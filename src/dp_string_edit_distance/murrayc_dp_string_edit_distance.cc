@@ -5,24 +5,6 @@
 
 using uint = unsigned int;
 
-enum class operations {
-  MATCH,
-  INSERT,
-  DELETE
-};
-
-uint match(const char ch_str, const char ch_pattern) {
-  if (ch_str == ch_pattern) {
-    return 0;
-  } else {
-    return 1;
-  }
-}
-
-uint indel(char /* ch */) {
-  return 1;
-}
-
 template <typename T>
 class circular_vector {
   public:
@@ -79,19 +61,65 @@ class circular_vector {
     std::vector<T> vec_;
 };
 
-class DpEditDistance {
-private:
-  const uint COUNT_COSTS_TO_KEEP = 2;
+/**
+ * Override this, implementing calc_cost().
+ */
+class DpBase {
+public:
   using type_costs = std::vector<uint>;
+
+  /**
+   * @param count_osts_to_keep The number of previous i values that calc_cost() needs to use.
+   * @param The number of i values to calculate the cost for.
+   * @pram The number of j values to calculate the cost for.
+   */
+  DpBase(uint count_costs_to_keep, uint i_count, uint j_count)
+  : costs_(count_costs_to_keep, type_costs(j_count)),
+    i_count_(i_count),
+    j_count_(j_count)
+  {}
+  
+  uint calc() {
+    for (uint i = 1; i < i_count_; ++i) {
+      costs_.step(); //Swap costs_i and costs_i_minus_1.
+      type_costs& costs_i = costs_.get(0);
+
+      for (uint j = 1; j < j_count_; ++j) {
+        costs_i[j] = calc_cost(i, j);
+      }
+
+      //costs_i will then be read as costs_i_minus_1;
+      //and costs_i_minus_1 will be filled as costs_i;
+    }
+
+    const type_costs& costs_i = costs_.get(0);
+    return costs_i[j_count_ - 1];
+  }
+ 
+private:
+  virtual uint calc_cost(uint i, uint j) const = 0;
+
+protected:
+  using type_vec_costs = circular_vector<type_costs>;
+  type_vec_costs costs_;
+  uint i_count_;
+  uint j_count_;
+};
+
+class DpEditDistance : public DpBase {
+private:
+  //The number of previous i values that calc_cost() needs to use.
+  const uint COUNT_COSTS_TO_KEEP = 2;
     
 public:
   explicit DpEditDistance(const std::string& str, const std::string& pattern)
-  : str_(str),
-    pattern_(pattern),
-    costs_(COUNT_COSTS_TO_KEEP, type_costs(pattern.size(), 0))
+  : DpBase(COUNT_COSTS_TO_KEEP, str.size(), pattern.size()),
+    str_(str),
+    pattern_(pattern)
   {}
 
-  uint calc_cost(uint i, uint j) const {
+private:
+  uint calc_cost(uint i, uint j) const override {
     const type_costs& costs_i = costs_.get(0);
     const type_costs& costs_i_minus_1 = costs_.get(-1);
 
@@ -105,32 +133,21 @@ public:
     return min;
   }
 
-  uint calc_edit_distance() {
-    const auto str_size = str_.size();
-    const auto pattern_size = pattern_.size();
-    
-    for (uint i = 1; i < str_size; ++i) {
-      costs_.step(); //Swap costs_i and costs_i_minus_1.
-      type_costs& costs_i = costs_.get(0);
-
-      for (uint j = 1; j < pattern_size; ++j) {
-        costs_i[j] = calc_cost(i, j);
-      }
-
-      //costs_i will then be read as costs_i_minus_1;
-      //and costs_i_minus_1 will be filled as costs_i;
+  static uint match(const char ch_str, const char ch_pattern) {
+    if (ch_str == ch_pattern) {
+      return 0;
+    } else {
+      return 1;
     }
-
-    const type_costs& costs_i = costs_.get(0);
-    return costs_i[pattern_size-1];
   }
+
+  static uint indel(char /* ch */) {
+    return 1;
+  }
+
   
-private:
   const std::string str_;
   const std::string pattern_;
-
-  using type_vec_costs = circular_vector<type_costs>;
-  type_vec_costs costs_;
 };
 
 int main() {
@@ -138,7 +155,7 @@ int main() {
   const auto pattern = "though shalt not";
   
   DpEditDistance dp(str, pattern);
-  const auto distance = dp.calc_edit_distance();
+  const auto distance = dp.calc();
   std::cout << "string: " << str << std::endl
     << "pattern: " << pattern << std::endl
     << "distance: " << distance << std::endl;
