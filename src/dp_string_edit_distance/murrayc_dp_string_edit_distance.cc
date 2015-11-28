@@ -4,7 +4,6 @@
 #include <vector>
 
 using uint = unsigned int;
-using type_costs = std::vector<uint>;
 
 enum class operations {
   MATCH,
@@ -28,15 +27,21 @@ uint dp_calc_edit_distance(const std::string& str, const std::string& pattern) {
   const auto str_size = str.size();
   const auto pattern_size = pattern.size();
   
-  //We switch between a and b:
-  type_costs a(pattern_size, 0);
-  type_costs b(pattern_size, 0);
+  using type_costs = std::vector<uint>;
+  using type_vec_costs = std::vector<std::vector<uint>>;
+
+  const uint count_costs_to_keep = 2;
+  type_vec_costs costs(count_costs_to_keep);
+  for (auto& sub : costs) {
+     sub.resize(pattern_size, 0);
+  }
+
   bool a_is_first = false; //arbitrary.
 
   for (uint i = 1; i < str_size; ++i) {
     a_is_first = !a_is_first;
-    type_costs& costs_i = (a_is_first ? a : b);
-    const type_costs& costs_i_minus_1 = (a_is_first ? b : a);
+    type_costs& costs_i = (a_is_first ? costs[0] : costs[1]);
+    const type_costs& costs_i_minus_1 = (a_is_first ? costs[1] : costs[0]);
 
     for (uint j = 1; j < pattern_size; ++j) {
       //Get the cost of the possible operations, and choose the least costly:
@@ -53,7 +58,7 @@ uint dp_calc_edit_distance(const std::string& str, const std::string& pattern) {
     //and costs_i_minus_1 will be filled as costs_i;
   }
   
-  type_costs& costs_i = (a_is_first ? a : b);
+  type_costs& costs_i = (a_is_first ? costs[0] : costs[1]);
   return costs_i[pattern_size-1];
 }
 
