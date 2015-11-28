@@ -64,29 +64,29 @@ class circular_vector {
  * Override this, implementing calc_cost(), and then call calc() to get the
  * overall cost.
  * @tparam T_COUNT_COSTS_TO_KEEP The number of previous i values that calc_cost() needs to use.
+ * @tparam T_cost The type of the cost, such as unsigned int.
  */
-template <unsigned int T_COUNT_COSTS_TO_KEEP>
+template <unsigned int T_COUNT_COSTS_TO_KEEP, typename T_cost>
 class DpBase {
 public:
-  using uint = unsigned int;
-  using type_costs = std::vector<uint>;
+  using type_costs = std::vector<T_cost>;
 
   /**
    * @param The number of i values to calculate the cost for.
    * @pram The number of j values to calculate the cost for.
    */
-  DpBase(uint i_count, uint j_count)
+  DpBase(unsigned int i_count, unsigned int j_count)
   : costs_(T_COUNT_COSTS_TO_KEEP, type_costs(j_count)),
     i_count_(i_count),
     j_count_(j_count)
   {}
   
-  uint calc() {
-    for (uint i = 1; i < i_count_; ++i) {
+  T_cost calc() {
+    for (unsigned int i = 1; i < i_count_; ++i) {
       costs_.step(); //Swap costs_i and costs_i_minus_1.
       type_costs& costs_i = costs_.get(0);
 
-      for (uint j = 1; j < j_count_; ++j) {
+      for (unsigned int j = 1; j < j_count_; ++j) {
         costs_i[j] = calc_cost(i, j);
       }
 
@@ -99,7 +99,7 @@ public:
   }
  
 private:
-  virtual uint calc_cost(uint i, uint j) const = 0;
+  virtual T_cost calc_cost(unsigned int i, unsigned int j) const = 0;
 
 protected:
   using type_vec_costs = circular_vector<type_costs>;
@@ -108,7 +108,8 @@ protected:
   uint j_count_;
 };
 
-class DpEditDistance : public DpBase<2 /* cost to keep, used in calc_cost() */> {
+class DpEditDistance
+  : public DpBase<2 /* cost to keep, used in calc_cost() */, uint> {
 public:
   explicit DpEditDistance(const std::string& str, const std::string& pattern)
   : DpBase(str.size(), pattern.size()),
