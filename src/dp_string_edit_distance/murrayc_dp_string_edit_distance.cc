@@ -111,7 +111,7 @@ protected:
 class DpEditDistance
   : public DpBase<2 /* cost to keep, used in calc_cost() */, uint> {
 public:
-  explicit DpEditDistance(const std::string& str, const std::string& pattern)
+  DpEditDistance(const std::string& str, const std::string& pattern)
   : DpBase(str.size(), pattern.size()),
     str_(str),
     pattern_(pattern)
