@@ -3,8 +3,6 @@
 #include <iostream>
 #include <vector>
 
-using uint = unsigned int;
-
 template <typename T>
 class circular_vector {
   public:
@@ -61,20 +59,24 @@ class circular_vector {
     std::vector<T> vec_;
 };
 
-/**
- * Override this, implementing calc_cost().
+/** A base class for a 2D bottom-up dynamic programming algorithm.
+ *
+ * Override this, implementing calc_cost(), and then call calc() to get the
+ * overall cost.
+ * @tparam T_COUNT_COSTS_TO_KEEP The number of previous i values that calc_cost() needs to use.
  */
+template <unsigned int T_COUNT_COSTS_TO_KEEP>
 class DpBase {
 public:
+  using uint = unsigned int;
   using type_costs = std::vector<uint>;
 
   /**
-   * @param count_osts_to_keep The number of previous i values that calc_cost() needs to use.
    * @param The number of i values to calculate the cost for.
    * @pram The number of j values to calculate the cost for.
    */
-  DpBase(uint count_costs_to_keep, uint i_count, uint j_count)
-  : costs_(count_costs_to_keep, type_costs(j_count)),
+  DpBase(uint i_count, uint j_count)
+  : costs_(T_COUNT_COSTS_TO_KEEP, type_costs(j_count)),
     i_count_(i_count),
     j_count_(j_count)
   {}
@@ -106,14 +108,10 @@ protected:
   uint j_count_;
 };
 
-class DpEditDistance : public DpBase {
-private:
-  //The number of previous i values that calc_cost() needs to use.
-  const uint COUNT_COSTS_TO_KEEP = 2;
-    
+class DpEditDistance : public DpBase<2 /* cost to keep, used in calc_cost() */> {
 public:
   explicit DpEditDistance(const std::string& str, const std::string& pattern)
-  : DpBase(COUNT_COSTS_TO_KEEP, str.size(), pattern.size()),
+  : DpBase(str.size(), pattern.size()),
     str_(str),
     pattern_(pattern)
   {}
