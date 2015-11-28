@@ -23,25 +23,70 @@ uint indel(char /* ch */) {
   return 1;
 }
 
+template <typename T>
+class circular_vector {
+  public:
+    using size_type = typename std::vector<T>::size_type;
+
+    /**
+     * Create a circular vector of size @a size,
+     * with each item having value @a value.
+     */
+    explicit circular_vector(size_type size, const T& value = T())
+    : pos_zero_(0),
+      size_(size),
+      vec_(size, value)
+    {}
+    
+    T& get(int offset) {
+      const auto pos = pos_for_offset(offset);
+      return vec_[pos];
+    }
+    
+    /** Cause get(-1) to return whatever get(0) currently returns.
+     */
+    void step() {
+      ++pos_zero_;
+      if(pos_zero_ >= (int)size_)
+        pos_zero_ = 0; 
+    }
+    
+  private:
+    /** Get a position relative to pos_zero_,
+     * wrapping around if necessary.
+     */    
+    size_type pos_for_offset(int offset) {
+      if (offset >= (int)size_) {
+        std::cerr << "offset too large: " << offset << std::endl;
+      }
+
+      int pos = pos_zero_ + offset;
+      if(pos >= (int)size_)
+        return 0 + (size_ - pos);
+      else if (pos < 0)
+        return size_ + pos;
+      else
+        return pos;
+    }
+
+    int pos_zero_;
+    unsigned int size_;
+    std::vector<T> vec_;
+};
+
 uint dp_calc_edit_distance(const std::string& str, const std::string& pattern) {
   const auto str_size = str.size();
   const auto pattern_size = pattern.size();
   
-  using type_costs = std::vector<uint>;
-  using type_vec_costs = std::vector<std::vector<uint>>;
-
   const uint count_costs_to_keep = 2;
-  type_vec_costs costs(count_costs_to_keep);
-  for (auto& sub : costs) {
-     sub.resize(pattern_size, 0);
-  }
-
-  bool a_is_first = false; //arbitrary.
+  using type_costs = std::vector<uint>;
+  circular_vector<type_costs> costs(count_costs_to_keep,
+    type_costs(pattern_size, 0));
 
   for (uint i = 1; i < str_size; ++i) {
-    a_is_first = !a_is_first;
-    type_costs& costs_i = (a_is_first ? costs[0] : costs[1]);
-    const type_costs& costs_i_minus_1 = (a_is_first ? costs[1] : costs[0]);
+    costs.step(); //Swap costs_i and costs_i_minus_1.
+    type_costs& costs_i = costs.get(0);
+    const type_costs& costs_i_minus_1 = costs.get(-1);
 
     for (uint j = 1; j < pattern_size; ++j) {
       //Get the cost of the possible operations, and choose the least costly:
@@ -58,7 +103,7 @@ uint dp_calc_edit_distance(const std::string& str, const std::string& pattern) {
     //and costs_i_minus_1 will be filled as costs_i;
   }
   
-  type_costs& costs_i = (a_is_first ? costs[0] : costs[1]);
+  const type_costs& costs_i = costs.get(0);
   return costs_i[pattern_size-1];
 }
 
