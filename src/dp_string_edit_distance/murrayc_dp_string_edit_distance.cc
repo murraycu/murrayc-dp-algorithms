@@ -43,7 +43,7 @@ class circular_vector {
       return vec_[pos];
     }
     
-    T& get(int offset) const {
+    const T& get(int offset) const {
       const auto pos = pos_for_offset(offset);
       return vec_[pos];
     }
@@ -60,7 +60,7 @@ class circular_vector {
     /** Get a position relative to pos_zero_,
      * wrapping around if necessary.
      */    
-    size_type pos_for_offset(int offset) {
+    size_type pos_for_offset(int offset) const {
       if (offset >= (int)size_) {
         std::cerr << "offset too large: " << offset << std::endl;
       }
@@ -79,44 +79,66 @@ class circular_vector {
     std::vector<T> vec_;
 };
 
-uint dp_calc_edit_distance(const std::string& str, const std::string& pattern) {
-  const auto str_size = str.size();
-  const auto pattern_size = pattern.size();
-  
+class DpEditDistance {
+private:
   const uint COUNT_COSTS_TO_KEEP = 2;
   using type_costs = std::vector<uint>;
-  circular_vector<type_costs> costs(COUNT_COSTS_TO_KEEP,
-    type_costs(pattern_size, 0));
+    
+public:
+  explicit DpEditDistance(const std::string& str, const std::string& pattern)
+  : str_(str),
+    pattern_(pattern),
+    costs_(COUNT_COSTS_TO_KEEP, type_costs(pattern.size(), 0))
+  {}
 
-  for (uint i = 1; i < str_size; ++i) {
-    costs.step(); //Swap costs_i and costs_i_minus_1.
-    type_costs& costs_i = costs.get(0);
-    const type_costs& costs_i_minus_1 = costs.get(-1);
+  uint calc_cost(uint i, uint j) const {
+    const type_costs& costs_i = costs_.get(0);
+    const type_costs& costs_i_minus_1 = costs_.get(-1);
 
-    for (uint j = 1; j < pattern_size; ++j) {
-      //Get the cost of the possible operations, and choose the least costly:
-      const uint cost_match = costs_i_minus_1[j - 1] + match(str[i], pattern[j]);
-      const uint cost_insert = costs_i[j - 1] + indel(pattern[j]);
-      const uint cost_delete = costs_i_minus_1[j] + indel(str[j]);
-      
-      auto min = std::min(cost_match, cost_insert);
-      min = std::min(min, cost_delete);
-      costs_i[j] = min;
+    //Get the cost of the possible operations, and choose the least costly:
+    const uint cost_match = costs_i_minus_1[j - 1] + match(str_[i], pattern_[j]);
+    const uint cost_insert = costs_i[j - 1] + indel(pattern_[j]);
+    const uint cost_delete = costs_i_minus_1[j] + indel(str_[j]);
+    
+    auto min = std::min(cost_match, cost_insert);
+    min = std::min(min, cost_delete);
+    return min;
+  }
+
+  uint calc_edit_distance() {
+    const auto str_size = str_.size();
+    const auto pattern_size = pattern_.size();
+    
+    for (uint i = 1; i < str_size; ++i) {
+      costs_.step(); //Swap costs_i and costs_i_minus_1.
+      type_costs& costs_i = costs_.get(0);
+
+      for (uint j = 1; j < pattern_size; ++j) {
+        costs_i[j] = calc_cost(i, j);
+      }
+
+      //costs_i will then be read as costs_i_minus_1;
+      //and costs_i_minus_1 will be filled as costs_i;
     }
 
-    //costs_i will then be read as costs_i_minus_1;
-    //and costs_i_minus_1 will be filled as costs_i;
+    const type_costs& costs_i = costs_.get(0);
+    return costs_i[pattern_size-1];
   }
   
-  const type_costs& costs_i = costs.get(0);
-  return costs_i[pattern_size-1];
-}
+private:
+  const std::string str_;
+  const std::string pattern_;
+
+  using type_vec_costs = circular_vector<type_costs>;
+  type_vec_costs costs_;
+};
 
 int main() {
   const auto str = "you should not";
   const auto pattern = "though shalt not";
   
-  const auto distance = dp_calc_edit_distance(str, pattern);
+  DpEditDistance dp(str, pattern);
+  const auto distance = dp.calc_edit_distance();
   std::cout << "string: " << str << std::endl
     << "pattern: " << pattern << std::endl
     << "distance: " << distance << std::endl;
