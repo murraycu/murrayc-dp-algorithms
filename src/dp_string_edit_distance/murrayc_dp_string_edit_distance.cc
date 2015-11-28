@@ -83,9 +83,9 @@ uint dp_calc_edit_distance(const std::string& str, const std::string& pattern) {
   const auto str_size = str.size();
   const auto pattern_size = pattern.size();
   
-  const uint count_costs_to_keep = 2;
+  const uint COUNT_COSTS_TO_KEEP = 2;
   using type_costs = std::vector<uint>;
-  circular_vector<type_costs> costs(count_costs_to_keep,
+  circular_vector<type_costs> costs(COUNT_COSTS_TO_KEEP,
     type_costs(pattern_size, 0));
 
   for (uint i = 1; i < str_size; ++i) {
