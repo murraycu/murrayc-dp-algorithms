@@ -43,6 +43,11 @@ class circular_vector {
       return vec_[pos];
     }
     
+    T& get(int offset) const {
+      const auto pos = pos_for_offset(offset);
+      return vec_[pos];
+    }
+
     /** Cause get(-1) to return whatever get(0) currently returns.
      */
     void step() {
