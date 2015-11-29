@@ -14,6 +14,7 @@ class circular_vector {
      */
     explicit circular_vector(size_type size, const T& value = T())
     : pos_zero_(0),
+      steps_count_(0),
       size_(size),
       vec_(size, value)
     {}
@@ -31,9 +32,21 @@ class circular_vector {
     /** Cause get(-1) to return whatever get(0) currently returns.
      */
     void step() {
+      ++steps_count_;
+
       ++pos_zero_;
       if(pos_zero_ >= (int)size_)
         pos_zero_ = 0; 
+    }
+
+    size_type size() const {
+      return size_;
+    }
+
+    /** Returns which index get(0) now represents.
+     */
+    int steps_count() const {
+      return steps_count_;
     }
     
   private:
@@ -55,6 +68,7 @@ class circular_vector {
     }
 
     int pos_zero_;
+    int steps_count_;
     unsigned int size_;
     std::vector<T> vec_;
 };
@@ -94,12 +108,28 @@ public:
       //and costs_i_minus_1 will be filled as costs_i;
     }
 
-    const type_costs& costs_i = costs_.get(0);
-    return costs_i[j_count_ - 1];
+    unsigned int goal_i = 0;
+    unsigned int goal_j = 0;
+    get_goal_cell(goal_i, goal_j);
+    //std::cout << "goal_i=" << goal_i << ", goal_j=" << goal_j << std::endl;
+
+    const int goal_offset_i = goal_i - costs_.steps_count();
+    //std::cout << "goal_offset_i=" << goal_offset_i << std::endl;
+    if (std::abs(goal_offset_i) > (int)costs_.size()) {
+      std::cerr << "goal has already been discarded. costs size=" << costs_.size() << ", goal_offset_i=" << goal_offset_i << std::endl;
+      return T_cost();
+    }
+
+    const type_costs& costs_i = costs_.get(goal_offset_i);
+    return costs_i[goal_j];
   }
- 
+
 private:
   virtual T_cost calc_cost(unsigned int i, unsigned int j) const = 0;
+
+  /** Get the cell whose value contains the solution.
+   */
+  virtual void get_goal_cell(unsigned int& i, unsigned int& j) const = 0;
 
 protected:
   using type_vec_costs = circular_vector<type_costs>;
@@ -130,6 +160,12 @@ private:
     auto min = std::min(cost_match, cost_insert);
     min = std::min(min, cost_delete);
     return min;
+  }
+
+  void get_goal_cell(unsigned int& i, unsigned int& j) const override {
+     //The answer is in the last-calculated cell:
+     i = i_count_ - 1;
+     j = j_count_ - 1;
   }
 
   static uint match(const char ch_str, const char ch_pattern) {
