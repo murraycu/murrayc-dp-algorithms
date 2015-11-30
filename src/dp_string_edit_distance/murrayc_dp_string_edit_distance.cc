@@ -2,6 +2,9 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <iomanip>
+
+#define MURRAYC_DP_DEBUG_OUTPUT = 1;
 
 template <typename T>
 class circular_vector {
@@ -119,13 +122,39 @@ public:
   {}
   
   T_cost calc() {
+#if defined(MURRAYC_DP_DEBUG_OUTPUT)
+    std::cout << "i=" << std::setw(2) << 0 << ": ";
+    for (unsigned int j = 0; j < j_count_; ++j) {
+      if (j != 0) {
+        std::cout << ", ";
+      }
+
+      std::cout << std::setw(2) << calc_cost(0, j);
+    }
+    std::cout << std::endl;
+#endif
+
     for (unsigned int i = 1; i < i_count_; ++i) {
       costs_.step(); //Swap costs_i and costs_i_minus_1.
       type_costs& costs_i = costs_.get(0);
 
+#if defined(MURRAYC_DP_DEBUG_OUTPUT)
+      std::cout << "i=" << std::setw(2) << i << ": "
+        << std::setw(2) << calc_cost(i, 0);
+#endif
+
       for (unsigned int j = 1; j < j_count_; ++j) {
         costs_i[j] = calc_cost(i, j);
+
+#if defined(MURRAYC_DP_DEBUG_OUTPUT)
+        std::cout << ", ";
+        std::cout << std::setw(2) << costs_i[j];
+#endif
       }
+
+#if defined(MURRAYC_DP_DEBUG_OUTPUT)
+      std::cout << std::endl;
+#endif
 
       //costs_i will then be read as costs_i_minus_1;
       //and costs_i_minus_1 will be filled as costs_i;
