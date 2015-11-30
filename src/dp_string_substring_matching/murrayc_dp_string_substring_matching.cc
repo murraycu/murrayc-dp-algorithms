@@ -5,13 +5,6 @@
 #include <iomanip>
 #include <limits>
 
-#include <cstdlib>
-#include <string>
-#include <iostream>
-#include <vector>
-#include <iomanip>
-#include <limits>
-
 #define MURRAYC_DP_DEBUG_OUTPUT = 1;
 
 template <typename T>
