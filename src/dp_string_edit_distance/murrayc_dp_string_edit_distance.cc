@@ -242,7 +242,7 @@ private:
 
 int main() {
   const auto str = "you should not";
-  const auto pattern = "though shalt not";
+  const auto pattern = "thou shalt not";
   
   DpEditDistance dp(str, pattern);
   const auto distance = dp.calc();
