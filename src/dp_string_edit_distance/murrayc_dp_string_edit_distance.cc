@@ -196,12 +196,12 @@ private:
   uint calc_cost(uint i, uint j) const override {
     if (i == 0) {
       //Base case:
-      return i * indel(' ');
+      return j * indel(' ');
     }
 
     if (j == 0) {
       //Base case:
-      return j * indel(' ');
+      return i * indel(' ');
     }
 
     const type_costs& costs_i = costs_.get(0);
