@@ -20,7 +20,8 @@ bin_PROGRAMS = \
   murrayc_dp_make_change \
   murrayc_dp_bottom_up_string_edit_distance \
   murrayc_dp_bottom_up_string_substring_matching \
-  murrayc_dp_top_down_string_edit_distance
+  murrayc_dp_top_down_string_edit_distance \
+  murrayc_dp_top_down_make_change
 
 #List of source files needed to build the executable:
 
@@ -50,5 +51,12 @@ murrayc_dp_top_down_string_edit_distance_SOURCES = \
 murrayc_dp_top_down_string_edit_distance_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 murrayc_dp_top_down_string_edit_distance_LDADD = \
+	$(PROJECT_LIBS)
+
+murrayc_dp_top_down_make_change_SOURCES = \
+	examples/dp_top_down_make_change/murrayc_dp_top_down_make_change.cc
+murrayc_dp_top_down_make_change_CXXFLAGS = \
+	$(COMMON_CXXFLAGS)
+murrayc_dp_top_down_make_change_LDADD = \
 	$(PROJECT_LIBS)
 
