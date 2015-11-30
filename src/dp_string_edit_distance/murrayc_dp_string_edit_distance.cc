@@ -78,7 +78,6 @@ class circular_vector {
      */
     int get_offset_from_start(int offset) const {
      const int current_offset = offset - steps_count();
-      //std::cout << "goal_offset_i=" << goal_offset_i << std::endl;
       if (std::abs(current_offset) > (int)size()) {
         std::cerr << "Item has already been discarded. size=" << size() << ", current_offset=" << current_offset << std::endl;
         return 0;
@@ -123,7 +122,6 @@ public:
   
   T_cost calc() {
     for (unsigned int i = 0; i < i_count_; ++i) {
-      costs_.step(); //Swap costs_i and costs_i_minus_1.
       type_costs& costs_i = costs_.get(0);
 
 #if defined(MURRAYC_DP_DEBUG_OUTPUT)
@@ -147,6 +145,7 @@ public:
 
       //costs_i will then be read as costs_i_minus_1;
       //and costs_i_minus_1 will be filled as costs_i;
+      costs_.step(); //Swap costs_i and costs_i_minus_1.
     }
 
     unsigned int goal_i = 0;
@@ -176,7 +175,7 @@ class DpEditDistance
   : public DpBase<2 /* cost to keep, used in calc_cost() */, uint> {
 public:
   DpEditDistance(const std::string& str, const std::string& pattern)
-  : DpBase(str.size(), pattern.size()),
+  : DpBase(str.size() + 1, pattern.size() + 1),
     str_(str),
     pattern_(pattern)
   {}
@@ -197,10 +196,13 @@ private:
     const type_costs& costs_i_minus_1 = costs_.get(-1);
 
     //Get the cost of the possible operations, and choose the least costly:
-    const uint cost_match = costs_i_minus_1[j - 1] + match(str_[i], pattern_[j]);
-    const uint cost_insert = costs_i[j - 1] + indel(pattern_[j]);
-    const uint cost_delete = costs_i_minus_1[j] + indel(str_[j]);
-    
+    const auto char_str_i = str_[i - 1]; //i is 1-indexed, but the str is 0-indexed.
+    const auto char_pattern_j = pattern_[j - 1]; //j is 1-indexed, but the pattern is 0-indexed.
+
+    const uint cost_match = costs_i_minus_1[j - 1] + match(char_str_i, char_pattern_j);
+    const uint cost_insert = costs_i[j - 1] + indel(char_pattern_j);
+    const uint cost_delete = costs_i_minus_1[j] + indel(char_str_i);
+
     auto min = std::min(cost_match, cost_insert);
     min = std::min(min, cost_delete);
     return min;
