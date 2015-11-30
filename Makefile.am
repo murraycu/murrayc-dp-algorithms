@@ -10,6 +10,7 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-warnings=fatal --disable-update-mime-databa
 
 #SUBDIRS =
 
+AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)
 AM_CXXFLAGS = $(PROJECT_WXXFLAGS)
 
 # TODO: Why do we still need to specify this for each executable that we build?
@@ -23,21 +24,21 @@ bin_PROGRAMS = \
 #List of source files needed to build the executable:
 
 murrayc_dp_make_change_SOURCES = \
-	src/dp_make_change/murrayc_dp_make_change.cc
+	examples/dp_make_change/murrayc_dp_make_change.cc
 murrayc_dp_make_change_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 murrayc_dp_make_change_LDADD = \
 	$(PROJECT_LIBS)
 
 murrayc_dp_string_edit_distance_SOURCES = \
-	src/dp_string_edit_distance/murrayc_dp_string_edit_distance.cc
+	examples/dp_string_edit_distance/murrayc_dp_string_edit_distance.cc
 murrayc_dp_string_edit_distance_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 murrayc_dp_string_edit_distance_LDADD = \
 	$(PROJECT_LIBS)
 
 murrayc_dp_string_substring_matching_SOURCES = \
-	src/dp_string_substring_matching/murrayc_dp_string_substring_matching.cc
+	examples/dp_string_substring_matching/murrayc_dp_string_substring_matching.cc
 murrayc_dp_string_substring_matching_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 murrayc_dp_string_substring_matching_LDADD = \
