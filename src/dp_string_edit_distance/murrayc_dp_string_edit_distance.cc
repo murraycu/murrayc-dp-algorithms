@@ -149,6 +149,11 @@ public:
 
 private:
   uint calc_cost(uint i, uint j) const override {
+    if (i == 0 || j == 0) {
+      //Base case:
+      return 0;
+    }
+
     const type_costs& costs_i = costs_.get(0);
     const type_costs& costs_i_minus_1 = costs_.get(-1);
 
