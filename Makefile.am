@@ -18,8 +18,8 @@ COMMON_CXXFLAGS = $(PROJECT_CFLAGS) $(PROJECT_WXXFLAGS)
 
 bin_PROGRAMS = \
   murrayc_dp_make_change \
-  murrayc_dp_string_edit_distance \
-  murrayc_dp_string_substring_matching
+  murrayc_dp_bottom_up_string_edit_distance \
+  murrayc_dp_bottom_up_string_substring_matching
 
 #List of source files needed to build the executable:
 
@@ -30,16 +30,16 @@ murrayc_dp_make_change_CXXFLAGS = \
 murrayc_dp_make_change_LDADD = \
 	$(PROJECT_LIBS)
 
-murrayc_dp_string_edit_distance_SOURCES = \
-	examples/dp_string_edit_distance/murrayc_dp_string_edit_distance.cc
-murrayc_dp_string_edit_distance_CXXFLAGS = \
+murrayc_dp_bottom_up_string_edit_distance_SOURCES = \
+	examples/dp_bottom_up_string_edit_distance/murrayc_dp_bottom_up_string_edit_distance.cc
+murrayc_dp_bottom_up_string_edit_distance_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
-murrayc_dp_string_edit_distance_LDADD = \
+murrayc_dp_bottom_up_string_edit_distance_LDADD = \
 	$(PROJECT_LIBS)
 
-murrayc_dp_string_substring_matching_SOURCES = \
-	examples/dp_string_substring_matching/murrayc_dp_string_substring_matching.cc
-murrayc_dp_string_substring_matching_CXXFLAGS = \
+murrayc_dp_bottom_up_string_substring_matching_SOURCES = \
+	examples/dp_bottom_up_string_substring_matching/murrayc_dp_bottom_up_string_substring_matching.cc
+murrayc_dp_bottom_up_string_substring_matching_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
-murrayc_dp_string_substring_matching_LDADD = \
+murrayc_dp_bottom_up_string_substring_matching_LDADD = \
 	$(PROJECT_LIBS)
