@@ -122,32 +122,21 @@ public:
   {}
   
   T_cost calc() {
-#if defined(MURRAYC_DP_DEBUG_OUTPUT)
-    std::cout << "i=" << std::setw(2) << 0 << ": ";
-    for (unsigned int j = 0; j < j_count_; ++j) {
-      if (j != 0) {
-        std::cout << ", ";
-      }
-
-      std::cout << std::setw(2) << calc_cost(0, j);
-    }
-    std::cout << std::endl;
-#endif
-
-    for (unsigned int i = 1; i < i_count_; ++i) {
+    for (unsigned int i = 0; i < i_count_; ++i) {
       costs_.step(); //Swap costs_i and costs_i_minus_1.
       type_costs& costs_i = costs_.get(0);
 
 #if defined(MURRAYC_DP_DEBUG_OUTPUT)
-      std::cout << "i=" << std::setw(2) << i << ": "
-        << std::setw(2) << calc_cost(i, 0);
+      std::cout << "i=" << std::setw(2) << i << ": ";
 #endif
 
-      for (unsigned int j = 1; j < j_count_; ++j) {
+      for (unsigned int j = 0; j < j_count_; ++j) {
         costs_i[j] = calc_cost(i, j);
 
 #if defined(MURRAYC_DP_DEBUG_OUTPUT)
-        std::cout << ", ";
+        if (j != 0) {
+          std::cout << ", ";
+        }
         std::cout << std::setw(2) << costs_i[j];
 #endif
       }
