@@ -5,7 +5,7 @@
 #include <iomanip>
 #include <limits>
 
-#include <murraycdp/dp_base.h>
+#include <murraycdp/dp_bottom_up_base.h>
 
 class Cost {
 public:
@@ -58,10 +58,10 @@ public:
 };
 
 class DpSubstringMatching
-  : public DpBase<2 /* cost to keep, used in calc_cost() */, Cost> {
+  : public DpBottomUpBase<2 /* cost to keep, used in calc_cost() */, Cost> {
 public:
   DpSubstringMatching(const std::string& str, const std::string& pattern)
-  : DpBase(str.size() + 1, pattern.size() + 1),
+  : DpBottomUpBase(str.size() + 1, pattern.size() + 1),
     str_(str),
     pattern_(pattern)
   {}

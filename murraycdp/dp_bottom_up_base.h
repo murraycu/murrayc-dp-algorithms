@@ -17,7 +17,7 @@
  * @tparam T_cost The type of the cost, such as unsigned int.
  */
 template <unsigned int T_COUNT_COSTS_TO_KEEP, typename T_cost>
-class DpBase {
+class DpBottomUpBase {
 public:
   using type_cost = T_cost;
   using type_costs = std::vector<T_cost>;
@@ -26,7 +26,7 @@ public:
    * @param The number of i values to calculate the cost for.
    * @pram The number of j values to calculate the cost for.
    */
-  DpBase(unsigned int i_count, unsigned int j_count)
+  DpBottomUpBase(unsigned int i_count, unsigned int j_count)
   : costs_(T_COUNT_COSTS_TO_KEEP, type_costs(j_count)),
     i_count_(i_count),
     j_count_(j_count)
