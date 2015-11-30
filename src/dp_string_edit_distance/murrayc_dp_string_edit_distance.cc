@@ -29,6 +29,14 @@ class circular_vector {
       return vec_[pos];
     }
 
+    T& get_at_offset_from_start(int offset) {
+      return get(get_offset_from_start(offset));
+    }
+
+    const T& get_at_offset_from_start(int offset) const {
+      return get(get_offset_from_start(offset));
+    }
+
     /** Cause get(-1) to return whatever get(0) currently returns.
      */
     void step() {
@@ -41,12 +49,6 @@ class circular_vector {
 
     size_type size() const {
       return size_;
-    }
-
-    /** Returns which index get(0) now represents.
-     */
-    int steps_count() const {
-      return steps_count_;
     }
     
   private:
@@ -65,6 +67,27 @@ class circular_vector {
         return size_ + pos;
       else
         return pos;
+    }
+
+    /** For instance, get the 5th item,
+     * regardless of how many times we have called step().
+     * This can fail if the @a offset is greater than size().
+     */
+    int get_offset_from_start(int offset) {
+     const int current_offset = offset - steps_count();
+      //std::cout << "goal_offset_i=" << goal_offset_i << std::endl;
+      if (std::abs(current_offset) > (int)size()) {
+        std::cerr << "Item has already been discarded. size=" << size() << ", current_offset=" << current_offset << std::endl;
+        return 0;
+      }
+
+      return current_offset;
+    }
+
+    /** Returns which index get(0) now represents.
+     */
+    int steps_count() const {
+      return steps_count_;
     }
 
     int pos_zero_;
@@ -113,14 +136,7 @@ public:
     get_goal_cell(goal_i, goal_j);
     //std::cout << "goal_i=" << goal_i << ", goal_j=" << goal_j << std::endl;
 
-    const int goal_offset_i = goal_i - costs_.steps_count();
-    //std::cout << "goal_offset_i=" << goal_offset_i << std::endl;
-    if (std::abs(goal_offset_i) > (int)costs_.size()) {
-      std::cerr << "goal has already been discarded. costs size=" << costs_.size() << ", goal_offset_i=" << goal_offset_i << std::endl;
-      return T_cost();
-    }
-
-    const type_costs& costs_i = costs_.get(goal_offset_i);
+    const type_costs& costs_i = costs_.get_at_offset_from_start(goal_i);
     return costs_i[goal_j];
   }
 
