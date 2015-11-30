@@ -108,6 +108,7 @@ class circular_vector {
 template <unsigned int T_COUNT_COSTS_TO_KEEP, typename T_cost>
 class DpBase {
 public:
+  using type_cost = T_cost;
   using type_costs = std::vector<T_cost>;
 
   /**
@@ -120,7 +121,7 @@ public:
     j_count_(j_count)
   {}
   
-  T_cost calc() {
+  type_cost calc() {
     for (unsigned int i = 0; i < i_count_; ++i) {
       type_costs& costs_i = costs_.get(0);
 
@@ -135,7 +136,7 @@ public:
         if (j != 0) {
           std::cout << ", ";
         }
-        std::cout << std::setw(2) << costs_i[j];
+        std::cout << std::setw(2) << costs_i[j].cost;
 #endif
       }
 
@@ -158,7 +159,7 @@ public:
   }
 
 private:
-  virtual T_cost calc_cost(unsigned int i, unsigned int j) const = 0;
+  virtual type_cost calc_cost(unsigned int i, unsigned int j) const = 0;
 
   /** Get the cell whose value contains the solution.
    */
@@ -171,8 +172,29 @@ protected:
   uint j_count_;
 };
 
+class Cost {
+public:
+  using uint = unsigned int;
+
+  explicit Cost()
+  : cost(0)
+  {}
+
+  explicit Cost(uint in_cost)
+  : cost(in_cost)
+  {}
+
+  Cost(const Cost& src) = default;
+  Cost& operator=(const Cost& src) = default;
+  
+  Cost(Cost&& src) = default;
+  Cost& operator=(Cost&& src) = default;
+
+  uint cost;
+};
+
 class DpEditDistance
-  : public DpBase<2 /* cost to keep, used in calc_cost() */, uint> {
+  : public DpBase<2 /* count of costs to keep, used in calc_cost() */, Cost> {
 public:
   DpEditDistance(const std::string& str, const std::string& pattern)
   : DpBase(str.size() + 1, pattern.size() + 1),
@@ -181,15 +203,17 @@ public:
   {}
 
 private:
-  uint calc_cost(uint i, uint j) const override {
+  using uint = Cost::uint;
+
+  type_cost calc_cost(uint i, uint j) const override {
     if (i == 0) {
       //Base case:
-      return j * indel(' ');
+      return Cost(j * indel(' '));
     }
 
     if (j == 0) {
       //Base case:
-      return i * indel(' ');
+      return Cost(i * indel(' '));
     }
 
     const type_costs& costs_i = costs_.get(0);
@@ -199,13 +223,13 @@ private:
     const auto char_str_i = str_[i - 1]; //i is 1-indexed, but the str is 0-indexed.
     const auto char_pattern_j = pattern_[j - 1]; //j is 1-indexed, but the pattern is 0-indexed.
 
-    const uint cost_match = costs_i_minus_1[j - 1] + match(char_str_i, char_pattern_j);
-    const uint cost_insert = costs_i[j - 1] + indel(char_pattern_j);
-    const uint cost_delete = costs_i_minus_1[j] + indel(char_str_i);
+    const uint cost_match = costs_i_minus_1[j - 1].cost + match(char_str_i, char_pattern_j);
+    const uint cost_insert = costs_i[j - 1].cost + indel(char_pattern_j);
+    const uint cost_delete = costs_i_minus_1[j].cost + indel(char_str_i);
 
     auto min = std::min(cost_match, cost_insert);
     min = std::min(min, cost_delete);
-    return min;
+    return Cost(min);
   }
 
   void get_goal_cell(unsigned int& i, unsigned int& j) const override {
@@ -239,7 +263,7 @@ int main() {
   const auto distance = dp.calc();
   std::cout << "string: " << str << std::endl
     << "pattern: " << pattern << std::endl
-    << "distance: " << distance << std::endl;
+    << "distance: " << distance.cost << std::endl;
   
   return EXIT_SUCCESS;
 }
