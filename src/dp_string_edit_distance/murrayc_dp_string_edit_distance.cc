@@ -73,7 +73,7 @@ class circular_vector {
      * regardless of how many times we have called step().
      * This can fail if the @a offset is greater than size().
      */
-    int get_offset_from_start(int offset) {
+    int get_offset_from_start(int offset) const {
      const int current_offset = offset - steps_count();
       //std::cout << "goal_offset_i=" << goal_offset_i << std::endl;
       if (std::abs(current_offset) > (int)size()) {
@@ -165,9 +165,14 @@ public:
 
 private:
   uint calc_cost(uint i, uint j) const override {
-    if (i == 0 || j == 0) {
+    if (i == 0) {
       //Base case:
-      return 0;
+      return i * indel(' ');
+    }
+
+    if (j == 0) {
+      //Base case:
+      return j * indel(' ');
     }
 
     const type_costs& costs_i = costs_.get(0);
