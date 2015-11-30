@@ -14,6 +14,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef _MURRAYCDP_CIRCULAR_VECTOR_H
+#define _MURRAYCDP_CIRCULAR_VECTOR_H
+
 #include <vector>
 
 template <typename T>
@@ -107,3 +110,5 @@ class circular_vector {
     unsigned int size_;
     std::vector<T> vec_;
 };
+
+#endif //MURRAYCDP_CIRCULAR_VECTOR_H
