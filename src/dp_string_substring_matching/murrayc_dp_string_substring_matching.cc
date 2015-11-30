@@ -264,7 +264,7 @@ private:
     
     auto min = std::min(cost_match, cost_insert);
     min = std::min(min, cost_delete);
-    
+
     //Remember the path, based on what operation produced this minimum cost:
     Cost::type_path path;
     if (min == cost_match) {
