@@ -28,7 +28,7 @@ libmurraycdp_1_0_la_SOURCES = $(cc_sources) $(h_sources_public)
 libmurraycdp_1_0_la_LDFLAGS = -no-undefined -version-info $(LIBMURRAYDP_SO_VERSION)
 #libmurraycdp-_1.0_la_LIBADD = $(LIBXMLXX_LIBS)
 
-library_includedir = $(includedir)/libmurraycdp-1.0/murraycdp
+library_includedir = $(includedir)/libmurraycdp-1.0
 nobase_library_include_HEADERS = $(h_sources_public)
 
 
