@@ -22,7 +22,7 @@ LT_INIT([win32-dll])
 # http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
 AC_SUBST([LIBMURRAYDP_SO_VERSION], [0:0:0])
 
-PKG_CHECK_MODULES([PROJECT], [gdkmm-3.0])
+#PKG_CHECK_MODULES([PROJECT], [])
 
 # See http://www.gnu.org/software/autoconf-archive/ax_boost_base.html
 #AX_BOOST_BASE
