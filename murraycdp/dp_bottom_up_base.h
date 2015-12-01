@@ -33,7 +33,8 @@
  * Override this, implementing calc_subproblem(), and then call calc() to get the
  * overall solution.
  * @tparam T_COUNT_SUBPROBLEMS_TO_KEEP The number of previous i values that calc_subproblem() needs to use.
- * @tparam T_subproblem The type of the subproblem solution, such as unsigned int
+ * @tparam T_subproblem The type of the subproblem solution, such as unsigned int,
+ * or a custom class containing a value and a partial path.
  */
 template <unsigned int T_COUNT_SUBPROBLEMS_TO_KEEP, typename T_subproblem>
 class DpBottomUpBase {

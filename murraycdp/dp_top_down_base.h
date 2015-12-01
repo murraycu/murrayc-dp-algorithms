@@ -32,7 +32,8 @@
  *
  * Override this, implementing calc_subproblem(), and then call calc() to get the
  * overall solution.
- * @tparam T_subproblem The type of the subproblem solution, such as unsigned int.
+ * @tparam T_subproblem The type of the subproblem solution, such as unsigned int,
+ * or a custom class containing a value and a partial path.
  */
 template <typename T_subproblem, typename T_i = unsigned int, typename T_j = unsigned int>
 class DpTopDownBase {
