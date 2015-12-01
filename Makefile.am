@@ -33,57 +33,57 @@ nobase_library_include_HEADERS = $(h_sources_public)
 
 
 check_PROGRAMS = \
-  murrayc_dp_make_change \
-  murrayc_dp_bottom_up_string_edit_distance \
-  murrayc_dp_bottom_up_string_substring_matching \
-  murrayc_dp_top_down_string_edit_distance \
-  murrayc_dp_top_down_make_change \
-  murrayc_dp_top_down_knapsack
+  examples/murrayc_dp_make_change \
+  examples/murrayc_dp_bottom_up_string_edit_distance \
+  examples/murrayc_dp_bottom_up_string_substring_matching \
+  examples/murrayc_dp_top_down_string_edit_distance \
+  examples/murrayc_dp_top_down_make_change \
+  examples/murrayc_dp_top_down_knapsack
 
 TESTS = $(check_PROGRAMS)
 
 #List of source files needed to build the executable:
 
-murrayc_dp_make_change_SOURCES = \
+examples_murrayc_dp_make_change_SOURCES = \
 	examples/dp_make_change/murrayc_dp_make_change.cc
-murrayc_dp_make_change_CXXFLAGS = \
+examples_murrayc_dp_make_change_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
-murrayc_dp_make_change_LDADD = \
+examples_murrayc_dp_make_change_LDADD = \
 	$(PROJECT_LIBS)
 
-murrayc_dp_bottom_up_string_edit_distance_SOURCES = \
+examples_murrayc_dp_bottom_up_string_edit_distance_SOURCES = \
 	examples/dp_bottom_up_string_edit_distance/murrayc_dp_bottom_up_string_edit_distance.cc
-murrayc_dp_bottom_up_string_edit_distance_CXXFLAGS = \
+examples_murrayc_dp_bottom_up_string_edit_distance_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
-murrayc_dp_bottom_up_string_edit_distance_LDADD = \
+examples_murrayc_dp_bottom_up_string_edit_distance_LDADD = \
 	$(PROJECT_LIBS)
 
-murrayc_dp_bottom_up_string_substring_matching_SOURCES = \
+examples_murrayc_dp_bottom_up_string_substring_matching_SOURCES = \
 	examples/dp_bottom_up_string_substring_matching/murrayc_dp_bottom_up_string_substring_matching.cc
-murrayc_dp_bottom_up_string_substring_matching_CXXFLAGS = \
+examples_murrayc_dp_bottom_up_string_substring_matching_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
-murrayc_dp_bottom_up_string_substring_matching_LDADD = \
+examples_murrayc_dp_bottom_up_string_substring_matching_LDADD = \
 	$(PROJECT_LIBS)
 
-murrayc_dp_top_down_string_edit_distance_SOURCES = \
+examples_murrayc_dp_top_down_string_edit_distance_SOURCES = \
 	examples/dp_top_down_string_edit_distance/murrayc_dp_top_down_string_edit_distance.cc
-murrayc_dp_top_down_string_edit_distance_CXXFLAGS = \
+examples_murrayc_dp_top_down_string_edit_distance_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
-murrayc_dp_top_down_string_edit_distance_LDADD = \
+examples_murrayc_dp_top_down_string_edit_distance_LDADD = \
 	$(PROJECT_LIBS)
 
-murrayc_dp_top_down_make_change_SOURCES = \
+examples_murrayc_dp_top_down_make_change_SOURCES = \
 	examples/dp_top_down_make_change/murrayc_dp_top_down_make_change.cc
-murrayc_dp_top_down_make_change_CXXFLAGS = \
+examples_murrayc_dp_top_down_make_change_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
-murrayc_dp_top_down_make_change_LDADD = \
+examples_murrayc_dp_top_down_make_change_LDADD = \
 	$(PROJECT_LIBS)
 
-murrayc_dp_top_down_knapsack_SOURCES = \
+examples_murrayc_dp_top_down_knapsack_SOURCES = \
 	examples/dp_top_down_knapsack/murrayc_dp_top_down_knapsack.cc
-murrayc_dp_top_down_knapsack_CXXFLAGS = \
+examples_murrayc_dp_top_down_knapsack_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
-murrayc_dp_top_down_knapsack_LDADD = \
+examples_murrayc_dp_top_down_knapsack_LDADD = \
 	$(PROJECT_LIBS)
 
 
