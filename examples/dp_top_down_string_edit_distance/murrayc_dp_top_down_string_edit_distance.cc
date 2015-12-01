@@ -75,7 +75,7 @@ public:
 };
 
 class DpEditDistance
-  : public DpTopDownBase<Cost> {
+  : public DpTopDownBase<Cost, Cost::uint, Cost::uint> {
 public:
   DpEditDistance(const std::string& str, const std::string& pattern)
   : DpTopDownBase(str.size() + 1, pattern.size() + 1),
@@ -86,7 +86,7 @@ public:
 private:
   using uint = Cost::uint;
 
-  type_subproblem calc_subproblem(uint i, uint j, type_level level) const override {
+  type_subproblem calc_subproblem(type_level level, uint i, uint j) const override {
     //std::cout << "calc_subproblem(): i=" << i << ", j=" << j << std::endl;
     if (i == 0) {
       //Base case:
@@ -102,9 +102,9 @@ private:
     const auto char_str_i = str_[i - 1]; //i is 1-indexed, but the str is 0-indexed.
     const auto char_pattern_j = pattern_[j - 1]; //j is 1-indexed, but the pattern is 0-indexed.
 
-    const uint cost_match = get_subproblem(i - 1, j - 1, level).cost + match(char_str_i, char_pattern_j);
-    const uint cost_insert = get_subproblem(i, j - 1, level).cost + indel(char_pattern_j);
-    const uint cost_delete = get_subproblem(i - 1, j, level).cost + indel(char_str_i);
+    const uint cost_match = get_subproblem(level, i - 1, j - 1).cost + match(char_str_i, char_pattern_j);
+    const uint cost_insert = get_subproblem(level, i, j - 1).cost + indel(char_pattern_j);
+    const uint cost_delete = get_subproblem(level, i - 1, j).cost + indel(char_str_i);
     
     auto min = std::min(cost_match, cost_insert);
     min = std::min(min, cost_delete);
@@ -112,13 +112,13 @@ private:
     //Remember the path, based on what operation produced this minimum cost:
     Cost::type_path path;
     if (min == cost_match) {
-        path = get_subproblem(i - 1, j - 1, level).path; //TODO: Avoid repeated get_subproblem() call.
+        path = get_subproblem(level, i - 1, j - 1).path; //TODO: Avoid repeated get_subproblem() call.
         path.emplace_back(Cost::Operation::MATCH);
     } else if (min == cost_insert) {
-        path = get_subproblem(i, j - 1, level).path; //TODO: Avoid repeated get_subproblem() call.
+        path = get_subproblem(level, i, j - 1).path; //TODO: Avoid repeated get_subproblem() call.
         path.emplace_back(Cost::Operation::INSERT);
     } else if (min == cost_delete) {
-        path = get_subproblem(i - 1, j, level).path; //TODO: Avoid repeated get_subproblem() call.
+        path = get_subproblem(level, i - 1, j).path; //TODO: Avoid repeated get_subproblem() call.
         path.emplace_back(Cost::Operation::DELETE);
     } else {
       std::cerr << "Unexpected min." << std::endl;
@@ -129,8 +129,8 @@ private:
 
   void get_goal_cell(unsigned int& i, unsigned int& j) const override {
      //The answer is in the last-calculated cell:
-     i = i_count_ - 1;
-     j = j_count_ - 1;
+     i = str_.size() + 1;
+     j = pattern_.size() + 1;
   }
 
   static uint match(const char ch_str, const char ch_pattern) {

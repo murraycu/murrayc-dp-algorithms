@@ -24,6 +24,9 @@
 #include <iomanip>
 #include <limits>
 #include <unordered_map>
+#include <tuple>
+#include <utility>
+#include <murraycdp/tuple_hash.h>
 
 
 //#define MURRAYC_DP_DEBUG_OUTPUT = 1;
@@ -35,43 +38,40 @@
  * @tparam T_subproblem The type of the subproblem solution, such as unsigned int,
  * or a custom class containing a value and a partial path.
  */
-template <typename T_subproblem, typename T_i = unsigned int, typename T_j = unsigned int>
+template <typename T_subproblem, typename... T_value_types>
 class DpTopDownBase {
 public:
   using type_subproblem = T_subproblem;
-  using type_i = T_i;
-  using type_j = T_j;
   using type_level = unsigned int;
   
-  //Map of j values to subproblems.
-  using type_subproblems = std::unordered_map<type_j, T_subproblem>;
+  using type_values = std::tuple<T_value_types...>;
 
   /**
    * @param The number of i values to calculate the subproblem for.
    * @pram The number of j values to calculate the subproblem for.
    */
-  DpTopDownBase(type_i i_count, type_j j_count)
-  : i_count_(i_count),
-    j_count_(j_count)
+  DpTopDownBase(T_value_types... value_counts)
+  : value_counts_(value_counts...)
   {}
   
   type_subproblem calc() {
-    type_i goal_i = type_i();
-    type_j goal_j = type_j();
-    get_goal_cell(goal_i, goal_j);
+    //We cannot do this to pass the output parameters to get_goal_cell():
+    //  T_type_values... goal
+    //but we can pass a std::tuple<> based on T_type_values... 
+    //and that will then be passed as individual parameters when we unpack it
+    //via std::index_sequence.
+    type_values goals;
+    get_goal_cell_call_with_tuple(goals,
+      std::index_sequence_for<T_value_types...>());
+    //std::cout << "calc: " << std::get<0>(goals) << std::endl;
 
     type_level level = 0;
-    return get_subproblem(goal_i, goal_j, level);
+    return get_subproblem_call_with_tuple(level, goals,
+      std::index_sequence_for<T_value_types...>());
   }
-  
+
   unsigned int count_cached_sub_problems() const {
-    unsigned int result = 0;
-    for (const auto i_pair : subproblems_) {
-      const auto j_map = i_pair.second;
-      result += j_map.size();
-    }
-    
-    return result;
+    return subproblems_.size();
   }
 
 protected:
@@ -80,16 +80,18 @@ protected:
    *
    * See calc_subproblem().
    */
-  type_subproblem get_subproblem(type_i i, type_j j, type_level level) const {
+  type_subproblem get_subproblem(type_level level, T_value_types... values) const {
     type_subproblem result;
-    if (!get_cached_subproblem(i, j, result)) {
+    if (!get_cached_subproblem(result, values...)) {
 #if defined MURRAYC_DP_DEBUG_OUTPUT
       indent(level);
       std::cout << "DpTopDownBase::get_subproblem(): i=" << i << ", j=" << j << std::endl;
 #endif //MURRAYC_DP_DEBUG_OUTPUT
       ++level;
-      result = calc_subproblem(i, j, level);
-      subproblems_[i][j] = result;
+      result = calc_subproblem(level, values...);
+
+      const type_values key(values...);
+      subproblems_[key] = result;
     }
 
     return result;
@@ -104,33 +106,43 @@ private:
    *
    * Implementations should call get_subproblem() to get related sub-problem results.
    */
-  virtual type_subproblem calc_subproblem(type_i i, type_j j, type_level level) const = 0;
+  virtual type_subproblem calc_subproblem(type_level level, T_value_types... values) const = 0;
 
   /** Get the cell whose value contains the solution.
    */
-  virtual void get_goal_cell(type_i& i, type_j& j) const = 0;
+  virtual void get_goal_cell(T_value_types&... values) const = 0;
   
   /** Gets the already-calculated subproblem solution, if any.
    * @result true if the subproblem solution was in the cache.
    */
-  bool get_cached_subproblem(type_i i, type_j j, type_subproblem& subproblem) const {
+  bool get_cached_subproblem(type_subproblem& subproblem, T_value_types... values) const {
     //std::cout << "get_cached_subproblem(): i=" << i << ", j=" << j << std::endl;
-    const auto iter_i = subproblems_.find(i);
-    if (iter_i == subproblems_.end()) {
-      subproblem = type_subproblem();
-      return false;
-    }
-
-    const auto map_j = iter_i->second;
-    const auto iter_j = map_j.find(j);
-    if (iter_j == map_j.end()) {
+    const type_values key(values...);
+    const auto iter = subproblems_.find(key);
+    if (iter == subproblems_.end()) {
       subproblem = type_subproblem();
       return false;
     }
 
     //std::cout << "get_cached_subproblem(): returning cache for i=" << i << ", j=" << j << std::endl;
-    subproblem = iter_j->second;
+    subproblem = iter->second;
     return true;
+  }
+  
+  /// Call get_goal_cell(a, b, c, d) with std::tuple<a, b, c, d>
+  template<std::size_t... Is>
+  void get_goal_cell_call_with_tuple(
+    type_values& goals,
+    std::index_sequence<Is...>) {
+    get_goal_cell(std::get<Is>(goals)...);
+  }
+  
+  /// Call get_subproblem(level, a, b, c, d) with std::tuple<a, b, c, d>
+  template<std::size_t... Is>
+  type_subproblem get_subproblem_call_with_tuple(type_level level,
+    const type_values& goals,
+    std::index_sequence<Is...>) {
+    return get_subproblem(level, std::get<Is>(goals)...);
   }
 
 protected:
@@ -143,13 +155,12 @@ protected:
   }
 
 protected:
-  
-  //Map of i values to maps of j values to subproblems:
-  using type_map_subproblems = std::unordered_map<type_i, type_subproblems>;
+
+  //Map of values to subproblems:
+  using type_map_subproblems = std::unordered_map<type_values, type_subproblem, hash_tuple::hash<type_values>>;
   mutable type_map_subproblems subproblems_;
 
-  type_i i_count_;
-  type_j j_count_;
+  type_values value_counts_;
 };
 
 #endif //MURRAYCDP_DP_BOTTOM_UP_BASE_H

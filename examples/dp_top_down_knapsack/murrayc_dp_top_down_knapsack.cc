@@ -77,9 +77,9 @@ public:
 };
 
 class DpKnapsack
-  : public DpTopDownBase<SubSolution, SubSolution::type_vec_items::size_type, SubSolution::type_value> {
+  : public DpTopDownBase<SubSolution, SubSolution::type_vec_items::size_type, Item::type_weight> {
 public:
-  using type_value = SubSolution::type_value;
+  using type_value = Item::type_value;
   using type_weight = Item::type_weight;
   using type_vec_items = SubSolution::type_vec_items;
   using type_size = type_vec_items::size_type;
@@ -91,7 +91,7 @@ public:
   {}
 
 private:
-  type_subproblem calc_subproblem(type_size items_count, type_weight weight_capacity, type_level level) const override {
+  type_subproblem calc_subproblem(type_level level, type_size items_count, type_weight weight_capacity) const override {
     if(items_count == 0) {
       return type_subproblem(0); //0 items means 0 value for any maximum weight.
     }
@@ -108,7 +108,7 @@ private:
     //try the previously-calculated lesser number of items,
     //and don't bother trying any other alternative:
     if(item.weight > weight_capacity) {
-      return get_subproblem(items_count - 1, weight_capacity, level);
+      return get_subproblem(level, items_count - 1, weight_capacity);
     }
 
 
@@ -118,7 +118,7 @@ private:
     //The value for same max weight with 1 less item.
     //This recurses, so it really tells us the max possible value across all of
     //the earlier items, for the same weight capacity.
-    const auto subproblem_1_less_item = get_subproblem(items_count - 1, weight_capacity, level);
+    const auto subproblem_1_less_item = get_subproblem(level, items_count - 1, weight_capacity);
 
     //Case 2: This item is in the optimal solution (and is the last item in it),
     //so the optimal solution's value is equal to the solution for 1 less item, with less capacity,
@@ -126,7 +126,7 @@ private:
     //
     //The value for the max weight minus the current item's weight, with 1 less item, plus the current item's value.
     auto subproblem_1_less_item_less_weight =
-      get_subproblem(items_count - 1, weight_capacity - item.weight, level);
+      get_subproblem(level, items_count - 1, weight_capacity - item.weight);
     subproblem_1_less_item_less_weight.value += item.value;
 
     if (subproblem_1_less_item.value > subproblem_1_less_item_less_weight.value) {
@@ -137,10 +137,10 @@ private:
     }
   }
 
-  void get_goal_cell(type_i& i, type_j& j) const override {
+  void get_goal_cell(type_size& items_count, type_weight& weight) const override {
      //The answer is in the last-calculated cell:
-     i = i_count_;
-     j = j_count_;
+     items_count = items_.size();
+     weight = weight_capacity_;
   }
 
   const type_vec_items items_;

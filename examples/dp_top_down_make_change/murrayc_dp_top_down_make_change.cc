@@ -68,7 +68,7 @@ public:
 
 private:
 
-  type_subproblem calc_subproblem(type_size item_number, type_value needed_value, type_level level) const override {
+  type_subproblem calc_subproblem(type_level level, type_size item_number, type_value needed_value) const override {
     //indent(level);
     //std::cout << "calc_subproblem(): item_number = " << item_number << ", needed_value=" << needed_value << std::endl;
     //const auto& item_value = items_[item_number - 1];
@@ -94,7 +94,7 @@ private:
     auto case_dont_use_this_item =
       (item_number == 1 ?
       SubSolution(SubSolution::COIN_COUNT_INFINITY) :
-      get_subproblem(item_number - 1, needed_value, level));
+      get_subproblem(level, item_number - 1, needed_value));
 
     const auto& item_value = items_[item_number - 1];
     //indent(level);
@@ -122,7 +122,7 @@ private:
       if(item_number != 1)
       {
         case_use_this_item =
-          get_subproblem(item_number - 1, needed_value - item_value, level);
+          get_subproblem(level, item_number - 1, needed_value - item_value);
         case_use_this_item.coin_count_used += SubSolution::COIN_COUNT_ONE;
       }
 
@@ -155,10 +155,10 @@ private:
     return result;
   }
 
-  void get_goal_cell(type_i& i, type_j& j) const override {
+  void get_goal_cell(type_size& item_number, type_value& needed_value) const override {
      //The answer is in the last-calculated cell:
-     i = i_count_;
-     j = j_count_;
+     item_number = items_.size() + 1;
+     needed_value = needed_value_;
   }
 
   static uint match(const char ch_str, const char ch_pattern) {
