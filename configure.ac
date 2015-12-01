@@ -29,7 +29,7 @@ MM_PREREQ([0.9.5])
 AC_LANG([C++])
 MM_ARG_ENABLE_WARNINGS([PROJECT_WXXFLAGS],
                        [-Wall],
-                       [-pedantic -Wall -Wextra -Wsuggest-override -Wshadow -Wformat-security -Wno-missing-field-initializers -DGSEAL_ENABLE],
+                       [-pedantic -Wall -Wextra -Wsuggest-override -Wshadow -Wformat-security -Wno-missing-field-initializers -fsanitize=undefined -ftrapv -DGSEAL_ENABLE],
                        [G GDK GDK_PIXBUF GTK GDA GLIBMM GDKMM CAIROMM PANGOMM GTKMM SIGCXX LIBGDAMM])
 
 
