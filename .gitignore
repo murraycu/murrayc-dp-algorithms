@@ -48,12 +48,18 @@ Makefile.in
 /xmldocs.make
 
 /test-driver
-/test-suite.log
+/*.log
+/*.trs
 
 /murrayc_dp_make_change
-/murrayc_find_objects_in_image_with_disjoint_set
-/murrayc_greedy_make_change
-/murrayc_dependency_resolution
+/murrayc_dp_bottom_up_string_edit_distance
+/murrayc_dp_bottom_up_string_substring_matching
+/murrayc_dp_string_edit_distance
+/murrayc_dp_string_substring_matching
+/murrayc_dp_top_down_knapsack
+/murrayc_dp_top_down_make_change
+/murrayc_dp_top_down_string_edit_distance
+
 
 
 
