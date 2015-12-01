@@ -32,7 +32,7 @@ library_includedir = $(includedir)/libmurraycdp-1.0
 nobase_library_include_HEADERS = $(h_sources_public)
 
 
-bin_PROGRAMS = \
+check_PROGRAMS = \
   murrayc_dp_make_change \
   murrayc_dp_bottom_up_string_edit_distance \
   murrayc_dp_bottom_up_string_substring_matching \
@@ -40,7 +40,6 @@ bin_PROGRAMS = \
   murrayc_dp_top_down_make_change \
   murrayc_dp_top_down_knapsack
 
-check_PROGRAMS = $(bin_PROGRAMS)
 TESTS = $(check_PROGRAMS)
 
 #List of source files needed to build the executable:
