@@ -50,6 +50,9 @@ Makefile.in
 /test-driver
 /*.log
 /*.trs
+/examples/*.log
+/examples/*.trs
+
 
 /macros/libtool.m4
 /macros/ltoptions.m4
@@ -57,14 +60,14 @@ Makefile.in
 /macros/ltversion.m4
 /macros/lt~obsolete.m4
 
-/murrayc_dp_make_change
-/murrayc_dp_bottom_up_string_edit_distance
-/murrayc_dp_bottom_up_string_substring_matching
-/murrayc_dp_string_edit_distance
-/murrayc_dp_string_substring_matching
-/murrayc_dp_top_down_knapsack
-/murrayc_dp_top_down_make_change
-/murrayc_dp_top_down_string_edit_distance
+/examples/murrayc_dp_make_change
+/examples/murrayc_dp_bottom_up_string_edit_distance
+/examples/murrayc_dp_bottom_up_string_substring_matching
+/examples/murrayc_dp_string_edit_distance
+/examples/murrayc_dp_string_substring_matching
+/examples/murrayc_dp_top_down_knapsack
+/examples/murrayc_dp_top_down_make_change
+/examples/murrayc_dp_top_down_string_edit_distance
 
 
 
