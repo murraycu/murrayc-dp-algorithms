@@ -15,6 +15,7 @@
  */
 
 #include <cstdlib>
+#include <cassert>
 #include <string>
 #include <iostream>
 #include <vector>
@@ -189,6 +190,8 @@ int main() {
 
   std::cout << "Count of sub-problems calculated: " <<
     dp.count_cached_sub_problems() << std::endl;
+
+  assert(result.value == 83);
 
   return EXIT_SUCCESS;
 }

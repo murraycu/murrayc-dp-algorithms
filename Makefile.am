@@ -24,6 +24,9 @@ bin_PROGRAMS = \
   murrayc_dp_top_down_make_change \
   murrayc_dp_top_down_knapsack
 
+check_PROGRAMS = $(bin_PROGRAMS)
+TESTS = $(check_PROGRAMS)
+
 #List of source files needed to build the executable:
 
 murrayc_dp_make_change_SOURCES = \

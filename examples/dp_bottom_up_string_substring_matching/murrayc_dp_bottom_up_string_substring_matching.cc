@@ -15,6 +15,7 @@
  */
 
 #include <cstdlib>
+#include <cassert>
 #include <string>
 #include <iostream>
 #include <vector>
@@ -177,6 +178,8 @@ int main() {
     std::cout << Cost::get_operation_as_string(op) << ", ";
   }
   std::cout << std::endl;
+
+  assert(result.cost == 8);
   
   return EXIT_SUCCESS;
 }
