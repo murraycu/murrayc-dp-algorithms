@@ -70,9 +70,16 @@ private:
   type_subproblem calc_subproblem(type_size item_number, type_value needed_value, type_level level) const override {
     //indent(level);
     //std::cout << "calc_subproblem(): item_number = " << item_number << ", needed_value=" << needed_value << std::endl;
+    //const auto& item_value = items_[item_number - 1];
+    //indent(level);
+    //std::cout << "item value=" << item_value << std::endl;
+
     if(item_number < 1)
     {
-      std::cerr << "Unexpected item_number=0" << std::endl;
+      std::cerr << "Unexpected item_number=" << item_number << std::endl;
+      return SubSolution();
+    } else if (item_number > items_.size() + 1) {
+      std::cerr << "Unexpected item_number=" << item_number << std::endl;
       return SubSolution();
     }
 
@@ -142,6 +149,8 @@ private:
       }
     }
 
+    //indent(level);
+    //std::cout << "item_value=" << item_value << ", returning result: coin_count_used=" << result.coin_count_used << std::endl;
     return result;
   }
 
@@ -177,8 +186,8 @@ void print_vec(const std::vector<T>& vec)
 }
 
 int main() {
-  DpMakeChange::type_vec_coins coins{3, 50};
-  const DpMakeChange::type_value needed_value = 53;
+  DpMakeChange::type_vec_coins coins{3, 50, 2, 100, 52, 119, 15};
+  const DpMakeChange::type_value needed_value = 117;
 
   //Sort largest first:
   /*
