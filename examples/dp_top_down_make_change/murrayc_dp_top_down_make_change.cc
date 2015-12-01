@@ -91,18 +91,15 @@ private:
     const auto& item_value = items_[item_number - 1];
     //indent(level);
     //std::cout << "item_value=" << item_value << std::endl;
-  
-    /*
-      if(item_value == needed_value)
-      {
-        indent(level);
-        std::cout << "Taking item_value." << std::endl;
-        result = SubSolution(SubSolution::COIN_COUNT_ONE);
-        result.solution.emplace_back(item_value);
-      }
-    */
 
-    if(item_value > needed_value)
+    if(item_value == needed_value)
+    {
+      //indent(level);
+      //std::cout << "Taking item_value:" << item_value << std::endl;
+      result = SubSolution(SubSolution::COIN_COUNT_ONE);
+      result.solution.emplace_back(item_value);
+    }
+    else if(item_value > needed_value)
     {
       //indent(level);
       //std::cout << "Taking case_dont_use_this_item because item_value too big: " << item_value << std::endl;
