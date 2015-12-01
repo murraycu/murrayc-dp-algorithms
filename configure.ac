@@ -16,6 +16,11 @@ AC_PROG_CXX
 
 AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
 
+LT_PREREQ([2.2.6])
+LT_INIT([win32-dll])
+
+# http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
+AC_SUBST([LIBMURRAYDP_SO_VERSION], [0:0:0])
 
 PKG_CHECK_MODULES([PROJECT], [gdkmm-3.0])
 

@@ -16,6 +16,22 @@ AM_CXXFLAGS = $(PROJECT_WXXFLAGS)
 # TODO: Why do we still need to specify this for each executable that we build?
 COMMON_CXXFLAGS = $(PROJECT_CFLAGS) $(PROJECT_WXXFLAGS)
 
+h_sources_public = \
+  murraycdp/circular_vector.h \
+  murraycdp/dp_bottom_up_base.h \
+  murraycdp/dp_top_down_base.h
+
+cc_sources =
+
+lib_LTLIBRARIES = libmurraycdp-1.0.la
+libmurraycdp_1_0_la_SOURCES = $(cc_sources) $(h_sources_public)
+libmurraycdp_1_0_la_LDFLAGS = -no-undefined -version-info $(LIBMURRAYDP_SO_VERSION)
+#libmurraycdp-_1.0_la_LIBADD = $(LIBXMLXX_LIBS)
+
+library_includedir = $(includedir)/libmurraycdp-1.0/murraycdp
+nobase_library_include_HEADERS = $(h_sources_public)
+
+
 bin_PROGRAMS = \
   murrayc_dp_make_change \
   murrayc_dp_bottom_up_string_edit_distance \
