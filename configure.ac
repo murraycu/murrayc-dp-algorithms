@@ -19,6 +19,9 @@ AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
 LT_PREREQ([2.2.6])
 LT_INIT([win32-dll])
 
+MM_PREREQ([0.9.8])
+MM_INIT_MODULE([libmurraycdp-1.0])
+
 # http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
 AC_SUBST([LIBMURRAYDP_SO_VERSION], [0:0:0])
 
@@ -26,10 +29,6 @@ AC_SUBST([LIBMURRAYDP_SO_VERSION], [0:0:0])
 
 # See http://www.gnu.org/software/autoconf-archive/ax_boost_base.html
 #AX_BOOST_BASE
-
-# Allow use of mm-common macros for the warnings option.
-MM_PREREQ([0.9.5])
-#MM_INIT_MODULE([test-0-1])
 
 AC_LANG([C++])
 MM_ARG_ENABLE_WARNINGS([PROJECT_WXXFLAGS],

@@ -23,12 +23,12 @@ h_sources_public = \
 
 cc_sources =
 
-lib_LTLIBRARIES = libmurraycdp-1.0.la
-libmurraycdp_1_0_la_SOURCES = $(cc_sources) $(h_sources_public)
-libmurraycdp_1_0_la_LDFLAGS = -no-undefined -version-info $(LIBMURRAYDP_SO_VERSION)
-#libmurraycdp-_1.0_la_LIBADD = $(LIBXMLXX_LIBS)
+lib_LTLIBRARIES = libmurraycdp-@LIBMURRAYCDP_API_VERSION@.la
+libmurraycdp_@LIBMURRAYCDP_API_VERSION@_la_SOURCES = $(cc_sources) $(h_sources_public)
+libmurraycdp_@LIBMURRAYCDP_API_VERSION@_la_LDFLAGS = -no-undefined -version-info $(LIBMURRAYDP_SO_VERSION)
+#libmurraycdp-_@LIBMURRAYCDP_API_VERSION@_la_LIBADD = $(LIBXMLXX_LIBS)
 
-library_includedir = $(includedir)/libmurraycdp-1.0
+library_includedir = $(includedir)/$(LIBMURRAYCDP_MODULE_NAME)
 nobase_library_include_HEADERS = $(h_sources_public)
 
 
