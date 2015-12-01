@@ -33,7 +33,6 @@ nobase_library_include_HEADERS = $(h_sources_public)
 
 
 check_PROGRAMS = \
-  examples/murrayc_dp_make_change \
   examples/murrayc_dp_bottom_up_string_edit_distance \
   examples/murrayc_dp_bottom_up_string_substring_matching \
   examples/murrayc_dp_top_down_string_edit_distance \
@@ -43,13 +42,6 @@ check_PROGRAMS = \
 TESTS = $(check_PROGRAMS)
 
 #List of source files needed to build the executable:
-
-examples_murrayc_dp_make_change_SOURCES = \
-	examples/dp_make_change/murrayc_dp_make_change.cc
-examples_murrayc_dp_make_change_CXXFLAGS = \
-	$(COMMON_CXXFLAGS)
-examples_murrayc_dp_make_change_LDADD = \
-	$(PROJECT_LIBS)
 
 examples_murrayc_dp_bottom_up_string_edit_distance_SOURCES = \
 	examples/dp_bottom_up_string_edit_distance/murrayc_dp_bottom_up_string_edit_distance.cc
