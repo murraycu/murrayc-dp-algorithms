@@ -74,7 +74,7 @@ public:
 };
 
 class DpEditDistance
-  : public DpBottomUpBase<2 /* count of costs to keep, used in calc_cost() */, Cost> {
+  : public DpBottomUpBase<2 /* count of subproblems to keep, used in calc_subproblem() */, Cost> {
 public:
   DpEditDistance(const std::string& str, const std::string& pattern)
   : DpBottomUpBase(str.size() + 1, pattern.size() + 1),
@@ -85,7 +85,7 @@ public:
 private:
   using uint = Cost::uint;
 
-  type_cost calc_cost(uint i, uint j) const override {
+  type_subproblem calc_subproblem(uint i, uint j) const override {
     if (i == 0) {
       //Base case:
       return Cost(j * indel(' '), Cost::Operation::INSERT);
@@ -96,16 +96,16 @@ private:
       return Cost(i * indel(' '), Cost::Operation::DELETE);
     }
 
-    const type_costs& costs_i = costs_.get(0);
-    const type_costs& costs_i_minus_1 = costs_.get(-1);
+    const type_subproblems& subproblems_i = subproblems_.get(0);
+    const type_subproblems& subproblems_i_minus_1 = subproblems_.get(-1);
 
     //Get the cost of the possible operations, and choose the least costly:
     const auto char_str_i = str_[i - 1]; //i is 1-indexed, but the str is 0-indexed.
     const auto char_pattern_j = pattern_[j - 1]; //j is 1-indexed, but the pattern is 0-indexed.
 
-    const uint cost_match = costs_i_minus_1[j - 1].cost + match(char_str_i, char_pattern_j);
-    const uint cost_insert = costs_i[j - 1].cost + indel(char_pattern_j);
-    const uint cost_delete = costs_i_minus_1[j].cost + indel(char_str_i);
+    const uint cost_match = subproblems_i_minus_1[j - 1].cost + match(char_str_i, char_pattern_j);
+    const uint cost_insert = subproblems_i[j - 1].cost + indel(char_pattern_j);
+    const uint cost_delete = subproblems_i_minus_1[j].cost + indel(char_str_i);
     
     auto min = std::min(cost_match, cost_insert);
     min = std::min(min, cost_delete);
@@ -113,13 +113,13 @@ private:
     //Remember the path, based on what operation produced this minimum cost:
     Cost::type_path path;
     if (min == cost_match) {
-        path = costs_i_minus_1[j - 1].path;
+        path = subproblems_i_minus_1[j - 1].path;
         path.emplace_back(Cost::Operation::MATCH);
     } else if (min == cost_insert) {
-        path = costs_i[j - 1].path;
+        path = subproblems_i[j - 1].path;
         path.emplace_back(Cost::Operation::INSERT);
     } else if (min == cost_delete) {
-        path = costs_i_minus_1[j].path;
+        path = subproblems_i_minus_1[j].path;
         path.emplace_back(Cost::Operation::DELETE);
     } else {
       std::cerr << "Unexpected min." << std::endl;

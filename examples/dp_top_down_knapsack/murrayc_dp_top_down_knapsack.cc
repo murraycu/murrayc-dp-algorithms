@@ -90,13 +90,13 @@ public:
   {}
 
 private:
-  type_cost calc_cost(type_size items_count, type_weight weight_capacity, type_level level) const override {
+  type_subproblem calc_subproblem(type_size items_count, type_weight weight_capacity, type_level level) const override {
     if(items_count == 0) {
-      return type_cost(0); //0 items means 0 value for any maximum weight.
+      return type_subproblem(0); //0 items means 0 value for any maximum weight.
     }
 
     if(weight_capacity == 0) {
-      return type_cost(0); //0 max weight means 0 weight.
+      return type_subproblem(0); //0 max weight means 0 weight.
     }
 
     //std::cout << "  calc: i=" << items_count << ", w=" << weight_capacity << std::endl;
@@ -107,7 +107,7 @@ private:
     //try the previously-calculated lesser number of items,
     //and don't bother trying any other alternative:
     if(item.weight > weight_capacity) {
-      return get_cost(items_count - 1, weight_capacity, level);
+      return get_subproblem(items_count - 1, weight_capacity, level);
     }
 
 
@@ -117,7 +117,7 @@ private:
     //The value for same max weight with 1 less item.
     //This recurses, so it really tells us the max possible value across all of
     //the earlier items, for the same weight capacity.
-    const auto subproblem_1_less_item = get_cost(items_count - 1, weight_capacity, level);
+    const auto subproblem_1_less_item = get_subproblem(items_count - 1, weight_capacity, level);
 
     //Case 2: This item is in the optimal solution (and is the last item in it),
     //so the optimal solution's value is equal to the solution for 1 less item, with less capacity,
@@ -125,7 +125,7 @@ private:
     //
     //The value for the max weight minus the current item's weight, with 1 less item, plus the current item's value.
     auto subproblem_1_less_item_less_weight =
-      get_cost(items_count - 1, weight_capacity - item.weight, level);
+      get_subproblem(items_count - 1, weight_capacity - item.weight, level);
     subproblem_1_less_item_less_weight.value += item.value;
 
     if (subproblem_1_less_item.value > subproblem_1_less_item_less_weight.value) {

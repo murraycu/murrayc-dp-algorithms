@@ -67,9 +67,9 @@ public:
 
 private:
 
-  type_cost calc_cost(type_size item_number, type_value needed_value, type_level level) const override {
+  type_subproblem calc_subproblem(type_size item_number, type_value needed_value, type_level level) const override {
     //indent(level);
-    //std::cout << "calc_cost(): item_number = " << item_number << ", needed_value=" << needed_value << std::endl;
+    //std::cout << "calc_subproblem(): item_number = " << item_number << ", needed_value=" << needed_value << std::endl;
     if(item_number < 1)
     {
       std::cerr << "Unexpected item_number=0" << std::endl;
@@ -86,7 +86,7 @@ private:
     auto case_dont_use_this_item =
       (item_number == 1 ?
       SubSolution(SubSolution::COIN_COUNT_INFINITY) :
-      get_cost(item_number - 1, needed_value, level));
+      get_subproblem(item_number - 1, needed_value, level));
 
     const auto& item_value = items_[item_number - 1];
     //indent(level);
@@ -117,7 +117,7 @@ private:
       if(item_number != 1)
       {
         case_use_this_item =
-          get_cost(item_number - 1, needed_value - item_value, level);
+          get_subproblem(item_number - 1, needed_value - item_value, level);
         case_use_this_item.coin_count_used += SubSolution::COIN_COUNT_ONE;
       }
 
@@ -180,8 +180,8 @@ void print_vec(const std::vector<T>& vec)
 }
 
 int main() {
-  DpMakeChange::type_vec_coins coins{3, 50, 2, 100, 52, 119, 15};
-  const DpMakeChange::type_value needed_value = 117;
+  DpMakeChange::type_vec_coins coins{3, 50};
+  const DpMakeChange::type_value needed_value = 53;
 
   //Sort largest first:
   /*
