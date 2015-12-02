@@ -53,6 +53,8 @@ public:
   {}
   
   type_subproblem calc() {
+    //TODO: subproblems_.clear();
+
     for (unsigned int i = 0; i < i_count_; ++i) {
       type_subproblems& subproblems_i = subproblems_.get(0);
 
