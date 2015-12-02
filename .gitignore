@@ -53,12 +53,23 @@ Makefile.in
 /examples/*.log
 /examples/*.trs
 
-
 /macros/libtool.m4
 /macros/ltoptions.m4
 /macros/ltsugar.m4
 /macros/ltversion.m4
 /macros/lt~obsolete.m4
+
+# docs
+/docs/doc-install.pl
+/docs/doc-postprocess.pl
+/docs/doxygen.css
+/docs/doxygen-extra.css
+/docs/tagfile-to-devhelp2.xsl
+/docs/reference/Doxyfile
+/docs/reference/*.log
+/docs/reference/*.tag
+/docs/reference/*.devhelp2
+/docs/reference/html/
 
 /examples/murrayc_dp_make_change
 /examples/murrayc_dp_bottom_up_string_edit_distance
