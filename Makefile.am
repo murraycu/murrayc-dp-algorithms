@@ -8,7 +8,13 @@ ACLOCAL_AMFLAGS  = -I macros ${ACLOCAL_FLAGS}
 # of tools that change files not installed by the package itself
 DISTCHECK_CONFIGURE_FLAGS = --enable-warnings=fatal --disable-update-mime-database
 
-#SUBDIRS =
+if ENABLE_DOCUMENTATION
+doc_subdirs = docs
+else
+doc_subdirs =
+endif
+
+SUBDIRS = $(doc_subdirs)
 
 AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)
 AM_CXXFLAGS = $(PROJECT_WXXFLAGS)
@@ -16,12 +22,7 @@ AM_CXXFLAGS = $(PROJECT_WXXFLAGS)
 # TODO: Why do we still need to specify this for each executable that we build?
 COMMON_CXXFLAGS = $(PROJECT_CFLAGS) $(PROJECT_WXXFLAGS)
 
-h_sources_public = \
-  murraycdp/circular_vector.h \
-  murraycdp/dp_bottom_up_base.h \
-  murraycdp/dp_top_down_base.h
-
-cc_sources =
+include $(top_srcdir)/murraycdp/filelist.am
 
 lib_LTLIBRARIES = libmurraycdp-@LIBMURRAYCDP_API_VERSION@.la
 libmurraycdp_@LIBMURRAYCDP_API_VERSION@_la_SOURCES = $(cc_sources) $(h_sources_public)

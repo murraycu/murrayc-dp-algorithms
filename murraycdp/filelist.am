@@ -1,0 +1,8 @@
+## This file is part of murraycdp.
+
+h_sources_public = \
+  murraycdp/circular_vector.h \
+  murraycdp/dp_bottom_up_base.h \
+  murraycdp/dp_top_down_base.h
+
+cc_sources =

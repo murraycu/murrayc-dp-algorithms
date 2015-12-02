@@ -22,6 +22,14 @@ LT_INIT([win32-dll])
 MM_PREREQ([0.9.8])
 MM_INIT_MODULE([libmurraycdp-1.0])
 
+# Tell mm-common-prepare to copy the mm-common .pl scripts
+# and some other files into docs/, and use them from there,
+# so we can dist them to avoid a tarball-build dependency.
+MM_CONFIG_DOCTOOL_DIR([docs])
+
+MM_ARG_ENABLE_DOCUMENTATION
+#For instance: MM_ARG_WITH_TAGFILE_DOC([libstdc++.tag], [mm-common-libstdc++])
+
 # http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
 AC_SUBST([LIBMURRAYDP_SO_VERSION], [0:0:0])
 
@@ -37,6 +45,8 @@ MM_ARG_ENABLE_WARNINGS([PROJECT_WXXFLAGS],
                        [G GDK GDK_PIXBUF GTK GDA GLIBMM GDKMM CAIROMM PANGOMM GTKMM SIGCXX LIBGDAMM])
 
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile
+  docs/Makefile
+  docs/reference/Doxyfile])
 
 AC_OUTPUT
