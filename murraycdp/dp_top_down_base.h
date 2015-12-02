@@ -55,6 +55,8 @@ public:
   {}
   
   type_subproblem calc() {
+    subproblems_.clear();
+
     //We cannot do this to pass the output parameters to get_goal_cell():
     //  T_type_values... goal
     //but we can pass a std::tuple<> based on T_type_values... 
