@@ -96,30 +96,6 @@ public:
     }
   }
 
-protected:
-  void clear() {
-    subproblems_.clear();
-
-    subproblem_accesses_.clear();
-  }
-
-private:
-  enum class SubproblemAccess {
-    CALCULATED,
-    FROM_CACHE
-  };
-
-  static std::string get_string_for_subproblem_access(SubproblemAccess enumVal) {
-    switch (enumVal) {
-      case SubproblemAccess::CALCULATED:
-       return "calculated";
-      case SubproblemAccess::FROM_CACHE:
-       return "from-cache";
-      default:
-       return "unknown";
-    }
-  }
-
 public:
 
   /** Get the subproblem solution from the cache if it is in the cache,
@@ -150,6 +126,14 @@ public:
     return result;
   }
   
+protected:
+  static void indent(type_level level)
+  {
+    std::cout << "level: " << level;
+    for(type_level l = 0; l < level; ++l) {
+      std::cout << "  ";
+    }
+  }
 
 private:
   /** Calculate the subproblem solution.
@@ -198,16 +182,29 @@ private:
     return get_subproblem(level, std::get<Is>(goals)...);
   }
 
-protected:
-  static void indent(type_level level)
-  {
-    std::cout << "level: " << level;
-    for(type_level l = 0; l < level; ++l) {
-      std::cout << "  ";
+  void clear() {
+    subproblems_.clear();
+
+    subproblem_accesses_.clear();
+  }
+
+  enum class SubproblemAccess {
+    CALCULATED,
+    FROM_CACHE
+  };
+
+  static std::string get_string_for_subproblem_access(SubproblemAccess enumVal) {
+    switch (enumVal) {
+      case SubproblemAccess::CALCULATED:
+       return "calculated";
+      case SubproblemAccess::FROM_CACHE:
+       return "from-cache";
+      default:
+       return "unknown";
     }
   }
 
-protected:
+private:
 
   //Map of values to subproblems:
   using type_map_subproblems = std::unordered_map<type_values, type_subproblem, hash_tuple::hash<type_values>>;
