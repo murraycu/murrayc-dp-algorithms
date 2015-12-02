@@ -52,6 +52,12 @@ public:
     j_count_(j_count)
   {}
   
+  DpBottomUpBase(const DpBottomUpBase& src) = delete;
+  DpBottomUpBase& operator=(const DpBottomUpBase& src) = delete;
+
+  DpBottomUpBase(DpBottomUpBase&& src) = delete;
+  DpBottomUpBase& operator=(DpBottomUpBase&& src) = delete;
+
   type_subproblem calc() {
     //TODO: subproblems_.clear();
 

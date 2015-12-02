@@ -53,7 +53,13 @@ public:
   DpTopDownBase(T_value_types... value_counts)
   : value_counts_(value_counts...)
   {}
-  
+
+  DpTopDownBase(const DpTopDownBase& src) = delete;
+  DpTopDownBase& operator=(const DpTopDownBase& src) = delete;
+
+  DpTopDownBase(DpTopDownBase&& src) = delete;
+  DpTopDownBase& operator=(DpTopDownBase&& src) = delete;
+
   type_subproblem calc() {
     subproblems_.clear();
 
