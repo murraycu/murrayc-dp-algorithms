@@ -85,14 +85,16 @@ public:
   }
 
   void print_subproblem_sequence() const {
+    std::size_t i = 0;
     for (const auto subproblem_access : subproblem_accesses_) {
-       std::cout <<
-         get_string_for_subproblem_access(subproblem_access.second) << ": ";
+       std::cout << i << ", " <<
+         get_string_for_subproblem_access(subproblem_access.second) << ", ";
 
        TuplePrinter<type_values, sizeof...(T_value_types)>::print(
          subproblem_access.first);
 
        std::cout << std::endl;
+       ++i;
     }
   }
 
