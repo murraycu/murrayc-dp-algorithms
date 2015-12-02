@@ -191,6 +191,8 @@ int main() {
   std::cout << "Count of sub-problems calculated: " <<
     dp.count_cached_sub_problems() << std::endl;
 
+  //Uncomment to show the sequence: dp.print_subproblem_sequence();
+
   assert(result.value == 83);
 
   return EXIT_SUCCESS;

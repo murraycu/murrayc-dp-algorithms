@@ -3,6 +3,8 @@
 h_sources_public = \
   murraycdp/circular_vector.h \
   murraycdp/dp_bottom_up_base.h \
-  murraycdp/dp_top_down_base.h
+  murraycdp/dp_top_down_base.h \
+  murraycdp/tuple_hash.h \
+  murraycdp/tuple_printer.h
 
 cc_sources =

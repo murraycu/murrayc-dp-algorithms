@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include <list>
 #include <vector>
 #include <iomanip>
 #include <limits>
@@ -27,6 +28,7 @@
 #include <tuple>
 #include <utility>
 #include <murraycdp/tuple_hash.h>
+#include <murraycdp/tuple_printer.h>
 
 
 //#define MURRAYC_DP_DEBUG_OUTPUT = 1;
@@ -61,7 +63,7 @@ public:
   DpTopDownBase& operator=(DpTopDownBase&& src) = delete;
 
   type_subproblem calc() {
-    subproblems_.clear();
+    clear();
 
     //We cannot do this to pass the output parameters to get_goal_cell():
     //  T_type_values... goal
@@ -82,7 +84,44 @@ public:
     return subproblems_.size();
   }
 
+  void print_subproblem_sequence() const {
+    for (const auto subproblem_access : subproblem_accesses_) {
+       std::cout <<
+         get_string_for_subproblem_access(subproblem_access.second) << ": ";
+
+       TuplePrinter<type_values, sizeof...(T_value_types)>::print(
+         subproblem_access.first);
+
+       std::cout << std::endl;
+    }
+  }
+
 protected:
+  void clear() {
+    subproblems_.clear();
+
+    subproblem_accesses_.clear();
+  }
+
+private:
+  enum class SubproblemAccess {
+    CALCULATED,
+    FROM_CACHE
+  };
+
+  static std::string get_string_for_subproblem_access(SubproblemAccess enumVal) {
+    switch (enumVal) {
+      case SubproblemAccess::CALCULATED:
+       return "calculated";
+      case SubproblemAccess::FROM_CACHE:
+       return "from-cache";
+      default:
+       return "unknown";
+    }
+  }
+
+public:
+
   /** Get the subproblem solution from the cache if it is in the cache,
    * or call calc_subproblem() and put it in the cache, then return it.
    *
@@ -90,7 +129,10 @@ protected:
    */
   type_subproblem get_subproblem(type_level level, T_value_types... values) const {
     type_subproblem result;
-    if (!get_cached_subproblem(result, values...)) {
+    if (get_cached_subproblem(result, values...)) {
+      subproblem_accesses_.emplace_back(
+        type_values(values...), SubproblemAccess::FROM_CACHE);
+    } else {
 #if defined MURRAYC_DP_DEBUG_OUTPUT
       indent(level);
       std::cout << "DpTopDownBase::get_subproblem(): i=" << i << ", j=" << j << std::endl;
@@ -100,6 +142,9 @@ protected:
 
       const type_values key(values...);
       subproblems_[key] = result;
+
+      subproblem_accesses_.emplace_back(
+        type_values(values...), SubproblemAccess::CALCULATED);
     }
 
     return result;
@@ -169,6 +214,10 @@ protected:
   mutable type_map_subproblems subproblems_;
 
   type_values value_counts_;
+
+  //Keep a record of the order in which each subproblem was calculated:
+  using type_subproblem_access = std::pair<type_values, SubproblemAccess>;
+  mutable std::list<type_subproblem_access> subproblem_accesses_;
 };
 
 #endif //MURRAYCDP_DP_BOTTOM_UP_BASE_H
