@@ -26,7 +26,7 @@
 #include <limits>
 #include <unordered_map>
 #include <tuple>
-#include <utility>
+#include <murraycdp/dp_base.h>
 #include <murraycdp/tuple_hash.h>
 #include <murraycdp/tuple_printer.h>
 
@@ -41,8 +41,9 @@
  * or a custom class containing a value and a partial path.
  */
 template <typename T_subproblem, typename... T_value_types>
-class DpTopDownBase {
+class DpTopDownBase : public DpBase<T_subproblem, T_value_types...> {
 public:
+  using type_base = DpBase<T_subproblem, T_value_types...>;
   using type_subproblem = T_subproblem;
   using type_level = unsigned int;
   
@@ -53,7 +54,7 @@ public:
    * @pram The number of j values to calculate the subproblem for.
    */
   DpTopDownBase(T_value_types... value_counts)
-  : value_counts_(value_counts...)
+  : DpBase<T_subproblem, T_value_types...>(value_counts...)
   {}
 
   DpTopDownBase(const DpTopDownBase& src) = delete;
@@ -62,7 +63,7 @@ public:
   DpTopDownBase(DpTopDownBase&& src) = delete;
   DpTopDownBase& operator=(DpTopDownBase&& src) = delete;
 
-  type_subproblem calc() {
+  type_subproblem calc() override {
     clear();
 
     //We cannot do this to pass the output parameters to get_goal_cell():
@@ -71,12 +72,12 @@ public:
     //and that will then be passed as individual parameters when we unpack it
     //via std::index_sequence.
     type_values goals;
-    get_goal_cell_call_with_tuple(goals,
+    this->get_goal_cell_call_with_tuple(goals,
       std::index_sequence_for<T_value_types...>());
     //std::cout << "calc: " << std::get<0>(goals) << std::endl;
 
     type_level level = 0;
-    return get_subproblem_call_with_tuple(level, goals,
+    return this->get_subproblem_call_with_tuple(level, goals,
       std::index_sequence_for<T_value_types...>());
   }
 
@@ -116,7 +117,7 @@ public:
       std::cout << "DpTopDownBase::get_subproblem(): i=" << i << ", j=" << j << std::endl;
 #endif //MURRAYC_DP_DEBUG_OUTPUT
       ++level;
-      result = calc_subproblem(level, values...);
+      result = this->calc_subproblem(level, values...);
 
       const type_values key(values...);
       subproblems_[key] = result;
@@ -138,19 +139,6 @@ protected:
   }
 
 private:
-  /** Calculate the subproblem solution.
-   * This will only be called when the subproblem solution has not yet been calculated.
-   * The implementation dos not need to check any cache first,
-   * and does not need to store the result in any cache.
-   *
-   * Implementations should call get_subproblem() to get related sub-problem results.
-   */
-  virtual type_subproblem calc_subproblem(type_level level, T_value_types... values) const = 0;
-
-  /** Get the cell whose value contains the solution.
-   */
-  virtual void get_goal_cell(T_value_types&... values) const = 0;
-  
   /** Gets the already-calculated subproblem solution, if any.
    * @result true if the subproblem solution was in the cache.
    */
@@ -166,22 +154,6 @@ private:
     //std::cout << "get_cached_subproblem(): returning cache for i=" << i << ", j=" << j << std::endl;
     subproblem = iter->second;
     return true;
-  }
-  
-  /// Call get_goal_cell(a, b, c, d) with std::tuple<a, b, c, d>
-  template<std::size_t... Is>
-  void get_goal_cell_call_with_tuple(
-    type_values& goals,
-    std::index_sequence<Is...>) {
-    get_goal_cell(std::get<Is>(goals)...);
-  }
-  
-  /// Call get_subproblem(level, a, b, c, d) with std::tuple<a, b, c, d>
-  template<std::size_t... Is>
-  type_subproblem get_subproblem_call_with_tuple(type_level level,
-    const type_values& goals,
-    std::index_sequence<Is...>) {
-    return get_subproblem(level, std::get<Is>(goals)...);
   }
 
   void clear() {
@@ -204,6 +176,14 @@ private:
       default:
        return "unknown";
     }
+  }
+
+  /// Call get_subproblem(level, a, b, c, d) with std::tuple<a, b, c, d>
+  template<std::size_t... Is>
+  type_subproblem get_subproblem_call_with_tuple(typename type_base::type_level level,
+    const typename type_base::type_values& goals,
+    std::index_sequence<Is...>) {
+    return get_subproblem(level, std::get<Is>(goals)...);
   }
 
 private:

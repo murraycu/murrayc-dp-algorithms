@@ -24,6 +24,7 @@
 #include <iomanip>
 #include <limits>
 
+#include <murraycdp/dp_base.h>
 #include <murraycdp/circular_vector.h>
 
 #define MURRAYC_DP_DEBUG_OUTPUT = 1;
@@ -36,18 +37,21 @@
  * @tparam T_subproblem The type of the subproblem solution, such as unsigned int,
  * or a custom class containing a value and a partial path.
  */
-template <unsigned int T_COUNT_SUBPROBLEMS_TO_KEEP, typename T_subproblem>
-class DpBottomUpBase {
+template <unsigned int T_COUNT_SUBPROBLEMS_TO_KEEP,
+  typename T_subproblem, typename... T_value_types>
+class DpBottomUpBase : public DpBase<T_subproblem, T_value_types...> {
 public:
   using type_subproblem = T_subproblem;
   using type_subproblems = std::vector<T_subproblem>;
+  using type_base = DpBase<T_subproblem, T_value_types...>;
 
   /**
    * @param The number of i values to calculate the subproblem for.
    * @pram The number of j values to calculate the subproblem for.
    */
   DpBottomUpBase(unsigned int i_count, unsigned int j_count)
-  : subproblems_(T_COUNT_SUBPROBLEMS_TO_KEEP, type_subproblems(j_count)),
+  : type_base(i_count, j_count),
+    subproblems_(T_COUNT_SUBPROBLEMS_TO_KEEP, type_subproblems(j_count)),
     i_count_(i_count),
     j_count_(j_count)
   {}
@@ -58,8 +62,10 @@ public:
   DpBottomUpBase(DpBottomUpBase&& src) = delete;
   DpBottomUpBase& operator=(DpBottomUpBase&& src) = delete;
 
-  type_subproblem calc() {
+  type_subproblem calc() override {
     //TODO: subproblems_.clear();
+
+    typename type_base::type_level level = 0; //unused
 
     for (unsigned int i = 0; i < i_count_; ++i) {
       type_subproblems& subproblems_i = subproblems_.get(0);
@@ -69,7 +75,7 @@ public:
 #endif
 
       for (unsigned int j = 0; j < j_count_; ++j) {
-        subproblems_i[j] = calc_subproblem(i, j);
+        subproblems_i[j] = this->calc_subproblem(level, i, j);
 
 #if defined(MURRAYC_DP_DEBUG_OUTPUT)
         if (j != 0) {
@@ -90,19 +96,12 @@ public:
 
     unsigned int goal_i = 0;
     unsigned int goal_j = 0;
-    get_goal_cell(goal_i, goal_j);
+    this->get_goal_cell(goal_i, goal_j);
     //std::cout << "goal_i=" << goal_i << ", goal_j=" << goal_j << std::endl;
 
     const type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(goal_i);
     return subproblems_i[goal_j];
   }
-
-private:
-  virtual type_subproblem calc_subproblem(unsigned int i, unsigned int j) const = 0;
-
-  /** Get the cell whose value contains the solution.
-   */
-  virtual void get_goal_cell(unsigned int& i, unsigned int& j) const = 0;
 
 protected:
   using type_vec_subproblems = circular_vector<type_subproblems>;

@@ -75,7 +75,8 @@ public:
 };
 
 class DpEditDistance
-  : public DpBottomUpBase<2 /* count of subproblems to keep, used in calc_subproblem() */, Cost> {
+  : public DpBottomUpBase<2 /* count of subproblems to keep, used in calc_subproblem() */,
+      Cost, uint, uint> {
 public:
   DpEditDistance(const std::string& str, const std::string& pattern)
   : DpBottomUpBase(str.size() + 1, pattern.size() + 1),
@@ -86,7 +87,7 @@ public:
 private:
   using uint = Cost::uint;
 
-  type_subproblem calc_subproblem(uint i, uint j) const override {
+  type_subproblem calc_subproblem(type_base::type_level /* level */, uint i, uint j) const override {
     if (i == 0) {
       //Base case:
       return Cost(j * indel(' '), Cost::Operation::INSERT);

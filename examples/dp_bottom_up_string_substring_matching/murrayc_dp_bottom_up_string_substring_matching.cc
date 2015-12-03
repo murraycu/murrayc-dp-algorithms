@@ -75,7 +75,8 @@ public:
 };
 
 class DpSubstringMatching
-  : public DpBottomUpBase<2 /* cost to keep, used in calc_subproblem() */, Cost> {
+  : public DpBottomUpBase<2 /* cost to keep, used in calc_subproblem() */,
+      Cost, uint, uint> {
 public:
   DpSubstringMatching(const std::string& str, const std::string& pattern)
   : DpBottomUpBase(str.size() + 1, pattern.size() + 1),
@@ -84,7 +85,7 @@ public:
   {}
 
 private:
-  type_subproblem calc_subproblem(uint i, uint j) const override {
+  type_subproblem calc_subproblem(type_level /* level */, uint i, uint j) const override {
     if (i == 0) {
       //Base case:
       return Cost(0, Cost::Operation::INVALID);
