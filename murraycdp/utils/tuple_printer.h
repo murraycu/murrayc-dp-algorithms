@@ -18,6 +18,7 @@
 #define _MURRAYCDP_TUPLE_PRINTER_H
 
 namespace murraycdp {
+namespace utils {
 
 // Based on example code from here:
 // http://en.cppreference.com/w/cpp/utility/tuple/tuple_cat
@@ -42,6 +43,7 @@ public:
 };
 /// @endcond DOXYGEN_HIDDEN_SYMBOLS
 
+} //namespace utils
 } //namespace murraycdp
 
 #endif //_MURRAYCDP_TUPLE_PRINTER_H

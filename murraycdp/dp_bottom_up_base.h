@@ -45,7 +45,7 @@ template <unsigned int T_COUNT_SUBPROBLEMS_TO_KEEP,
 class DpBottomUpBase : public DpBase<T_subproblem, T_value_types...> {
 public:
   using type_subproblem = T_subproblem;
-  using type_subproblems = typename vector_of_vectors<T_subproblem, 0>::type;
+  using type_subproblems = typename utils::vector_of_vectors<T_subproblem, 0>::type;
   using type_base = DpBase<T_subproblem, T_value_types...>;
 
   /**
@@ -59,7 +59,7 @@ public:
   {
     subproblems_.foreach(
       [j_count] (type_subproblems& item) {
-        resize_vector_of_vectors(item, j_count);
+        utils::resize_vector_of_vectors(item, j_count);
       }
     );
   }
@@ -81,7 +81,7 @@ public:
 #endif
 
       type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
-      for_vector_of_vectors(subproblems_i,
+      utils::for_vector_of_vectors(subproblems_i,
         [this, level, i] (unsigned int j) {
           const auto subproblem = this->calc_subproblem(level, i, j);
           this->set_subproblem(subproblem, i, j);
@@ -124,7 +124,7 @@ private:
   }
 
 protected:
-  using type_vec_subproblems = circular_vector<type_subproblems>;
+  using type_vec_subproblems = utils::circular_vector<type_subproblems>;
   type_vec_subproblems subproblems_;
   uint i_count_;
   uint j_count_;

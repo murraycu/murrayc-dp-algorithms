@@ -92,7 +92,7 @@ public:
        std::cout << i << ", " <<
          get_string_for_subproblem_access(subproblem_access.second) << ", ";
 
-       TuplePrinter<type_values, sizeof...(T_value_types)>::print(
+       utils::TuplePrinter<type_values, sizeof...(T_value_types)>::print(
          subproblem_access.first);
 
        std::cout << std::endl;
@@ -190,7 +190,7 @@ private:
 private:
 
   //Map of values to subproblems:
-  using type_map_subproblems = std::unordered_map<type_values, type_subproblem, hash_tuple::hash<type_values>>;
+  using type_map_subproblems = std::unordered_map<type_values, type_subproblem, utils::hash_tuple::hash<type_values>>;
   mutable type_map_subproblems subproblems_;
 
   //Keep a record of the order in which each subproblem was calculated:

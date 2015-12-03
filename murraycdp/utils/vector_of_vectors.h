@@ -22,6 +22,7 @@
 #include <tuple>
 
 namespace murraycdp {
+namespace utils{
 
 /**
  * A type trait for nested std::vectors.
@@ -184,6 +185,7 @@ void for_vector_of_vectors(std::vector<std::vector<T>>& vector, T_function f, T_
   }
 }
 
+} //namespace utils
 } //namespace murraycdp
 
 #endif //__MURRAYCDP_VECTOR_OF_VECTORS_H

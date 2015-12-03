@@ -20,6 +20,7 @@
 #include <vector>
 
 namespace murraycdp {
+namespace utils {
 
 template <typename T>
 class circular_vector {
@@ -120,6 +121,7 @@ class circular_vector {
     std::vector<T> vec_;
 };
 
+} //namespace utils
 } //namespace murraycdp
 
 #endif //MURRAYCDP_CIRCULAR_VECTOR_H
