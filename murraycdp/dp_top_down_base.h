@@ -20,7 +20,6 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
-#include <list>
 #include <vector>
 #include <iomanip>
 #include <limits>
@@ -28,7 +27,6 @@
 #include <tuple>
 #include <murraycdp/dp_base.h>
 #include <murraycdp/utils/tuple_hash.h>
-#include <murraycdp/utils/tuple_printer.h>
 
 namespace murraycdp {
 
@@ -69,7 +67,7 @@ public:
 
     //We cannot do this to pass the output parameters to get_goal_cell():
     //  T_type_values... goal
-    //but we can pass a std::tuple<> based on T_type_values... 
+    //but we can pass a std::tuple<> based on T_type_values...
     //and that will then be passed as individual parameters when we unpack it
     //via std::index_sequence.
     type_values goals;
@@ -85,51 +83,7 @@ public:
   unsigned int count_cached_sub_problems() const {
     return subproblems_.size();
   }
-
-  void print_subproblem_sequence() const {
-    std::size_t i = 0;
-    for (const auto subproblem_access : subproblem_accesses_) {
-       std::cout << i << ", " <<
-         get_string_for_subproblem_access(subproblem_access.second) << ", ";
-
-       utils::TuplePrinter<type_values, sizeof...(T_value_types)>::print(
-         subproblem_access.first);
-
-       std::cout << std::endl;
-       ++i;
-    }
-  }
-
-public:
-
-  /** Get the subproblem solution from the cache if it is in the cache,
-   * or call calc_subproblem() and put it in the cache, then return it.
-   *
-   * See calc_subproblem().
-   */
-  type_subproblem get_subproblem(type_level level, T_value_types... values) const {
-    type_subproblem result;
-    if (get_cached_subproblem(result, values...)) {
-      subproblem_accesses_.emplace_back(
-        type_values(values...), SubproblemAccess::FROM_CACHE);
-    } else {
-#if defined MURRAYC_DP_DEBUG_OUTPUT
-      indent(level);
-      std::cout << "DpTopDownBase::get_subproblem(): i=" << i << ", j=" << j << std::endl;
-#endif //MURRAYC_DP_DEBUG_OUTPUT
-      ++level;
-      result = this->calc_subproblem(level, values...);
-
-      const type_values key(values...);
-      subproblems_[key] = result;
-
-      subproblem_accesses_.emplace_back(
-        type_values(values...), SubproblemAccess::CALCULATED);
-    }
-
-    return result;
-  }
-  
+ 
 protected:
   static void indent(type_level level)
   {
@@ -143,7 +97,7 @@ private:
   /** Gets the already-calculated subproblem solution, if any.
    * @result true if the subproblem solution was in the cache.
    */
-  bool get_cached_subproblem(type_subproblem& subproblem, T_value_types... values) const {
+  bool get_cached_subproblem(type_subproblem& subproblem, T_value_types... values) const override {
     //std::cout << "get_cached_subproblem(): i=" << i << ", j=" << j << std::endl;
     const type_values key(values...);
     const auto iter = subproblems_.find(key);
@@ -157,45 +111,20 @@ private:
     return true;
   }
 
-  void clear() {
+  void set_subproblem(const type_subproblem& subproblem, T_value_types... values) const override {
+    const type_values key(values...);
+    subproblems_[key] = subproblem;
+  }
+
+  void clear() override {
+    type_base::clear();
     subproblems_.clear();
-
-    subproblem_accesses_.clear();
-  }
-
-  enum class SubproblemAccess {
-    CALCULATED,
-    FROM_CACHE
-  };
-
-  static std::string get_string_for_subproblem_access(SubproblemAccess enumVal) {
-    switch (enumVal) {
-      case SubproblemAccess::CALCULATED:
-       return "calculated";
-      case SubproblemAccess::FROM_CACHE:
-       return "from-cache";
-      default:
-       return "unknown";
-    }
-  }
-
-  /// Call get_subproblem(level, a, b, c, d) with std::tuple<a, b, c, d>
-  template<std::size_t... Is>
-  type_subproblem get_subproblem_call_with_tuple(typename type_base::type_level level,
-    const typename type_base::type_values& goals,
-    std::index_sequence<Is...>) {
-    return get_subproblem(level, std::get<Is>(goals)...);
   }
 
 private:
-
   //Map of values to subproblems:
   using type_map_subproblems = std::unordered_map<type_values, type_subproblem, utils::hash_tuple::hash<type_values>>;
   mutable type_map_subproblems subproblems_;
-
-  //Keep a record of the order in which each subproblem was calculated:
-  using type_subproblem_access = std::pair<type_values, SubproblemAccess>;
-  mutable std::list<type_subproblem_access> subproblem_accesses_;
 };
 
 } //namespace murraycdp

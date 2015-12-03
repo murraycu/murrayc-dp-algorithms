@@ -119,10 +119,27 @@ public:
   }
 
 private:
-  //TODO: void set_subproblem(T_value_types... values) {
-  void set_subproblem(const type_subproblem& subproblem, unsigned int i, unsigned int j) {
+  /** Gets the already-calculated subproblem solution, if any.
+   * @result true if the subproblem solution was in the cache.
+   */
+  bool get_cached_subproblem(type_subproblem& subproblem, T_value_types... values) const override {
+    //std::cout << "get_cached_subproblem(): i=" << i << ", j=" << j << std::endl;
+
+    const unsigned int i = std::get<0>(type_values(values...)); //TODO
+    const unsigned int j = std::get<1>(type_values(values...)); //TODO
+    const type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
+    subproblem = subproblems_i[j];
+
+    //std::cout << "get_cached_subproblem(): returning cache for i=" << i << ", j=" << j << std::endl;
+
+    return true; //TODO: Detect whether it has been calculated?
+  }
+
+  void set_subproblem(const type_subproblem& subproblem, T_value_types... values) const override {
     //TODO: Performance: Avoid repeated calls to get_at_offset_from_start(),
     //while still keeping the code generic:
+    const unsigned int i = std::get<0>(type_values(values...)); //TODO
+    const unsigned int j = std::get<1>(type_values(values...)); //TODO
     type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
     subproblems_i[j] = subproblem;
   }
@@ -145,7 +162,7 @@ private:
 
 protected:
   using type_vec_subproblems = utils::circular_vector<type_subproblems>;
-  type_vec_subproblems subproblems_;
+  mutable type_vec_subproblems subproblems_;
   type_values value_counts_;
 };
 
