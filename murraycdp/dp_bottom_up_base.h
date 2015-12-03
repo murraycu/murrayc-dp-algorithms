@@ -74,20 +74,19 @@ public:
     typename type_base::type_level level = 0; //unused
 
     for (unsigned int i = 0; i < i_count_; ++i) {
-      type_subproblems& subproblems_i = subproblems_.get(0);
-
 #if defined(MURRAYC_DP_DEBUG_OUTPUT)
       std::cout << "i=" << std::setw(2) << i << ": ";
 #endif
 
       for (unsigned int j = 0; j < j_count_; ++j) {
-        subproblems_i[j] = this->calc_subproblem(level, i, j);
+        const auto subproblem = this->calc_subproblem(level, i, j);
+        set_subproblem(subproblem, i, j);
 
 #if defined(MURRAYC_DP_DEBUG_OUTPUT)
         if (j != 0) {
           std::cout << ", ";
         }
-        std::cout << std::setw(2) << subproblems_i[j].cost;
+        std::cout << std::setw(2) << subproblem.cost;
 #endif
       }
 
@@ -107,6 +106,15 @@ public:
 
     const type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(goal_i);
     return subproblems_i[goal_j];
+  }
+
+private:
+  //TODO: void set_subproblem(T_value_types... values) {
+  void set_subproblem(const type_subproblem& subproblem, unsigned int i, unsigned int j) {
+    //TODO: Performance: Avoid repeated calls to get_at_offset_from_start(),
+    //while still keeping the code generic:
+    type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
+    subproblems_i[j] = subproblem;
   }
 
 protected:
