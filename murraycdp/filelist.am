@@ -7,6 +7,7 @@ h_sources_public = \
   murraycdp/utils/circular_vector.h \
   murraycdp/utils/tuple_cdr.h \
   murraycdp/utils/tuple_hash.h \
+  murraycdp/utils/tuple_interlace.h \
   murraycdp/utils/tuple_printer.h \
   murraycdp/utils/vector_of_vectors.h
 

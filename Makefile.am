@@ -40,7 +40,8 @@ check_PROGRAMS = \
   examples/murrayc_dp_top_down_make_change \
   examples/murrayc_dp_top_down_knapsack \
   tests/test_vector_of_vectors \
-  tests/test_tuple_cdr
+  tests/test_tuple_cdr \
+  tests/test_tuple_interlace
 
 TESTS = $(check_PROGRAMS)
 
@@ -93,6 +94,13 @@ tests_test_tuple_cdr_SOURCES = \
 tests_test_tuple_cdr_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 tests_test_tuple_cdr_LDADD = \
+	$(PROJECT_LIBS)
+
+tests_test_tuple_interlace_SOURCES = \
+	tests/test_tuple_interlace.cc
+tests_test_tuple_interlace_CXXFLAGS = \
+	$(COMMON_CXXFLAGS)
+tests_test_tuple_interlace_LDADD = \
 	$(PROJECT_LIBS)
 
 
