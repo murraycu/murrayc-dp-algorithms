@@ -129,12 +129,16 @@ private:
    * @result true if the subproblem solution was in the cache.
    */
   bool get_cached_subproblem(type_subproblem& subproblem, T_value_types... values) const override {
-    //std::cout << "get_cached_subproblem(): i=" << i << ", j=" << j << std::endl;
+    const std::tuple<T_value_types...> values_tuple(values...);
 
-    const unsigned int i = std::get<0>(type_values(values...)); //TODO
-    const unsigned int j = std::get<1>(type_values(values...)); //TODO
+    const auto i = std::get<0>(values_tuple);
     const type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
-    subproblem = subproblems_i[j];
+    
+    const auto values_without_i = utils::cdr(values_tuple);
+    constexpr std::size_t tuple_size =
+      std::tuple_size<decltype(values_without_i)>::value;
+    subproblem = call_get_at_sub_vectors_with_tuple(subproblems_i, values_without_i,
+      std::make_index_sequence<tuple_size>());
 
     //std::cout << "get_cached_subproblem(): returning cache for i=" << i << ", j=" << j << std::endl;
 
@@ -143,11 +147,17 @@ private:
 
   void set_subproblem(const type_subproblem& subproblem, T_value_types... values) const override {
     //TODO: Performance: Avoid repeated calls to get_at_offset_from_start(),
-    //while still keeping the code generic:
-    const unsigned int i = std::get<0>(type_values(values...)); //TODO
-    const unsigned int j = std::get<1>(type_values(values...)); //TODO
+    //while still keeping the code generic.
+    
+    const std::tuple<T_value_types...> values_tuple(values...);
+    const auto i = std::get<0>(values_tuple);
     type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
-    subproblems_i[j] = subproblem;
+
+    const auto values_without_i = utils::cdr(values_tuple);
+    constexpr std::size_t tuple_size =
+      std::tuple_size<decltype(values_without_i)>::value;
+    call_get_at_sub_vectors_with_tuple(subproblems_i, values_without_i,
+      std::make_index_sequence<tuple_size>()) = subproblem;
   }
 
   template<typename... T_sizes>
@@ -166,10 +176,28 @@ private:
     resize_sub_vectors(std::get<Is>(tuple)...);
   }
 
+  template<typename T_vector, typename T_tuple, std::size_t... Is>
+  type_subproblem& call_get_at_sub_vectors_with_tuple(
+    T_vector& vector,
+    const T_tuple& tuple,
+    std::index_sequence<Is...>) const {
+    return murraycdp::utils::get_at_vector_of_vectors<type_subproblem>(vector,
+      std::get<Is>(tuple)...);
+  }
+
+  template<typename T_vector, typename T_tuple, std::size_t... Is>
+  const type_subproblem& call_get_at_sub_vectors_with_tuple(
+    const T_vector& vector,
+    const T_tuple& tuple,
+    std::index_sequence<Is...>) const {
+    return murraycdp::utils::get_at_vector_of_vectors<type_subproblem>(vector,
+      std::get<Is>(tuple)...);
+  }
+
 protected:
   using type_vec_subproblems = utils::circular_vector<type_subproblems>;
   mutable type_vec_subproblems subproblems_;
-  type_values value_counts_;
+  const type_values value_counts_;
 };
 
 } //namespace murraycdp
