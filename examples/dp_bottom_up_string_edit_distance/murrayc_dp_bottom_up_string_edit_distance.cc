@@ -132,8 +132,8 @@ private:
 
   void get_goal_cell(unsigned int& i, unsigned int& j) const override {
      //The answer is in the last-calculated cell:
-     i = i_count_ - 1;
-     j = j_count_ - 1;
+     i = str_.size();
+     j = pattern_.size();
   }
 
   static uint match(const char ch_str, const char ch_pattern) {

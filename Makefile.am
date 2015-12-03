@@ -39,7 +39,8 @@ check_PROGRAMS = \
   examples/murrayc_dp_top_down_string_edit_distance \
   examples/murrayc_dp_top_down_make_change \
   examples/murrayc_dp_top_down_knapsack \
-  tests/test_vector_of_vectors
+  tests/test_vector_of_vectors \
+  tests/test_tuple_cdr
 
 TESTS = $(check_PROGRAMS)
 
@@ -85,6 +86,13 @@ tests_test_vector_of_vectors_SOURCES = \
 tests_test_vector_of_vectors_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 tests_test_vector_of_vectors_LDADD = \
+	$(PROJECT_LIBS)
+
+tests_test_tuple_cdr_SOURCES = \
+	tests/test_tuple_cdr.cc
+tests_test_tuple_cdr_CXXFLAGS = \
+	$(COMMON_CXXFLAGS)
+tests_test_tuple_cdr_LDADD = \
 	$(PROJECT_LIBS)
 
 

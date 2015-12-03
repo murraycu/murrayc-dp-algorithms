@@ -27,6 +27,7 @@
 #include <murraycdp/dp_base.h>
 #include <murraycdp/utils/circular_vector.h>
 #include <murraycdp/utils/vector_of_vectors.h>
+#include <murraycdp/utils/tuple_cdr.h>
 
 namespace murraycdp {
 
@@ -47,21 +48,22 @@ public:
   using type_subproblem = T_subproblem;
   using type_subproblems = typename utils::vector_of_vectors<T_subproblem, 0>::type;
   using type_base = DpBase<T_subproblem, T_value_types...>;
+  using type_values = typename type_base::type_values;
 
   /**
    * @param The number of i values to calculate the subproblem for.
    * @pram The number of j values to calculate the subproblem for.
    */
-  DpBottomUpBase(unsigned int i_count, unsigned int j_count)
-  : subproblems_(T_COUNT_SUBPROBLEMS_TO_KEEP, type_subproblems(j_count)),
-    i_count_(i_count),
-    j_count_(j_count)
+  DpBottomUpBase(T_value_types... value_counts)
+  : subproblems_(T_COUNT_SUBPROBLEMS_TO_KEEP),
+    value_counts_(value_counts...)
   {
-    subproblems_.foreach(
-      [j_count] (type_subproblems& item) {
-        utils::resize_vector_of_vectors(item, j_count);
-      }
-    );
+    const auto value_counts_without_i = utils::cdr(value_counts_);
+    constexpr std::size_t tuple_size =
+      std::tuple_size<decltype(value_counts_without_i)>::value;
+    call_resize_sub_vectors_with_tuple(
+      value_counts_without_i,
+      std::make_index_sequence<tuple_size>());
   }
   
   DpBottomUpBase(const DpBottomUpBase& src) = delete;
@@ -75,14 +77,16 @@ public:
 
     typename type_base::type_level level = 0; //unused
 
-    for (unsigned int i = 0; i < i_count_; ++i) {
+    const auto i_count = std::get<0>(value_counts_);
+    for (unsigned int i = 0; i < i_count; ++i) {
 #if defined(MURRAYC_DP_DEBUG_OUTPUT)
       std::cout << "i=" << std::setw(2) << i << ": ";
 #endif
 
+      const std::size_t j_count_ = std::get<1>(value_counts_);
       type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
       utils::for_vector_of_vectors(subproblems_i,
-        [this, level, i] (unsigned int j) {
+        [this, level, i] (auto j) {
           const auto subproblem = this->calc_subproblem(level, i, j);
           this->set_subproblem(subproblem, i, j);
 
@@ -123,11 +127,26 @@ private:
     subproblems_i[j] = subproblem;
   }
 
+  template<typename... T_sizes>
+  void resize_sub_vectors(T_sizes... sizes) {
+    this->subproblems_.foreach(
+      [sizes...] (type_subproblems& sub_item) {
+        utils::resize_vector_of_vectors(sub_item, sizes...);
+      }
+    );
+  }
+
+  template<typename T_tuple, std::size_t... Is>
+  void call_resize_sub_vectors_with_tuple(
+    T_tuple& tuple,
+    std::index_sequence<Is...>) {
+    resize_sub_vectors(std::get<Is>(tuple)...);
+  }
+
 protected:
   using type_vec_subproblems = utils::circular_vector<type_subproblems>;
   type_vec_subproblems subproblems_;
-  uint i_count_;
-  uint j_count_;
+  type_values value_counts_;
 };
 
 } //namespace murraycdp

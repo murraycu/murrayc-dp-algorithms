@@ -131,12 +131,13 @@ private:
   void get_goal_cell(unsigned int& i, unsigned int& j) const override {
      //The answer is in the last-calculated i cell,
      //in the j cell that has the least cost:
-     i = i_count_ - 1;
+     i = str_.size();
      const type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
 
      uint min_cost = std::numeric_limits<uint>::max();
      unsigned int j_min_cost = 0;
-     for (unsigned int k = 1; k < j_count_; ++k) {
+     const auto j_count = pattern_.size() + 1;
+     for (unsigned int k = 1; k < j_count; ++k) {
        const auto& cost = subproblems_i[k].cost;
        if (cost < min_cost) {
           min_cost = cost;
