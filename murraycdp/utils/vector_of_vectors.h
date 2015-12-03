@@ -63,6 +63,7 @@ public:
 };
 /// @endcond DOXYGEN_HIDDEN_SYMBOLS
 
+
 /**
  * Resize a vector.
  *
@@ -105,6 +106,47 @@ void resize_vector_of_vectors(std::vector<std::vector<T>>& vector, T_first_size 
     }
   );
 }
+
+
+/**
+ * Get an element from a vector.
+ *
+ * @tparam T_element the value_type of the innermost vector.
+ * @tparam T The type of the vector.
+ * @tparam T_first_index The type of the @a first_index parameter.
+ * @tparam T_other_indices The types of the @a other_indices parameters.
+ * @param first_index The top-level index.
+ */
+template<class T_element, class T, class T_first_index, class... T_other_sizes>
+T_element& get_at_vector_of_vectors(std::vector<T>& vector, T_first_index first_index) {
+  return vector[first_index];
+}
+
+/**
+ * Get an element from a vector of vectors.
+ * For instance, with a std::vector<std::vector<std::vector<int>>>,
+ * calling this
+ * @code
+ * int val = get_at_vector_of_vectors<int>(vec, 1, 2, 3);
+ * @endcode
+ * is equivalent to:
+ * @code
+ * int val = vec[1, 2, 3];
+ * @endcode
+ *
+ * @tparam T_element the value_type of the innermost vector.
+ * @tparam T The type of the vector.
+ * @tparam T_first_index The type of the @a first_index parameter.
+ * @tparam T_other_indices The types of the @a other_indices parameters.
+ * @param first_index The top-level index.
+ * @param other_indices The other indices.
+ */
+template<class T_element, class T, class T_first_index, class... T_other_indices>
+T_element& get_at_vector_of_vectors(std::vector<std::vector<T>>& vector, T_first_index first_index, T_other_indices... other_indices) {
+  auto& sub = vector[first_index];
+  return get_at_vector_of_vectors<T_element>(sub, other_indices...);
+}
+
 
 namespace {
 
