@@ -28,17 +28,20 @@
  * http://en.cppreference.com/w/cpp/types
  *
  * For instance, if we do this:
+ * @code
  *   using type_vec = vector_of_vectors<int, 0>::type;
- * then type_vec will be
- *   std::vector<int>> .
- * and if we do this:
+ * @endcode
+ * then type_vec will be @c std::vector<int> .
+ * And if we do this:
+ * @code
  *   using type_vec = vector_of_vectors<int, 1>::type;
- * then type_vec will be
- *   std::vector<std::vector<int>> .
- * and if we do this:
+ * @endcode
+ * then type_vec will be @c std::vector<std::vector<int>> .
+ * And if we do this:
+ * @code
  *   using type_vec = vector_of_vectors<int, 2>::type;
- * then type_vec will be
- *   std::vector<std::vector<std::vector<int>>>.
+ * @endcode
+ * then type_vec will be @c std::vector<std::vector<std::vector<int>>> .
  *
  * @tparam T The type of the vector's elements.
  * @tparam N The number of levels of nested vectors in the type.
@@ -48,18 +51,47 @@ class vector_of_vectors {
 public:
   using type = std::vector<typename vector_of_vectors<T, N-1>::type>;
 };
- 
+
+/// @cond DOXYGEN_HIDDEN_SYMBOLS
 template<class T>
 class vector_of_vectors<T, 0> {
 public:
   using type = std::vector<T>;
 };
+/// @endcond DOXYGEN_HIDDEN_SYMBOLS
 
+/**
+ * Resize a vector.
+ *
+ * @tparam T The type of the vector.
+ * @tparam T_first_size The type of the size, for @a first_size.
+ * @param first_size The size with which to call resize() on the vector itself.
+ */
 template<class T, class T_first_size, class... T_sizes>
 void resize_vector_of_vectors(std::vector<T>& vector, T_first_size first_size) {
   vector.resize(first_size);
 }
 
+/**
+ * Resize a vector of vectors.
+ * For instance, when calling this on a std::vector<std::vector<std::vector<int>>>,
+ * this is equivalent to:
+ * @code
+ *   vector.resize(a);
+ *
+ *   for (auto& item : vector) {
+ *     item.resize(b);
+ *     for (auto& inner_item : vector) {
+ *       inner_item.resize(c);
+ *     }
+ *   }
+ * @endcode
+ *
+ * @tparam T The type of the vector.
+ * @tparam T_first_size The type of the size, for @a first_size.
+ * @param first_size The size with which to call resize() on the vector itself.
+ * @param other_sizes The sizes with which to call resize() on the vector's nested items.
+ */
 template<class T, class T_first_size, class... T_other_sizes>
 void resize_vector_of_vectors(std::vector<std::vector<T>>& vector, T_first_size first_size, T_other_sizes... other_sizes) {
   vector.resize(first_size);
@@ -73,7 +105,7 @@ void resize_vector_of_vectors(std::vector<std::vector<T>>& vector, T_first_size 
 
 namespace {
 
-/// Call get_goal_cell(a, b, c, d) with std::tuple<a, b, c, d>
+/// Call f(a, b, c, d) with std::tuple<a, b, c, d>
 template<class T_function, class T_tuple, std::size_t... Is>
 void call_with_tuple(T_function f,
   const T_tuple& tuple, std::index_sequence<Is...>) {
@@ -104,12 +136,14 @@ void for_vector_of_vectors_with_indices(std::vector<std::vector<T>>& vector, T_f
 } //anonymous namespace
 
 /**
- * Call @a f on each item in the vector.
+ * Call @a f on a range of items in the vector.
  *
  * This is equivalent to:
+ * @code
  *   for (std::size_t i = start; i < end; ++i) {
- *     f(vector[i]);
+ *     f(i);
  *   }
+ * @endcode
  *
  * @param start The start of the range.
  * @param end One past the end of the range.
@@ -121,6 +155,24 @@ void for_vector_of_vectors(std::vector<T>& /* vector */, T_function f, T_first_s
   }
 }
 
+/**
+ * Call @a f on a range of items in the vector of vectors.
+ *
+ * For instance, when calling this on a std::vector<std::vector<std::vector<int>>>,
+ * this is equivalent to:
+ * @code
+ *   for (std::size_t i = i_start; i < i_end; ++i) {
+ *     for (std::size_t j = j_start; i < j_end; ++i) {
+ *       for (std::size_t k = k_start; i < k_end; ++i) {
+ *         f(i, j, k);
+ *       }
+ *     }
+ *   }
+ * @endcode
+ *
+ * @param start The start of the range.
+ * @param end One past the end of the range.
+ */
 template<class T, class T_function, class T_first_size_start, class T_first_size_end, class... T_other_sizes>
 void for_vector_of_vectors(std::vector<std::vector<T>>& vector, T_function f, T_first_size_start start, T_first_size_end end, T_other_sizes... other_sizes) {
 

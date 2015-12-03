@@ -29,7 +29,8 @@ public:
     std::cout << ", " << std::get<N-1>(t);
   }
 };
- 
+
+/// @cond DOXYGEN_HIDDEN_SYMBOLS
 template<class Tuple>
 class TuplePrinter<Tuple, 1> {
 public:
@@ -37,5 +38,6 @@ public:
     std::cout << std::get<0>(t);
   }
 };
+/// @endcond DOXYGEN_HIDDEN_SYMBOLS
 
 #endif //_MURRAYCDP_TUPLE_PRINTER_H

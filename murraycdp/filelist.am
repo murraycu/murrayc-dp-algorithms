@@ -6,6 +6,7 @@ h_sources_public = \
   murraycdp/dp_bottom_up_base.h \
   murraycdp/dp_top_down_base.h \
   murraycdp/tuple_hash.h \
-  murraycdp/tuple_printer.h
+  murraycdp/tuple_printer.h \
+  murraycdp/vector_of_vectors.h
 
 cc_sources =
