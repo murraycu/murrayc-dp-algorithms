@@ -147,6 +147,17 @@ T_element& get_at_vector_of_vectors(std::vector<std::vector<T>>& vector, T_first
   return get_at_vector_of_vectors<T_element>(sub, other_indices...);
 }
 
+template<class T_element, class T, class T_first_index, class... T_other_sizes>
+const T_element& get_at_vector_of_vectors(const std::vector<T>& vector, T_first_index first_index) {
+  return vector[first_index];
+}
+
+template<class T_element, class T, class T_first_index, class... T_other_indices>
+const T_element& get_at_vector_of_vectors(const std::vector<std::vector<T>>& vector, T_first_index first_index, T_other_indices... other_indices) {
+  auto& sub = vector[first_index];
+  return get_at_vector_of_vectors<T_element>(sub, other_indices...);
+}
+
 
 namespace {
 

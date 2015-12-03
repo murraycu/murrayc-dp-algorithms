@@ -67,6 +67,32 @@ void test_get_at() {
   assert(val2 == 9);
 }
 
+void test_get_at_const() {
+  using type_vec0 = murraycdp::utils::vector_of_vectors<int, 0>::type;
+  type_vec0 vec0;
+  murraycdp::utils::resize_vector_of_vectors(vec0, 10);
+  murraycdp::utils::get_at_vector_of_vectors<int>(vec0, 3) = 9;
+  const type_vec0 vec0_const = vec0;
+  const auto val0 = murraycdp::utils::get_at_vector_of_vectors<int>(vec0_const, 3);
+  assert(val0 == 9);
+
+  using type_vec1 = murraycdp::utils::vector_of_vectors<int, 1>::type;
+  type_vec1 vec1;
+  murraycdp::utils::resize_vector_of_vectors(vec1, 10, 20);
+  murraycdp::utils::get_at_vector_of_vectors<int>(vec1, 3, 4) = 9;
+  const type_vec1& vec1_const = vec1;
+  const auto val1 = murraycdp::utils::get_at_vector_of_vectors<int>(vec1_const, 3, 4);
+  assert(val1 == 9);
+
+  using type_vec2 = murraycdp::utils::vector_of_vectors<int, 2>::type;
+  type_vec2 vec2;
+  murraycdp::utils::resize_vector_of_vectors(vec2, 10, 20, 30);
+  murraycdp::utils::get_at_vector_of_vectors<int>(vec2, 3, 4, 5) = 9;
+  const type_vec2& vec2_const = vec2;
+  const auto val2 = murraycdp::utils::get_at_vector_of_vectors<int>(vec2_const, 3, 4, 5);
+  assert(val2 == 9);
+}
+
 void test_for0() {
   using type_vec0 = murraycdp::utils::vector_of_vectors<int, 0>::type;
   type_vec0 vec0;
@@ -125,6 +151,7 @@ int main() {
   test_type();
   test_resize();
   test_get_at();
+  test_get_at_const();
   test_for();
 
   return EXIT_SUCCESS;
