@@ -19,6 +19,8 @@
 
 #include <vector>
 
+namespace murraycdp {
+
 template <typename T>
 class circular_vector {
   public:
@@ -117,5 +119,7 @@ class circular_vector {
     unsigned int size_;
     std::vector<T> vec_;
 };
+
+} //namespace murraycdp
 
 #endif //MURRAYCDP_CIRCULAR_VECTOR_H

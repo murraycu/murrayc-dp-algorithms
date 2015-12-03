@@ -30,6 +30,7 @@
 #include <murraycdp/tuple_hash.h>
 #include <murraycdp/tuple_printer.h>
 
+namespace murraycdp {
 
 //#define MURRAYC_DP_DEBUG_OUTPUT = 1;
 
@@ -196,5 +197,7 @@ private:
   using type_subproblem_access = std::pair<type_values, SubproblemAccess>;
   mutable std::list<type_subproblem_access> subproblem_accesses_;
 };
+
+} //namespace murraycdp
 
 #endif //MURRAYCDP_DP_BOTTOM_UP_BASE_H

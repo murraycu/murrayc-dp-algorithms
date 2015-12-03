@@ -28,6 +28,8 @@
 #include <murraycdp/circular_vector.h>
 #include <murraycdp/vector_of_vectors.h>
 
+namespace murraycdp {
+
 #define MURRAYC_DP_DEBUG_OUTPUT = 1;
 
 /** A base class for a 2D bottom-up dynamic programming algorithm.
@@ -127,5 +129,7 @@ protected:
   uint i_count_;
   uint j_count_;
 };
+
+} //namespace murraycdp
 
 #endif //MURRAYCDP_DP_BOTTOM_UP_BASE_H

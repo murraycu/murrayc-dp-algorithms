@@ -75,7 +75,7 @@ public:
 };
 
 class DpEditDistance
-  : public DpTopDownBase<Cost, Cost::uint, Cost::uint> {
+  : public murraycdp::DpTopDownBase<Cost, Cost::uint, Cost::uint> {
 public:
   DpEditDistance(const std::string& str, const std::string& pattern)
   : str_(str),

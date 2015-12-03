@@ -77,7 +77,7 @@ public:
 };
 
 class DpKnapsack
-  : public DpTopDownBase<SubSolution, SubSolution::type_vec_items::size_type, Item::type_weight> {
+  : public murraycdp::DpTopDownBase<SubSolution, SubSolution::type_vec_items::size_type, Item::type_weight> {
 public:
   using type_value = Item::type_value;
   using type_weight = Item::type_weight;

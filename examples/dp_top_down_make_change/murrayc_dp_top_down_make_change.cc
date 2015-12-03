@@ -54,7 +54,7 @@ public:
 };
 
 class DpMakeChange
-  : public DpTopDownBase<SubSolution, SubSolution::type_size, SubSolution::type_value> {
+  : public murraycdp::DpTopDownBase<SubSolution, SubSolution::type_size, SubSolution::type_value> {
 public:
   using type_value = SubSolution::type_value;
   using type_vec_coins = SubSolution::type_vec_coins;

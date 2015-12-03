@@ -21,6 +21,7 @@
 #include <tuple>
 #include <utility>
 
+namespace murraycdp {
 
 //#define MURRAYC_DP_DEBUG_OUTPUT = 1;
 
@@ -75,5 +76,7 @@ protected:
     get_goal_cell(std::get<Is>(goals)...);
   }
 };
+
+} //namespace murraycdp
 
 #endif //MURRAYCDP_DP_BOTTOM_UP_BASE_H

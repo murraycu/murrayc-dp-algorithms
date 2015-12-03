@@ -75,11 +75,11 @@ public:
 };
 
 class DpSubstringMatching
-  : public DpBottomUpBase<2 /* cost to keep, used in calc_subproblem() */,
+  : public murraycdp::DpBottomUpBase<2 /* cost to keep, used in calc_subproblem() */,
       Cost, uint, uint> {
 public:
   DpSubstringMatching(const std::string& str, const std::string& pattern)
-  : DpBottomUpBase(str.size() + 1, pattern.size() + 1),
+  : DpBottomUpBase(str.size() + 1, pattern.size() + 1), //TODO: Why does the compiler fail when we prefix this with murraycdp::
     str_(str),
     pattern_(pattern)
   {}

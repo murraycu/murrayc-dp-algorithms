@@ -19,6 +19,8 @@
 
 #include <tuple>
 
+namespace murraycdp {
+
 //Based on this: http://stackoverflow.com/a/7115547/1123654
 namespace hash_tuple {
 
@@ -69,5 +71,7 @@ public:
 };
 
 } //namespace hash_tuple
+
+} //namespace murraycdp
 
 #endif //MURRAYCDP_DP_BOTTOM_UP_BASE_H
