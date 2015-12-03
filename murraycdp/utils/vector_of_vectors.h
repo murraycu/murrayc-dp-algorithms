@@ -70,7 +70,7 @@ public:
  * @tparam T_first_size The type of the size, for @a first_size.
  * @param first_size The size with which to call resize() on the vector itself.
  */
-template<class T, class T_first_size, class... T_sizes>
+template<class T, class T_first_size, class... T_other_sizes>
 void resize_vector_of_vectors(std::vector<T>& vector, T_first_size first_size) {
   vector.resize(first_size);
 }
