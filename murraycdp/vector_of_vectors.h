@@ -70,6 +70,32 @@ void resize_vector_of_vectors(std::vector<std::vector<T>>& vector, T_first_size 
   );
 }
 
+/**
+ * Call @a f on each item in the vector.
+ *
+ * This is equivalent to:
+ *   for (std::size_t i = start; i < end; ++i) {
+ *     f(vector[i]);
+ *   }
+ *
+ * @param start The start of the range.
+ * @param end One past the end of the range.
+ */
+template<class T, class T_function, class T_first_size_start, class T_first_size_end>
+void for_vector_of_vectors(std::vector<T>& /* vector */, T_function f, T_first_size_start start, T_first_size_end end) {
+  for (T_first_size_start i = start; i < end; ++i) {
+    f(i);
+  }
+}
+
+template<class T, class T_function, class T_first_size_start, class T_first_size_end, class... T_other_sizes>
+void for_vector_of_vectors(std::vector<std::vector<T>>& vector, T_function f, T_first_size_start start, T_first_size_end end, T_other_sizes... other_sizes) {
+  for (T_first_size_start i = start; i < end; ++i) {
+    for_vector_of_vectors(vector[i], f, other_sizes...);
+  }
+}
+
+
 
 
 #endif //__MURRAYCDP_VECTOR_OF_VECTORS_H

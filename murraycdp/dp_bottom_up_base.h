@@ -78,17 +78,21 @@ public:
       std::cout << "i=" << std::setw(2) << i << ": ";
 #endif
 
-      for (unsigned int j = 0; j < j_count_; ++j) {
-        const auto subproblem = this->calc_subproblem(level, i, j);
-        set_subproblem(subproblem, i, j);
+      type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
+      for_vector_of_vectors(subproblems_i,
+        [this, level, i] (unsigned int j) {
+          const auto subproblem = this->calc_subproblem(level, i, j);
+          this->set_subproblem(subproblem, i, j);
 
 #if defined(MURRAYC_DP_DEBUG_OUTPUT)
-        if (j != 0) {
-          std::cout << ", ";
-        }
-        std::cout << std::setw(2) << subproblem.cost;
+          if (j != 0) {
+            std::cout << ", ";
+          }
+          std::cout << std::setw(2) << subproblem.cost;
 #endif
-      }
+        },
+        (std::size_t)0, (std::size_t)j_count_
+      );
 
 #if defined(MURRAYC_DP_DEBUG_OUTPUT)
       std::cout << std::endl;
