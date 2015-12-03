@@ -50,8 +50,7 @@ public:
    * @pram The number of j values to calculate the subproblem for.
    */
   DpBottomUpBase(unsigned int i_count, unsigned int j_count)
-  : type_base(i_count, j_count),
-    subproblems_(T_COUNT_SUBPROBLEMS_TO_KEEP, type_subproblems(j_count)),
+  : subproblems_(T_COUNT_SUBPROBLEMS_TO_KEEP, type_subproblems(j_count)),
     i_count_(i_count),
     j_count_(j_count)
   {}

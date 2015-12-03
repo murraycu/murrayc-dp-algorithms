@@ -85,8 +85,7 @@ public:
   using type_size = type_vec_items::size_type;
 
   DpKnapsack(const type_vec_items& items, type_weight weight_capacity)
-  : DpTopDownBase(items.size(), weight_capacity),
-    items_(items),
+  : items_(items),
     weight_capacity_(weight_capacity)
   {}
 

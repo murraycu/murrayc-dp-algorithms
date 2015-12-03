@@ -61,8 +61,7 @@ public:
   using type_size = SubSolution::type_size;
 
   DpMakeChange(const type_vec_coins& items, type_value needed_value)
-  : DpTopDownBase(items.size() + 1, needed_value),
-    items_(items),
+  : items_(items),
     needed_value_(needed_value)
   {}
 

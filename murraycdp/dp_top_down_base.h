@@ -53,8 +53,8 @@ public:
    * @param The number of i values to calculate the subproblem for.
    * @pram The number of j values to calculate the subproblem for.
    */
-  DpTopDownBase(T_value_types... value_counts)
-  : DpBase<T_subproblem, T_value_types...>(value_counts...)
+  DpTopDownBase()
+  : DpBase<T_subproblem, T_value_types...>()
   {}
 
   DpTopDownBase(const DpTopDownBase& src) = delete;
@@ -191,8 +191,6 @@ private:
   //Map of values to subproblems:
   using type_map_subproblems = std::unordered_map<type_values, type_subproblem, hash_tuple::hash<type_values>>;
   mutable type_map_subproblems subproblems_;
-
-  type_values value_counts_;
 
   //Keep a record of the order in which each subproblem was calculated:
   using type_subproblem_access = std::pair<type_values, SubproblemAccess>;

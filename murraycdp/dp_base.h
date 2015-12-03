@@ -42,8 +42,7 @@ public:
    * @param i The number of i values to calculate the subproblem for.
    * @param j The number of j values to calculate the subproblem for.
    */
-  DpBase(T_value_types... value_counts)
-  : value_counts_(value_counts...)
+  DpBase()
   {}
 
   DpBase(const DpBase& src) = delete;
@@ -75,10 +74,6 @@ protected:
     std::index_sequence<Is...>) {
     get_goal_cell(std::get<Is>(goals)...);
   }
-
-private:
-
-  type_values value_counts_;
 };
 
 #endif //MURRAYCDP_DP_BOTTOM_UP_BASE_H

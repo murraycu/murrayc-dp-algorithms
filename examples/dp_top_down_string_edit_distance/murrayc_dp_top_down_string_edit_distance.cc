@@ -78,8 +78,7 @@ class DpEditDistance
   : public DpTopDownBase<Cost, Cost::uint, Cost::uint> {
 public:
   DpEditDistance(const std::string& str, const std::string& pattern)
-  : DpTopDownBase(str.size() + 1, pattern.size() + 1),
-    str_(str),
+  : str_(str),
     pattern_(pattern)
   {}
 
