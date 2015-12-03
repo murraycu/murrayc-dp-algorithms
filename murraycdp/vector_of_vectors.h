@@ -19,6 +19,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <tuple>
 
 /**
  * A type trait for nested std::vectors.
@@ -70,6 +71,38 @@ void resize_vector_of_vectors(std::vector<std::vector<T>>& vector, T_first_size 
   );
 }
 
+namespace {
+
+/// Call get_goal_cell(a, b, c, d) with std::tuple<a, b, c, d>
+template<class T_function, class T_tuple, std::size_t... Is>
+void call_with_tuple(T_function f,
+  const T_tuple& tuple, std::index_sequence<Is...>) {
+  f(std::get<Is>(tuple)...);
+}
+
+template<class T, class T_function, class T_tuple_indices, class T_first_size_start, class T_first_size_end>
+void for_vector_of_vectors_with_indices(std::vector<T>& /* vector */, T_function f, const T_tuple_indices& indices, T_first_size_start start, T_first_size_end end) {
+  for (T_first_size_start i = start; i < end; ++i) {
+    const std::tuple<T_first_size_start> index_i(i);
+    const auto indices_with_i = std::tuple_cat(indices, index_i);
+
+    constexpr std::size_t tuple_size = std::tuple_size<T_tuple_indices>::value + 1;
+    call_with_tuple(f, indices_with_i,
+      std::make_index_sequence<tuple_size>());
+  }
+}
+
+template<class T, class T_function, class T_tuple_indices, class T_first_size_start, class T_first_size_end, class... T_other_sizes>
+void for_vector_of_vectors_with_indices(std::vector<std::vector<T>>& vector, T_function f, const T_tuple_indices& indices, T_first_size_start start, T_first_size_end end, T_other_sizes... other_sizes) {
+  for (T_first_size_start i = start; i < end; ++i) {
+    const std::tuple<T_first_size_start> index_i(i);
+    const auto indices_with_i = std::tuple_cat(indices, index_i);
+    for_vector_of_vectors_with_indices(vector[i], f, indices_with_i, other_sizes...);
+  }
+}
+
+} //anonymous namespace
+
 /**
  * Call @a f on each item in the vector.
  *
@@ -90,10 +123,13 @@ void for_vector_of_vectors(std::vector<T>& /* vector */, T_function f, T_first_s
 
 template<class T, class T_function, class T_first_size_start, class T_first_size_end, class... T_other_sizes>
 void for_vector_of_vectors(std::vector<std::vector<T>>& vector, T_function f, T_first_size_start start, T_first_size_end end, T_other_sizes... other_sizes) {
+
   for (T_first_size_start i = start; i < end; ++i) {
-    for_vector_of_vectors(vector[i], f, other_sizes...);
+    const std::tuple<T_first_size_start> index_i(i);
+    for_vector_of_vectors_with_indices(vector[i], f, index_i, other_sizes...);
   }
 }
+
 
 
 

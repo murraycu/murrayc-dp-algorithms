@@ -66,13 +66,13 @@ void test_for1() {
 
   std::size_t n = 0;
   for_vector_of_vectors(vec1,
-    [&n] (int i) {
-      n += i;
+    [&n] (int i, int j) {
+      n += (i + j);
     },
     (std::size_t)0, (std::size_t)10,
     (std::size_t)0, (std::size_t)20);
   //std::cout << "n=" << n << std::endl;
-  assert(n == 1900);
+  assert(n == 2800);
 }
 
 void test_for2() {
@@ -82,14 +82,14 @@ void test_for2() {
 
   std::size_t n = 0;
   for_vector_of_vectors(vec2,
-    [&n] (int i) {
-      n += i;
+    [&n] (int i, int j, int k) {
+      n += (i + j + k);
     },
     (std::size_t)0, (std::size_t)10,
     (std::size_t)0, (std::size_t)20,
     (std::size_t)0, (std::size_t)30);
   //std::cout << "n=" << n << std::endl;
-  assert(n == 87000);
+  assert(n == 171000);
 }
 
 void test_for() {
