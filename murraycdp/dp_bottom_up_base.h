@@ -109,13 +109,19 @@ public:
       subproblems_.step(); //Swap subproblems_i and subproblems_i_minus_1.
     }
 
-    unsigned int goal_i = 0;
-    unsigned int goal_j = 0;
-    this->get_goal_cell(goal_i, goal_j);
+    //We cannot do this to pass the output parameters to get_goal_cell():
+    //  T_type_values... goal
+    //but we can pass a std::tuple<> based on T_type_values... 
+    //and that will then be passed as individual parameters when we unpack it
+    //via std::index_sequence.
+    type_values goals;
+    this->get_goal_cell_call_with_tuple(goals,
+      std::index_sequence_for<T_value_types...>());
     //std::cout << "goal_i=" << goal_i << ", goal_j=" << goal_j << std::endl;
+    //std::cout << "calc: " << std::get<0>(goals) << std::endl;
 
-    const type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(goal_i);
-    return subproblems_i[goal_j];
+    return this->get_subproblem_call_with_tuple(level, goals,
+      std::index_sequence_for<T_value_types...>());
   }
 
 private:
