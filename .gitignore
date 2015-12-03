@@ -48,10 +48,8 @@ Makefile.in
 /xmldocs.make
 
 /test-driver
-/*.log
-/*.trs
-/examples/*.log
-/examples/*.trs
+*.log
+*.trs
 
 /macros/libtool.m4
 /macros/ltoptions.m4
@@ -79,6 +77,7 @@ Makefile.in
 /examples/murrayc_dp_top_down_knapsack
 /examples/murrayc_dp_top_down_make_change
 /examples/murrayc_dp_top_down_string_edit_distance
+tests/test_vector_of_vectors
 
 
 

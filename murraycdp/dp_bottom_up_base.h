@@ -26,6 +26,7 @@
 
 #include <murraycdp/dp_base.h>
 #include <murraycdp/circular_vector.h>
+#include <murraycdp/vector_of_vectors.h>
 
 #define MURRAYC_DP_DEBUG_OUTPUT = 1;
 
@@ -42,7 +43,7 @@ template <unsigned int T_COUNT_SUBPROBLEMS_TO_KEEP,
 class DpBottomUpBase : public DpBase<T_subproblem, T_value_types...> {
 public:
   using type_subproblem = T_subproblem;
-  using type_subproblems = std::vector<T_subproblem>;
+  using type_subproblems = typename vector_of_vectors<T_subproblem, 0>::type;
   using type_base = DpBase<T_subproblem, T_value_types...>;
 
   /**

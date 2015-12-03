@@ -38,7 +38,8 @@ check_PROGRAMS = \
   examples/murrayc_dp_bottom_up_string_substring_matching \
   examples/murrayc_dp_top_down_string_edit_distance \
   examples/murrayc_dp_top_down_make_change \
-  examples/murrayc_dp_top_down_knapsack
+  examples/murrayc_dp_top_down_knapsack \
+  tests/test_vector_of_vectors
 
 TESTS = $(check_PROGRAMS)
 
@@ -77,6 +78,13 @@ examples_murrayc_dp_top_down_knapsack_SOURCES = \
 examples_murrayc_dp_top_down_knapsack_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 examples_murrayc_dp_top_down_knapsack_LDADD = \
+	$(PROJECT_LIBS)
+
+tests_test_vector_of_vectors_SOURCES = \
+	tests/test_vector_of_vectors.cc
+tests_test_vector_of_vectors_CXXFLAGS = \
+	$(COMMON_CXXFLAGS)
+tests_test_vector_of_vectors_LDADD = \
 	$(PROJECT_LIBS)
 
 
