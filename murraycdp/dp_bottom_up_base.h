@@ -54,7 +54,13 @@ public:
   : subproblems_(T_COUNT_SUBPROBLEMS_TO_KEEP, type_subproblems(j_count)),
     i_count_(i_count),
     j_count_(j_count)
-  {}
+  {
+    subproblems_.foreach(
+      [j_count] (type_subproblems& item) {
+        resize_vector_of_vectors(item, j_count);
+      }
+    );
+  }
   
   DpBottomUpBase(const DpBottomUpBase& src) = delete;
   DpBottomUpBase& operator=(const DpBottomUpBase& src) = delete;

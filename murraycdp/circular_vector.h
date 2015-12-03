@@ -66,6 +66,13 @@ class circular_vector {
     size_type size() const {
       return size_;
     }
+
+    template<class T_UnaryFunction>
+    void foreach(T_UnaryFunction f) {
+      for(auto& item : vec_) {
+        f(item);
+      }
+    }
     
   private:
     /** Get a position relative to pos_zero_,

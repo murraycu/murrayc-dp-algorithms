@@ -18,6 +18,7 @@
 #define __MURRAYCDP_VECTOR_OF_VECTORS_H
 
 #include <vector>
+#include <algorithm>
 
 /**
  * A type trait for nested std::vectors.
@@ -52,5 +53,23 @@ class vector_of_vectors<T, 0> {
 public:
   using type = std::vector<T>;
 };
+
+template<class T, class T_first_size, class... T_sizes>
+void resize_vector_of_vectors(std::vector<T>& vector, T_first_size first_size) {
+  vector.resize(first_size);
+}
+
+template<class T, class T_first_size, class... T_other_sizes>
+void resize_vector_of_vectors(std::vector<std::vector<T>>& vector, T_first_size first_size, T_other_sizes... other_sizes) {
+  vector.resize(first_size);
+
+  std::for_each(vector.begin(), vector.end(),
+    [other_sizes...](auto& item) {
+      resize_vector_of_vectors(item, other_sizes...);
+    }
+  );
+}
+
+
 
 #endif //__MURRAYCDP_VECTOR_OF_VECTORS_H
