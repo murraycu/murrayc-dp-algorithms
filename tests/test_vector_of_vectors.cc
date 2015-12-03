@@ -2,7 +2,7 @@
 #include <cassert>
 #include <utility>
 //#include <iostream>
-#include <murraycdp/vector_of_vectors.h>
+#include <murraycdp/utils/vector_of_vectors.h>
 
 void test_type() {
   //The preprocessor doesn't like having it all inside the assert() macro.

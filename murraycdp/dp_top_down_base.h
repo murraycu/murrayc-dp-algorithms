@@ -27,8 +27,8 @@
 #include <unordered_map>
 #include <tuple>
 #include <murraycdp/dp_base.h>
-#include <murraycdp/tuple_hash.h>
-#include <murraycdp/tuple_printer.h>
+#include <murraycdp/utils/tuple_hash.h>
+#include <murraycdp/utils/tuple_printer.h>
 
 namespace murraycdp {
 

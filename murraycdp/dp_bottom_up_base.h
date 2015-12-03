@@ -25,8 +25,8 @@
 #include <limits>
 
 #include <murraycdp/dp_base.h>
-#include <murraycdp/circular_vector.h>
-#include <murraycdp/vector_of_vectors.h>
+#include <murraycdp/utils/circular_vector.h>
+#include <murraycdp/utils/vector_of_vectors.h>
 
 namespace murraycdp {
 

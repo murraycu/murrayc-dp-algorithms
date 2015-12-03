@@ -1,12 +1,12 @@
 ## This file is part of murraycdp.
 
 h_sources_public = \
-  murraycdp/circular_vector.h \
   murraycdp/dp_base.h \
   murraycdp/dp_bottom_up_base.h \
   murraycdp/dp_top_down_base.h \
-  murraycdp/tuple_hash.h \
-  murraycdp/tuple_printer.h \
-  murraycdp/vector_of_vectors.h
+  murraycdp/utils/circular_vector.h \
+  murraycdp/utils/tuple_hash.h \
+  murraycdp/utils/tuple_printer.h \
+  murraycdp/utils/vector_of_vectors.h
 
 cc_sources =
