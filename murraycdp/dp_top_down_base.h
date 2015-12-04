@@ -85,6 +85,11 @@ public:
   }
  
 protected:
+  void clear() override {
+    type_base::clear();
+    subproblems_.clear();
+  }
+
   static void indent(type_level level)
   {
     std::cout << "level: " << level;
@@ -114,11 +119,6 @@ private:
   void set_subproblem(const type_subproblem& subproblem, T_value_types... values) const override {
     const type_values key(values...);
     subproblems_[key] = subproblem;
-  }
-
-  void clear() override {
-    type_base::clear();
-    subproblems_.clear();
   }
 
 private:
