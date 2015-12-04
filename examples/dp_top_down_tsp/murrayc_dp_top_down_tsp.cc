@@ -218,9 +218,9 @@ private:
     return min;
   }
 
-  void get_goal_cell(std::size_t& m, type_vec_node_ids& /* subset */, std::size_t& /* j */) const override {
-     //The answer is in the last-calculated cell:
-     m = vertices_.size();
+  void get_goal_cell(std::size_t& /* m */, type_vec_node_ids& /* subset */, std::size_t& /* j */) const override {
+     //We don't use this.
+     //Instead we override coal() and get a minimum over several cells.
   }
 
   const type_vec_nodes vertices_;
