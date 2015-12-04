@@ -28,6 +28,7 @@
 #include <murraycdp/utils/circular_vector.h>
 #include <murraycdp/utils/vector_of_vectors.h>
 #include <murraycdp/utils/tuple_cdr.h>
+#include <murraycdp/utils/tuple_interlace.h>
 
 namespace murraycdp {
 
@@ -83,9 +84,20 @@ public:
       std::cout << "i=" << std::setw(2) << i << ": ";
 #endif
 
-      const std::size_t j_count_ = std::get<1>(value_counts_);
       type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
-      utils::for_vector_of_vectors(subproblems_i,
+
+      using type_values_counts_without_i =
+        typename utils::tuple_type_cdr<type_values>::type;
+      const type_values_counts_without_i values_starts_without_i(0);
+      const auto value_counts_without_i = utils::tuple_cdr(value_counts_);
+
+      const auto values_start_end =
+        utils::tuple_interlace(values_starts_without_i, value_counts_without_i);
+
+      constexpr std::size_t values_start_end_size =
+        std::tuple_size<decltype(values_start_end)>::value;
+
+      call_for_sub_vectors_with_tuple(subproblems_i,
         [this, level, i] (auto j) {
           const auto subproblem = this->calc_subproblem(level, i, j);
           this->set_subproblem(subproblem, i, j);
@@ -97,7 +109,8 @@ public:
           std::cout << std::setw(2) << subproblem.cost;
 #endif
         },
-        (std::size_t)0, (std::size_t)j_count_
+        values_start_end,
+        std::make_index_sequence<values_start_end_size>()
       );
 
 #if defined(MURRAYC_DP_DEBUG_OUTPUT)
@@ -193,6 +206,17 @@ private:
     return murraycdp::utils::get_at_vector_of_vectors<type_subproblem>(vector,
       std::get<Is>(tuple)...);
   }
+
+  template<typename T_vector, typename T_function, typename T_tuple, std::size_t... Is>
+  void call_for_sub_vectors_with_tuple(
+    T_vector& vector,
+    T_function f,
+    const T_tuple& tuple,
+    std::index_sequence<Is...>) const {
+    murraycdp::utils::for_vector_of_vectors(vector, f,
+      std::get<Is>(tuple)...);
+  }
+
 
 protected:
   using type_vec_subproblems = utils::circular_vector<type_subproblems>;
