@@ -87,9 +87,10 @@ inline type_length get_sub_problem_base_case(const type_vec_node_ids& subset, ty
 using type_subset_id = std::string;
 
 static
-type_subset_id get_subset_id(const type_vec_node_ids& vertex_ids)
+inline type_subset_id get_subset_id(const type_vec_node_ids& vertex_ids)
 {
   type_subset_id result;
+  //This seems to make it slower: result.reserve(vertex_ids.size() * 2);
   char buffer[10];
   for(const auto& id : vertex_ids)
   {
