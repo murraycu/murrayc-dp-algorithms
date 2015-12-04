@@ -144,7 +144,7 @@ public:
   type_subproblem calc() override {
     clear();
     const type_level level = 0;
-    
+
     const auto& full_subset = vertex_ids_;
 
     const int i = vertices_.size();
