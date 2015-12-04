@@ -65,7 +65,7 @@ inline type_length calc_distance(const Vertex& a, const Vertex& b)
 using type_subproblem = type_length;
 
 static
-inline type_length get_sub_problem_base_case(const type_vec_node_ids subset, const type_node_id start_node_id)
+inline type_length get_sub_problem_base_case(const type_vec_node_ids& subset, type_node_id start_node_id)
 {
   //Base case:
   if((subset.size() == 1) && (subset[0] == start_node_id))
