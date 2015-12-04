@@ -60,8 +60,8 @@ public:
     const auto first_interlaced =
       std::make_tuple(std::get<0>(tuple1), std::get<0>(tuple2));
 
-    const auto remaining1 = cdr(tuple1);
-    const auto remaining2 = cdr(tuple2);
+    const auto remaining1 = tuple_cdr(tuple1);
+    const auto remaining2 = tuple_cdr(tuple2);
     
     constexpr auto size1 = std::tuple_size<T_tuple1>::value;
     constexpr auto size2 = std::tuple_size<T_tuple1>::value;
@@ -69,7 +69,7 @@ public:
       "remaining1 and remaining2 must have the same size.");
     
     const auto remaining_interlaced =
-      interlace_impl<typename tuple_cdr<T_tuple1>::type, typename tuple_cdr<T_tuple2>::type, size1 -1>::interlace(remaining1, remaining2);
+      interlace_impl<typename tuple_type_cdr<T_tuple1>::type, typename tuple_type_cdr<T_tuple2>::type, size1 -1>::interlace(remaining1, remaining2);
 
     return std::tuple_cat(first_interlaced, remaining_interlaced);
   }

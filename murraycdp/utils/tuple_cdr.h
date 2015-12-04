@@ -30,10 +30,10 @@ namespace utils{
 namespace {
 
 template<typename T, typename Seq>
-struct tuple_cdr_impl;
+struct tuple_type_cdr_impl;
 
 template<typename T, std::size_t I0, std::size_t... I>
-struct tuple_cdr_impl<T, std::index_sequence<I0, I...>>
+struct tuple_type_cdr_impl<T, std::index_sequence<I0, I...>>
 {
   using type = std::tuple<typename std::tuple_element<I, T>::type...>;
 };
@@ -44,25 +44,26 @@ struct tuple_cdr_impl<T, std::index_sequence<I0, I...>>
  * Get the type of a tuple without the first item.
  */
 template<typename T>
-struct tuple_cdr
-: tuple_cdr_impl<T, std::make_index_sequence<std::tuple_size<T>::value>>
+struct tuple_type_cdr
+: tuple_type_cdr_impl<T, std::make_index_sequence<std::tuple_size<T>::value>>
 {};
 
 template<typename T, std::size_t I0, std::size_t... I>
-typename tuple_cdr<T>::type
-cdr_impl(const T& t, std::index_sequence<I0, I...>) {
+typename tuple_type_cdr<T>::type
+tuple_cdr_impl(const T& t, std::index_sequence<I0, I...>) {
   return std::make_tuple(std::get<I>(t)...);
 }
 
 /**
  * Get the a tuple without the first item.
+ * This is analogous to std::tuple_cat().
  */
 template<typename T>
-typename tuple_cdr<T>::type
-cdr(const T& t) {
+typename tuple_type_cdr<T>::type
+tuple_cdr(const T& t) {
   constexpr auto size = std::tuple_size<T>::value;
   const auto seq = std::make_index_sequence<size>{};
-  return cdr_impl(t, seq);
+  return tuple_cdr_impl(t, seq);
 }
 
 

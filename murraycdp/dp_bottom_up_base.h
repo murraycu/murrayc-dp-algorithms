@@ -58,7 +58,7 @@ public:
   : subproblems_(T_COUNT_SUBPROBLEMS_TO_KEEP),
     value_counts_(value_counts...)
   {
-    const auto value_counts_without_i = utils::cdr(value_counts_);
+    const auto value_counts_without_i = utils::tuple_cdr(value_counts_);
     constexpr std::size_t tuple_size =
       std::tuple_size<decltype(value_counts_without_i)>::value;
     call_resize_sub_vectors_with_tuple(
@@ -134,7 +134,7 @@ private:
     const auto i = std::get<0>(values_tuple);
     const type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
     
-    const auto values_without_i = utils::cdr(values_tuple);
+    const auto values_without_i = utils::tuple_cdr(values_tuple);
     constexpr std::size_t tuple_size =
       std::tuple_size<decltype(values_without_i)>::value;
     subproblem = call_get_at_sub_vectors_with_tuple(subproblems_i, values_without_i,
@@ -153,7 +153,7 @@ private:
     const auto i = std::get<0>(values_tuple);
     type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
 
-    const auto values_without_i = utils::cdr(values_tuple);
+    const auto values_without_i = utils::tuple_cdr(values_tuple);
     constexpr std::size_t tuple_size =
       std::tuple_size<decltype(values_without_i)>::value;
     call_get_at_sub_vectors_with_tuple(subproblems_i, values_without_i,
