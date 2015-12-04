@@ -14,12 +14,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef __MURRAYCDP_TUPLE_CDR_H
-#define __MURRAYCDP_TUPLE_CDR_H
+#ifndef __MURRAYCDP_TUPLE_INTERLACE_H
+#define __MURRAYCDP_TUPLE_INTERLACE_H
 
 #include <tuple>
 #include <utility>
 #include <type_traits>
+#include <murraycdp/utils/tuple_cdr.h>
 
 namespace murraycdp {
 namespace utils{
@@ -48,7 +49,68 @@ struct tuple_interlace_<std::tuple<T_result_types...>, T<T_first>, T_tuples...>
 template<class... T_tuples>
 using tuple_interlace = tuple_interlace_<std::tuple<>, T_tuples...>;
 
+namespace {
+
+template<typename T_tuple1, typename T_tuple2, std::size_t N>
+class interlace_impl {
+public:
+  static
+  typename tuple_interlace<T_tuple1, T_tuple2>::type
+  interlace(const T_tuple1& tuple1, const T_tuple2& tuple2) {
+    const auto first_interlaced =
+      std::make_tuple(std::get<0>(tuple1), std::get<0>(tuple2));
+
+    const auto remaining1 = cdr(tuple1);
+    const auto remaining2 = cdr(tuple2);
+    
+    constexpr auto size1 = std::tuple_size<T_tuple1>::value;
+    constexpr auto size2 = std::tuple_size<T_tuple1>::value;
+    static_assert(size1 == size2,
+      "remaining1 and remaining2 must have the same size.");
+    
+    const auto remaining_interlaced =
+      interlace_impl<typename tuple_cdr<T_tuple1>::type, typename tuple_cdr<T_tuple2>::type, size1 -1>::interlace(remaining1, remaining2);
+
+    return std::tuple_cat(first_interlaced, remaining_interlaced);
+  }
+};
+
+//partial specialization for N=1:
+template<typename T_tuple1, typename T_tuple2>
+class interlace_impl<T_tuple1, T_tuple2, 1> {
+public:
+  static
+  typename tuple_interlace<T_tuple1, T_tuple2>::type
+  interlace(const T_tuple1& tuple1, const T_tuple2& tuple2) {
+    return std::make_tuple(std::get<0>(tuple1), std::get<0>(tuple2));
+  }
+};
+
+} //anonymous namespace
+
+/**
+ * Get the a tuple that interlaces two other tuples.
+ *
+ * For instance,
+ * @code
+ * std::tuple<int, short> tuple_is(1, 2);
+ * std::tuple<double, char> tuple_dc(3.0, '4');
+ * std::tuple<int, double, short, char> interlaced = murraycdp::utils::interlace(tuple_is, tuple_dc);
+ * @endcode
+ */
+template<typename T_tuple1, typename T_tuple2>
+auto interlace(const T_tuple1& tuple1, const T_tuple2& tuple2) -> typename tuple_interlace<T_tuple1, T_tuple2>::type {
+
+  constexpr auto size1 = std::tuple_size<T_tuple1>::value;
+  constexpr auto size2 = std::tuple_size<T_tuple1>::value;
+  static_assert(size1 == size2,
+    "tuple1 and tuple2 must have the same size.");
+
+  return interlace_impl<T_tuple1, T_tuple2, size1>::interlace(tuple1, tuple2);
+}
+
+
 } //namespace utils
 } //namespace murraycdp
 
-#endif //__MURRAYCDP_TUPLE_CDR_H
+#endif //__MURRAYCDP_TUPLE_INTERLACE_H
