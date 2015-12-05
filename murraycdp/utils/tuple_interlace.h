@@ -28,6 +28,16 @@ namespace utils{
 //Based on this:
 //http://stackoverflow.com/a/28182793/1123654
 
+/* This doesn't work, though that would be nice:
+ * See http://en.cppreference.com/w/cpp/language/parameter_pack
+ * where something like this creates an interlaced (zip) tuple<pair, pair>.
+template<class ...Args1> struct tuple_type_interlace {
+  template<class ...Args2> struct with {
+    using type = std::tuple<(Args1, Args2)...>;
+  };
+};
+*/
+
 namespace {
 template<class T, class... T_tuples>
 struct tuple_type_interlace_ {
