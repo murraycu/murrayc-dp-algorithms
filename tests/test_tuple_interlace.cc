@@ -5,6 +5,18 @@
 #include <typeinfo>
 #include <murraycdp/utils/tuple_interlace.h>
 
+void test_tuple_type_interlace_empty() {
+  using type_tuple1 = std::tuple<>;
+  using type_tuple2 = std::tuple<>;
+  using type_tuple12 = std::tuple<>;
+
+  using type_tuple_interlaced =
+    murraycdp::utils::tuple_type_interlace<type_tuple1, type_tuple2>::type;
+
+  static_assert(std::is_same<type_tuple_interlaced, type_tuple12>::value,
+      "unexpected tuple_interlace()ed tuple type");
+}
+
 void test_tuple_type_interlace() {
   using type_tuple_is = std::tuple<int, short>;
   using type_tuple_dc = std::tuple<double, char>;
@@ -15,6 +27,20 @@ void test_tuple_type_interlace() {
 
   static_assert(std::is_same<type_tuple_interlaced, type_tuple_idsc>::value,
       "unexpected tuple_interlace()ed tuple type");
+}
+
+void test_tuple_interlace_empty() {
+  using type_tuple1 = std::tuple<>;
+  using type_tuple2 = std::tuple<>;
+  using type_tuple12 = std::tuple<>;
+  
+  type_tuple1 tuple1;
+  type_tuple2 tuple2;
+
+  auto tuple_interlaced = murraycdp::utils::tuple_interlace(tuple1, tuple2);
+  static_assert(
+    std::is_same<decltype(tuple_interlaced), type_tuple12>::value,
+    "unexpected interlaced tuple type");
 }
 
 void test_tuple_interlace() {
@@ -37,7 +63,9 @@ void test_tuple_interlace() {
 }
 
 int main() {
+  test_tuple_type_interlace_empty();
   test_tuple_type_interlace();
+  test_tuple_interlace_empty();
   test_tuple_interlace();
  
   return EXIT_SUCCESS;

@@ -96,6 +96,17 @@ public:
   }
 };
 
+//partial specialization for N=0:
+template<typename T_tuple1, typename T_tuple2>
+class tuple_interlace_impl<T_tuple1, T_tuple2, 0> {
+public:
+  static
+  typename tuple_type_interlace<T_tuple1, T_tuple2>::type
+  interlace(const T_tuple1& tuple1, const T_tuple2& /* tuple2 */) {
+    return tuple1;
+  }
+};
+
 } //anonymous namespace
 
 /**
