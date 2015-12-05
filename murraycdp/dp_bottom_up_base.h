@@ -47,7 +47,7 @@ template <unsigned int T_COUNT_SUBPROBLEMS_TO_KEEP,
 class DpBottomUpBase : public DpBase<T_subproblem, T_value_types...> {
 public:
   using type_subproblem = T_subproblem;
-  using type_subproblems = typename utils::vector_of_vectors<T_subproblem, 0>::type;
+  using type_subproblems = typename utils::vector_of_vectors<T_subproblem, sizeof...(T_value_types) - 1>::type;
   using type_base = DpBase<T_subproblem, T_value_types...>;
   using type_values = typename type_base::type_values;
 
