@@ -44,9 +44,9 @@ class DpTopDownBase : public DpBase<T_subproblem, T_value_types...> {
 public:
   using type_base = DpBase<T_subproblem, T_value_types...>;
   using type_subproblem = T_subproblem;
-  using type_level = unsigned int;
-  
   using type_values = typename type_base::type_values;
+
+  using type_level = unsigned int;
 
   /**
    * @param The number of i values to calculate the subproblem for.
