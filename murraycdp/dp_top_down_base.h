@@ -46,7 +46,7 @@ public:
   using type_subproblem = T_subproblem;
   using type_level = unsigned int;
   
-  using type_values = std::tuple<T_value_types...>;
+  using type_values = typename type_base::type_values;
 
   /**
    * @param The number of i values to calculate the subproblem for.
