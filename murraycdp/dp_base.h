@@ -33,13 +33,14 @@ namespace murraycdp {
  *
  * @tparam T_subproblem The type of the subproblem solution, such as unsigned int,
  * or a custom class containing a value and a partial path.
+ * @tparam T_value_types The types of the parameters for the calc_subproblem() method.
  */
 template <typename T_subproblem, typename... T_value_types>
 class DpBase {
 public:
   using type_subproblem = T_subproblem;
   using type_level = unsigned int;
-  using type_values = std::tuple<T_value_types...>;
+  using type_values = std::tuple<typename std::decay<T_value_types>::type...>;
 
   /**
    * @param i The number of i values to calculate the subproblem for.
@@ -82,7 +83,7 @@ protected:
 
   /** Get the cell whose value contains the solution.
    */
-  virtual void get_goal_cell(T_value_types&... values) const = 0;
+  virtual void get_goal_cell(typename std::decay<T_value_types>::type&... values) const = 0;
 
   virtual bool get_cached_subproblem(type_subproblem& subproblem, T_value_types... values) const = 0;
   virtual void set_subproblem(const type_subproblem& subproblem, T_value_types... values) const = 0;

@@ -123,7 +123,7 @@ class DpTsp
   : public murraycdp::DpTopDownBase<
       type_subproblem,
       std::size_t, // m: nodes_count
-      type_vec_node_ids,
+      const type_vec_node_ids&,
       std::size_t // j: each node id in the subset.
       > {
 public:
@@ -172,7 +172,7 @@ public:
 private:
   using uint = unsigned int;
   
-  type_subproblem calc_subproblem(type_level level, std::size_t m, type_vec_node_ids subset, std::size_t j) const override {  
+  type_subproblem calc_subproblem(type_level level, std::size_t m, const type_vec_node_ids& subset, std::size_t j) const override {
     if(j == start_node_id_)
       return 0; //TODO
 

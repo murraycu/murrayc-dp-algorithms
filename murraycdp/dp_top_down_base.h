@@ -38,6 +38,7 @@ namespace murraycdp {
  * overall solution.
  * @tparam T_subproblem The type of the subproblem solution, such as unsigned int,
  * or a custom class containing a value and a partial path.
+ * @tparam T_value_types The types of the parameters for the calc_subproblem() method.
  */
 template <typename T_subproblem, typename... T_value_types>
 class DpTopDownBase : public DpBase<T_subproblem, T_value_types...> {
