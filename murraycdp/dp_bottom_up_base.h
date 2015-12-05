@@ -32,7 +32,7 @@
 
 namespace murraycdp {
 
-#define MURRAYC_DP_DEBUG_OUTPUT = 1;
+//#define MURRAYC_DP_DEBUG_OUTPUT = 1;
 
 /** A base class for a 2D bottom-up dynamic programming algorithm.
  *

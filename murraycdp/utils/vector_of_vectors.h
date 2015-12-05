@@ -82,6 +82,11 @@ void resize_vector_of_vectors(std::vector<T>& vector, T_first_size first_size) {
   vector.resize(first_size);
 }
 
+template<class T>
+void resize_vector_of_vectors(T /* base_type */) {
+  //Do nothing.
+}
+
 /**
  * Resize a vector of vectors.
  * For instance, when calling this on a std::vector<std::vector<std::vector<int>>>,

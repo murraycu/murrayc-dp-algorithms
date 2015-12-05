@@ -8,6 +8,12 @@ void test_type() {
   //The preprocessor doesn't like having it all inside the assert() macro.
   //It complains about there being 2 arguments instead of 1.
   //So we do it like this:
+
+  using type_vec0 = murraycdp::utils::vector_of_vectors<int, 0>::type;
+  constexpr auto is_same0 = std::is_same<type_vec0, int>::value;
+  static_assert(is_same0,
+    "unexpected type");
+
   using type_vec1 = murraycdp::utils::vector_of_vectors<int, 1>::type;
   constexpr auto is_same1 = std::is_same< type_vec1,
     std::vector<int> >::value;
@@ -28,6 +34,11 @@ void test_type() {
 }
 
 void test_resize() {
+  using type_vec0 = murraycdp::utils::vector_of_vectors<int, 0>::type;
+  type_vec0 vec0 = type_vec0(); //This will be an int.
+  murraycdp::utils::resize_vector_of_vectors(vec0);
+  //assert(vec1.size() == 10);
+
   using type_vec1 = murraycdp::utils::vector_of_vectors<int, 1>::type;
   type_vec1 vec1;
   murraycdp::utils::resize_vector_of_vectors(vec1, 10);
