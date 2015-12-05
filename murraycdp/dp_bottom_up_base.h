@@ -98,15 +98,15 @@ public:
         std::tuple_size<decltype(values_start_end)>::value;
 
       call_for_sub_vectors_with_tuple(subproblems_i,
-        [this, level, i] (auto j) {
-          const auto subproblem = this->calc_subproblem(level, i, j);
-          this->set_subproblem(subproblem, i, j);
+        [this, level, i] (auto... params) {
+          const auto subproblem = this->calc_subproblem(level, i, params...);
+          this->set_subproblem(subproblem, i, params...);
 
 #if defined(MURRAYC_DP_DEBUG_OUTPUT)
-          if (j != 0) {
-            std::cout << ", ";
-          }
-          std::cout << std::setw(2) << subproblem.cost;
+          //if (j != 0) {
+          //  std::cout << ", ";
+          //}
+          //std::cout << std::setw(2) << subproblem.cost;
 #endif
         },
         values_start_end,
