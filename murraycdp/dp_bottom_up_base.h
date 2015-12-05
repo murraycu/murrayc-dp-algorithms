@@ -46,10 +46,12 @@ template <unsigned int T_COUNT_SUBPROBLEMS_TO_KEEP,
   typename T_subproblem, typename... T_value_types>
 class DpBottomUpBase : public DpBase<T_subproblem, T_value_types...> {
 public:
-  using type_subproblem = T_subproblem;
-  using type_subproblems = typename utils::vector_of_vectors<T_subproblem, sizeof...(T_value_types) - 1>::type;
   using type_base = DpBase<T_subproblem, T_value_types...>;
+  using type_subproblem = T_subproblem;
   using type_values = typename type_base::type_values;
+  using type_level = typename type_base::type_level;
+
+  using type_subproblems = typename utils::vector_of_vectors<T_subproblem, sizeof...(T_value_types) - 1>::type;
 
   /**
    * @param The number of i values to calculate the subproblem for.
@@ -78,7 +80,7 @@ public:
   type_subproblem calc() override {
     //TODO: subproblems_.clear();
 
-    typename type_base::type_level level = 0; //unused
+    type_level level = 0; //unused
 
     //For some reason this always sets depth to 1:
     //const bool depth = sizeof...(T_value_types);
@@ -241,7 +243,7 @@ private:
 
   /// Call calc_subproblem(level, a, b, c, d) with std::tuple<a, b, c, d>
   template<std::size_t... Is>
-  type_subproblem calc_subproblem_call_with_tuple(typename type_base::type_level level,
+  type_subproblem calc_subproblem_call_with_tuple(type_level level,
     const type_values& values,
     std::index_sequence<Is...>) {
     return this->calc_subproblem(level, std::get<Is>(values)...);
