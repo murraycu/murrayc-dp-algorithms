@@ -118,6 +118,20 @@ void resize_vector_of_vectors(std::vector<std::vector<T>>& vector, T_first_size 
   );
 }
 
+/**
+ * This is useless, but it lets us call get_at_vector_of_vectors() on an
+ * instance of vector_of_vectors<Something, 0>::type,
+ * so we can write generic code.
+ */
+template<class T_element>
+T_element& get_at_vector_of_vectors(T_element& element) {
+  return element;
+}
+
+template<class T_element>
+const T_element& get_at_vector_of_vectors(const T_element& element) {
+  return element;
+}
 
 /**
  * Get an element from a vector.

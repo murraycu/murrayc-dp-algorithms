@@ -61,9 +61,10 @@ void test_resize() {
 void test_get_at() {
   //This will actuall just be int:
   using type_vec0 = murraycdp::utils::vector_of_vectors<int, 0>::type;
-  type_vec0 vec0;
-  vec0 = 9;
-  assert(vec0 == 9);
+  type_vec0 vec0 = type_vec0();
+  murraycdp::utils::resize_vector_of_vectors(vec0); //Does nothing.
+  const auto val0 = murraycdp::utils::get_at_vector_of_vectors(vec0);
+  assert(val0 == type_vec0());
 
   //This will be std::vector<int>
   using type_vec1 = murraycdp::utils::vector_of_vectors<int, 1>::type;
