@@ -62,9 +62,11 @@ public:
     const auto value_counts_without_i = utils::tuple_cdr(value_counts_);
     constexpr auto tuple_size =
       std::tuple_size<decltype(value_counts_without_i)>::value;
-    call_resize_sub_vectors_with_tuple(
-      value_counts_without_i,
-      std::make_index_sequence<tuple_size>());
+    if (tuple_size > 0) {
+      call_resize_sub_vectors_with_tuple(
+        value_counts_without_i,
+        std::make_index_sequence<tuple_size>());
+    }
   }
   
   DpBottomUpBase(const DpBottomUpBase& src) = delete;
