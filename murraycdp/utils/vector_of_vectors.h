@@ -216,6 +216,11 @@ void for_vector_of_vectors_with_indices(std::vector<std::vector<T>>& vector, T_f
 
 } //anonymous namespace
 
+template<class T, class T_function>
+void for_vector_of_vectors(T /* vector */, T_function /* f */) {
+  // do nothing.
+}
+
 /**
  * Call @a f on a range of items in the vector.
  *

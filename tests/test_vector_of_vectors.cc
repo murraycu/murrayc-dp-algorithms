@@ -115,6 +115,21 @@ void test_get_at_const() {
   assert(val3 == 9);
 }
 
+void test_for0() {
+  //This does nothing, but it should compile so we can write generic code:
+  using type_vec0 = murraycdp::utils::vector_of_vectors<int, 0>::type;
+  type_vec0 vec0 = type_vec0();
+  //murraycdp::utils::resize_vector_of_vectors(vec0);
+
+  std::size_t n = 0;
+  murraycdp::utils::for_vector_of_vectors(vec0,
+    [&n] (int i) {
+      n += i;
+    });
+  //std::cout << "n=" << n << std::endl;
+  assert(n == 0);
+}
+
 void test_for1() {
   using type_vec1 = murraycdp::utils::vector_of_vectors<int, 1>::type;
   type_vec1 vec1;
@@ -164,6 +179,7 @@ void test_for3() {
 }
 
 void test_for() {
+  test_for0();
   test_for1();
   test_for2();
   test_for3();
