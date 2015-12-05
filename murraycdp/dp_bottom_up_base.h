@@ -103,47 +103,45 @@ public:
         set_subproblem_call_with_tuple(subproblem,
           values,
           std::index_sequence_for<T_value_types...>());
+      } else {
+        type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
 
-        continue;
+        using type_values_counts_without_i =
+          typename utils::tuple_type_cdr<type_values>::type;
+        //TODO: Why can't this be const when it is tuple<> (with no element types):
+        type_values_counts_without_i values_starts_without_i; //TODO: explicitly initialize to 0.
+        const auto value_counts_without_i = utils::tuple_cdr(value_counts_);
+
+        const auto values_start_end =
+          utils::tuple_interlace(values_starts_without_i, value_counts_without_i);
+
+        constexpr std::size_t values_start_end_size =
+          std::tuple_size<decltype(values_start_end)>::value;
+
+        call_for_sub_vectors_with_tuple(subproblems_i,
+          [this, level, i] (auto... params) {
+            const auto subproblem = this->calc_subproblem(level, i, params...);
+            this->set_subproblem(subproblem, i, params...);
+
+#if defined(MURRAYC_DP_DEBUG_OUTPUT)
+            //if (j != 0) {
+            //  std::cout << ", ";
+            //}
+            //std::cout << std::setw(2) << subproblem.cost;
+#endif
+          },
+          values_start_end,
+          std::make_index_sequence<values_start_end_size>()
+        );
+
+#if defined(MURRAYC_DP_DEBUG_OUTPUT)
+        std::cout << std::endl;
+#endif
       }
-
-      type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
-
-      using type_values_counts_without_i =
-        typename utils::tuple_type_cdr<type_values>::type;
-      //TODO: Why can't this be const when it is tuple<> (with no element types):
-      type_values_counts_without_i values_starts_without_i; //TODO: explicitly initialize to 0.
-      const auto value_counts_without_i = utils::tuple_cdr(value_counts_);
-
-      const auto values_start_end =
-        utils::tuple_interlace(values_starts_without_i, value_counts_without_i);
-
-      constexpr std::size_t values_start_end_size =
-        std::tuple_size<decltype(values_start_end)>::value;
-
-      call_for_sub_vectors_with_tuple(subproblems_i,
-        [this, level, i] (auto... params) {
-          const auto subproblem = this->calc_subproblem(level, i, params...);
-          this->set_subproblem(subproblem, i, params...);
-
-#if defined(MURRAYC_DP_DEBUG_OUTPUT)
-          //if (j != 0) {
-          //  std::cout << ", ";
-          //}
-          //std::cout << std::setw(2) << subproblem.cost;
-#endif
-        },
-        values_start_end,
-        std::make_index_sequence<values_start_end_size>()
-      );
-
-#if defined(MURRAYC_DP_DEBUG_OUTPUT)
-      std::cout << std::endl;
-#endif
 
       //subproblems_i will then be read as subproblems_i_minus_1;
       //and subproblems_i_minus_1 will be filled as subproblems_i;
-      subproblems_.step(); //Swap subproblems_i and subproblems_i_minus_1.
+      subproblems_.step();
     }
 
     //We cannot do this to pass the output parameters to get_goal_cell():
