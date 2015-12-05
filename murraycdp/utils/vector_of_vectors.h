@@ -59,6 +59,12 @@ public:
 template<class T>
 class vector_of_vectors<T, 0> {
 public:
+  using type = T;
+};
+
+template<class T>
+class vector_of_vectors<T, 1> {
+public:
   using type = std::vector<T>;
 };
 /// @endcond DOXYGEN_HIDDEN_SYMBOLS
