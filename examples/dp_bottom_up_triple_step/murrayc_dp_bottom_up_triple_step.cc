@@ -44,20 +44,15 @@ private:
       //0 steps to get to 0:
       return 0;
     }
-    
-    const type_subproblems subproblem_i_minus_1 = subproblems_.get(-1);
-    std::size_t result = subproblem_i_minus_1 + 1;
 
-    if(i >= 2) {
-      const type_subproblems subproblem_i_minus_2 = subproblems_.get(-2);
-      result += subproblem_i_minus_2 + 2;
+    std::size_t result = 0;
+    for (std::size_t j = 1; j <= 3; ++j) {
+      if(i >= j) {
+        const type_subproblems subproblem_prev = subproblems_.get(-j);
+        result += subproblem_prev + j;
+      }
     }
 
-    if(i >= 3) {
-      const type_subproblems subproblem_i_minus_3 = subproblems_.get(-3);
-      result += subproblem_i_minus_3 + 3;
-    }
-    
     return result;
   }
 
