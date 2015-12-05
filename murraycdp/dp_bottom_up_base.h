@@ -80,17 +80,39 @@ public:
 
     typename type_base::type_level level = 0; //unused
 
+    //For some reason this always sets depth to 1:
+    //const bool depth = sizeof...(T_value_types);
+    //so we use std::tuple_size() instead.
+    constexpr auto depth = std::tuple_size<type_values>::value; //sizeof...(T_value_types);
+    //std::cout << "debug: depth=" << depth << std::endl;
+
     const auto i_count = std::get<0>(value_counts_);
     for (unsigned int i = 0; i < i_count; ++i) {
 #if defined(MURRAYC_DP_DEBUG_OUTPUT)
       std::cout << "i=" << std::setw(2) << i << ": ";
 #endif
+      if (depth == 1) {
+        //Call it via a tuple,
+        //to avoid a compilation error when depth is not 1:
+        type_values values;
+        std::get<0>(values) = i;
+        const auto subproblem = calc_subproblem_call_with_tuple(level,
+          values,
+          std::index_sequence_for<T_value_types...>());
+
+        set_subproblem_call_with_tuple(subproblem,
+          values,
+          std::index_sequence_for<T_value_types...>());
+
+        continue;
+      }
 
       type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
 
       using type_values_counts_without_i =
         typename utils::tuple_type_cdr<type_values>::type;
-      const type_values_counts_without_i values_starts_without_i(0);
+      //TODO: Why can't this be const when it is tuple<> (with no element types):
+      type_values_counts_without_i values_starts_without_i; //TODO: explicitly initialize to 0.
       const auto value_counts_without_i = utils::tuple_cdr(value_counts_);
 
       const auto values_start_end =
@@ -217,6 +239,22 @@ private:
     std::index_sequence<Is...>) const {
     murraycdp::utils::for_vector_of_vectors(vector, f,
       std::get<Is>(tuple)...);
+  }
+
+  /// Call calc_subproblem(level, a, b, c, d) with std::tuple<a, b, c, d>
+  template<std::size_t... Is>
+  type_subproblem calc_subproblem_call_with_tuple(typename type_base::type_level level,
+    const type_values& values,
+    std::index_sequence<Is...>) {
+    return this->calc_subproblem(level, std::get<Is>(values)...);
+  }
+
+  /// Call set_subproblem(level, a, b, c, d) with std::tuple<a, b, c, d>
+  template<std::size_t... Is>
+  void set_subproblem_call_with_tuple(const type_subproblem& subproblem,
+    const type_values& values,
+    std::index_sequence<Is...>) {
+    return this->set_subproblem(subproblem, std::get<Is>(values)...);
   }
 
 
