@@ -34,6 +34,7 @@ nobase_library_include_HEADERS = $(h_sources_public)
 
 
 check_PROGRAMS = \
+  examples/murrayc_dp_bottom_up_fibonacci \
   examples/murrayc_dp_bottom_up_string_edit_distance \
   examples/murrayc_dp_bottom_up_string_substring_matching \
   examples/murrayc_dp_bottom_up_triple_step \
@@ -68,6 +69,13 @@ examples_murrayc_dp_bottom_up_triple_step_SOURCES = \
 examples_murrayc_dp_bottom_up_triple_step_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 examples_murrayc_dp_bottom_up_triple_step_LDADD = \
+	$(PROJECT_LIBS)
+
+examples_murrayc_dp_bottom_up_fibonacci_SOURCES = \
+	examples/dp_bottom_up_fibonacci/murrayc_dp_bottom_up_fibonacci.cc
+examples_murrayc_dp_bottom_up_fibonacci_CXXFLAGS = \
+	$(COMMON_CXXFLAGS)
+examples_murrayc_dp_bottom_up_fibonacci_LDADD = \
 	$(PROJECT_LIBS)
 
 examples_murrayc_dp_top_down_string_edit_distance_SOURCES = \
