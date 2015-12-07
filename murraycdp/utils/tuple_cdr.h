@@ -49,8 +49,7 @@ struct tuple_type_cdr
 {};
 
 template<typename T, std::size_t I0, std::size_t... I>
-typename tuple_type_cdr<T>::type
-tuple_cdr_impl(const T& t, std::index_sequence<I0, I...>) {
+decltype(auto) tuple_cdr_impl(const T& t, std::index_sequence<I0, I...>) {
   return std::make_tuple(std::get<I>(t)...);
 }
 
@@ -59,8 +58,7 @@ tuple_cdr_impl(const T& t, std::index_sequence<I0, I...>) {
  * This is analogous to std::tuple_cat().
  */
 template<typename T>
-typename tuple_type_cdr<T>::type
-tuple_cdr(const T& t) {
+decltype(auto) tuple_cdr(const T& t) {
   constexpr auto size = std::tuple_size<T>::value;
   const auto seq = std::make_index_sequence<size>{};
   return tuple_cdr_impl(t, seq);

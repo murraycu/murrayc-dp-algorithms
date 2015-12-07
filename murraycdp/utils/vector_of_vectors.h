@@ -261,7 +261,6 @@ void for_vector_of_vectors(std::vector<T>& /* vector */, T_function f, T_first_s
  */
 template<class T, class T_function, class T_first_size_start, class T_first_size_end, class... T_other_sizes>
 void for_vector_of_vectors(std::vector<std::vector<T>>& vector, T_function f, T_first_size_start start, T_first_size_end end, T_other_sizes... other_sizes) {
-
   for (T_first_size_start i = start; i < end; ++i) {
     const std::tuple<T_first_size_start> index_i(i);
     for_vector_of_vectors_with_indices(vector[i], f, index_i, other_sizes...);

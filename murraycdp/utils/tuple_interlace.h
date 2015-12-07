@@ -65,8 +65,7 @@ template<typename T_tuple1, typename T_tuple2, std::size_t N>
 class tuple_interlace_impl {
 public:
   static
-  typename tuple_type_interlace<T_tuple1, T_tuple2>::type
-  interlace(const T_tuple1& tuple1, const T_tuple2& tuple2) {
+  decltype(auto) interlace(const T_tuple1& tuple1, const T_tuple2& tuple2) {
     const auto first_interlaced =
       std::make_tuple(std::get<0>(tuple1), std::get<0>(tuple2));
 
@@ -90,8 +89,7 @@ template<typename T_tuple1, typename T_tuple2>
 class tuple_interlace_impl<T_tuple1, T_tuple2, 1> {
 public:
   static
-  typename tuple_type_interlace<T_tuple1, T_tuple2>::type
-  interlace(const T_tuple1& tuple1, const T_tuple2& tuple2) {
+  decltype(auto) interlace(const T_tuple1& tuple1, const T_tuple2& tuple2) {
     return std::make_tuple(std::get<0>(tuple1), std::get<0>(tuple2));
   }
 };
@@ -101,8 +99,7 @@ template<typename T_tuple1, typename T_tuple2>
 class tuple_interlace_impl<T_tuple1, T_tuple2, 0> {
 public:
   static
-  typename tuple_type_interlace<T_tuple1, T_tuple2>::type
-  interlace(const T_tuple1& tuple1, const T_tuple2& /* tuple2 */) {
+  decltype(auto) interlace(const T_tuple1& tuple1, const T_tuple2& /* tuple2 */) {
     return tuple1;
   }
 };
@@ -122,7 +119,7 @@ public:
  * This is analogous to std::tuple_cat().
  */
 template<typename T_tuple1, typename T_tuple2>
-auto tuple_interlace(const T_tuple1& tuple1, const T_tuple2& tuple2) -> typename tuple_type_interlace<T_tuple1, T_tuple2>::type {
+decltype(auto) tuple_interlace(const T_tuple1& tuple1, const T_tuple2& tuple2) {
 
   constexpr auto size1 = std::tuple_size<T_tuple1>::value;
   constexpr auto size2 = std::tuple_size<T_tuple1>::value;
