@@ -79,7 +79,7 @@ public:
   DpBottomUpBase& operator=(DpBottomUpBase&& src) = delete;
 
   type_subproblem calc() override {
-    //TODO: subproblems_.clear();
+    subproblems_.clear();
 
     type_level level = 0; //unused
 

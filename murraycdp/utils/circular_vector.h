@@ -77,6 +77,12 @@ class circular_vector {
       }
     }
     
+    void clear() {
+      pos_zero_ = 0;
+      steps_count_ = 0;
+      //TODO: Wipe the actual data.
+    }
+
   private:
     /** Get a position relative to pos_zero_,
      * wrapping around if necessary.
