@@ -20,7 +20,7 @@ AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)
 AM_CXXFLAGS = $(PROJECT_WXXFLAGS)
 
 # TODO: Why do we still need to specify this for each executable that we build?
-COMMON_CXXFLAGS = $(PROJECT_CFLAGS) $(PROJECT_WXXFLAGS)
+COMMON_CXXFLAGS = $(PROJECT_CFLAGS) $(PROJECT_WXXFLAGS) $(BOOST_CPPFLAGS)
 
 include $(top_srcdir)/murraycdp/filelist.am
 
@@ -76,7 +76,9 @@ examples_murrayc_dp_bottom_up_fibonacci_SOURCES = \
 examples_murrayc_dp_bottom_up_fibonacci_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 examples_murrayc_dp_bottom_up_fibonacci_LDADD = \
-	$(PROJECT_LIBS)
+	$(PROJECT_LIBS) \
+	$(BOOST_SYSTEM_LIB) \
+	$(BOOST_TIMER_LIB)
 
 examples_murrayc_dp_top_down_string_edit_distance_SOURCES = \
 	examples/dp_top_down_string_edit_distance/murrayc_dp_top_down_string_edit_distance.cc

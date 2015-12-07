@@ -21,6 +21,7 @@
 #include <vector>
 #include <iomanip>
 #include <limits>
+#include <boost/timer/timer.hpp>
 
 #include <murraycdp/dp_bottom_up_base.h>
 
@@ -84,7 +85,13 @@ int main() {
   const auto n = 90;
   
   DpFibonacci dp(n);
-  const auto result = dp.calc();
+
+  unsigned long result = 0;
+  {
+    boost::timer::auto_cpu_timer timer;
+    result = dp.calc();
+  }
+
   std::cout << "fibonacci number: " << n << std::endl
     << "result: " << result << std::endl;
 

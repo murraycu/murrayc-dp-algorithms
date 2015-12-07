@@ -37,7 +37,10 @@ AC_SUBST([LIBMURRAYDP_SO_VERSION], [0:0:0])
 #PKG_CHECK_MODULES([PROJECT], [])
 
 # See http://www.gnu.org/software/autoconf-archive/ax_boost_base.html
-#AX_BOOST_BASE
+# Boost System is needed by Boost Timer
+AX_BOOST_BASE
+AX_BOOST_SYSTEM
+AX_BOOST_TIMER
 
 AC_LANG([C++])
 MM_ARG_ENABLE_WARNINGS([PROJECT_WXXFLAGS],
