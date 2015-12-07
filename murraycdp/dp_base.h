@@ -119,14 +119,6 @@ protected:
     return result;
   }
 
-  /// Call get_subproblem(level, a, b, c, d) with std::tuple<a, b, c, d>
-  template<std::size_t... Is>
-  type_subproblem get_subproblem_call_with_tuple(type_level level,
-    const type_values& goals,
-    std::index_sequence<Is...>) {
-    return get_subproblem(level, std::get<Is>(goals)...);
-  }
-
   /// Call get_goal_cell(a, b, c, d) with std::tuple<a, b, c, d>
   template<std::size_t... Is>
   void get_goal_cell_call_with_tuple(

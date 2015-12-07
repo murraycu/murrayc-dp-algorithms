@@ -25,6 +25,7 @@
 #include <limits>
 #include <unordered_map>
 #include <tuple>
+#include <experimental/tuple> //For apply().
 #include <murraycdp/dp_base.h>
 #include <murraycdp/utils/tuple_hash.h>
 
@@ -76,8 +77,11 @@ public:
     //std::cout << "calc: " << std::get<0>(goals) << std::endl;
 
     type_level level = 0;
-    return this->get_subproblem_call_with_tuple(level, goals,
-      std::index_sequence_for<T_value_types...>());
+    return std::experimental::apply(
+      [this, level] (T_value_types... the_values) {
+        return this->get_subproblem(level, the_values...);
+      },
+      goals);
   }
 
   unsigned int count_cached_sub_problems() const {

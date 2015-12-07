@@ -24,6 +24,8 @@
 #include <iomanip>
 #include <limits>
 
+#include <experimental/tuple> //For apply().
+
 #include <murraycdp/dp_base.h>
 #include <murraycdp/utils/circular_vector.h>
 #include <murraycdp/utils/vector_of_vectors.h>
@@ -99,13 +101,18 @@ public:
         //to avoid a compilation error when depth is not 1:
         type_values values;
         std::get<0>(values) = i;
-        const auto subproblem = calc_subproblem_call_with_tuple(level,
-          values,
-          std::index_sequence_for<T_value_types...>());
 
-        set_subproblem_call_with_tuple(subproblem,
-          values,
-          std::index_sequence_for<T_value_types...>());
+        const auto subproblem = std::experimental::apply(
+          [this, level] (T_value_types... the_values) {
+            return this->calc_subproblem(level, the_values...);
+          },
+          values);
+
+        std::experimental::apply(
+          [this, subproblem] (T_value_types... the_values) {
+            return this->set_subproblem(subproblem, the_values...);
+          },
+          values);
       } else {
         type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
 
@@ -152,14 +159,27 @@ public:
     //but we can pass a std::tuple<> based on T_type_values... 
     //and that will then be passed as individual parameters when we unpack it
     //via std::index_sequence.
+
+    /*
+    type_values goals;
+    std::experimental::apply(
+      [this] (T_value_types... the_values) {
+        return this->get_goal_cell(the_values...);
+      },
+      goals);
+    */
+
     type_values goals;
     this->get_goal_cell_call_with_tuple(goals,
       std::index_sequence_for<T_value_types...>());
     //std::cout << "goal_i=" << goal_i << ", goal_j=" << goal_j << std::endl;
     //std::cout << "calc: " << std::get<0>(goals) << std::endl;
 
-    return this->get_subproblem_call_with_tuple(level, goals,
-      std::index_sequence_for<T_value_types...>());
+    return std::experimental::apply(
+      [this, level] (T_value_types... the_values) {
+        return this->get_subproblem(level, the_values...);
+      },
+      goals);
   }
 
 private:
@@ -241,23 +261,6 @@ private:
     murraycdp::utils::for_vector_of_vectors(vector, f,
       std::get<Is>(tuple)...);
   }
-
-  /// Call calc_subproblem(level, a, b, c, d) with std::tuple<a, b, c, d>
-  template<std::size_t... Is>
-  type_subproblem calc_subproblem_call_with_tuple(type_level level,
-    const type_values& values,
-    std::index_sequence<Is...>) {
-    return this->calc_subproblem(level, std::get<Is>(values)...);
-  }
-
-  /// Call set_subproblem(level, a, b, c, d) with std::tuple<a, b, c, d>
-  template<std::size_t... Is>
-  void set_subproblem_call_with_tuple(const type_subproblem& subproblem,
-    const type_values& values,
-    std::index_sequence<Is...>) {
-    return this->set_subproblem(subproblem, std::get<Is>(values)...);
-  }
-
 
 protected:
   using type_vec_subproblems = utils::circular_vector<type_subproblems>;
