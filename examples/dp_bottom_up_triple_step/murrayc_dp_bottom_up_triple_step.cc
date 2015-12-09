@@ -38,7 +38,7 @@ public:
   {}
 
 private:
-  type_subproblem calc_subproblem(type_base::type_level /* level */, std::size_t i) const override {
+  type_subproblem calc_subproblem(type_base::type_level level, std::size_t i) const override {
     //Base cases:
     if (i == 0) {
       //0 steps to get to 0:
@@ -48,7 +48,7 @@ private:
     std::size_t result = 0;
     for (std::size_t j = 1; j <= 3; ++j) {
       if(i >= j) {
-        const type_subproblems subproblem_prev = subproblems_.get(-j);
+        const auto subproblem_prev = get_subproblem(level, i - j);
         result += subproblem_prev + j;
       }
     }

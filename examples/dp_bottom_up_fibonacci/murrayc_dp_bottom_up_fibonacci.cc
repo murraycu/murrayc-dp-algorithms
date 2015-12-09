@@ -62,7 +62,7 @@ public:
   {}
 
 private:
-  type_subproblem calc_subproblem(type_base::type_level /* level */, unsigned int i) const override {
+  type_subproblem calc_subproblem(type_base::type_level level, unsigned int i) const override {
     //Base cases:
     if (i == 0) {
       return 0;
@@ -70,7 +70,7 @@ private:
       return 1;
     }
 
-    return subproblems_.get(-1) + subproblems_.get(-2);
+    return get_subproblem(level, i - 1) + get_subproblem(level, i -2);
   }
 
   void get_goal_cell(unsigned int& i) const override {
