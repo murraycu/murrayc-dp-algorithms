@@ -34,7 +34,7 @@ public:
   }                                              
 };
 
-namespace  {
+namespace {
 
 template <class T_tuple>
 inline void hash_combine(std::size_t& seed, const T_tuple& v) {

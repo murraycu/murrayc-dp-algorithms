@@ -39,6 +39,7 @@ template<class ...Args1> struct tuple_type_interlace {
 */
 
 namespace {
+
 template<class T, class... T_tuples>
 struct tuple_type_interlace_ {
   using type = T;
