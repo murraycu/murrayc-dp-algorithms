@@ -57,7 +57,7 @@ class DpFibonacci
       > {
 public:
   DpFibonacci(unsigned int n)
-  : DpBottomUpBase(n + 1), //TODO: Why does the compiler fail when we prefix this with murraycdp::
+  : DpBottomUpBase(n + 1), //DpBottomUpBase without the specialization is apparently allowed.
     n_(n)
   {}
 

@@ -33,7 +33,7 @@ class DpTripleStep
       > {
 public:
   DpTripleStep(const std::size_t steps_count)
-  : DpBottomUpBase(steps_count), //TODO: Why does the compiler fail when we prefix this with murraycdp::
+  : DpBottomUpBase(steps_count), //DpBottomUpBase without the specialization is apparently allowed.
     steps_count_(steps_count)
   {}
 

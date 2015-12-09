@@ -79,7 +79,7 @@ class DpSubstringMatching
       Cost, uint, uint> {
 public:
   DpSubstringMatching(const std::string& str, const std::string& pattern)
-  : DpBottomUpBase(str.size() + 1, pattern.size() + 1), //TODO: Why does the compiler fail when we prefix this with murraycdp::
+  : DpBottomUpBase(str.size() + 1, pattern.size() + 1), //DpBottomUpBase without the specialization is apparently allowed.
     str_(str),
     pattern_(pattern)
   {}
