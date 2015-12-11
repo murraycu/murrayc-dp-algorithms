@@ -42,6 +42,7 @@ check_PROGRAMS = \
   examples/murrayc_dp_top_down_make_change \
   examples/murrayc_dp_top_down_knapsack \
   examples/murrayc_dp_top_down_parenthesization \
+  examples/murrayc_dp_top_down_parse_context_free_grammar \
   examples/murrayc_dp_top_down_tsp \
   tests/test_vector_of_vectors \
   tests/test_tuple_cdr \
@@ -107,6 +108,13 @@ examples_murrayc_dp_top_down_parenthesization_SOURCES = \
 examples_murrayc_dp_top_down_parenthesization_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 examples_murrayc_dp_top_down_parenthesization_LDADD = \
+	$(PROJECT_LIBS)
+
+examples_murrayc_dp_top_down_parse_context_free_grammar_SOURCES = \
+	examples/dp_top_down_parse_context_free_grammar/murrayc_dp_top_down_parse_context_free_grammar.cc
+examples_murrayc_dp_top_down_parse_context_free_grammar_CXXFLAGS = \
+	$(COMMON_CXXFLAGS)
+examples_murrayc_dp_top_down_parse_context_free_grammar_LDADD = \
 	$(PROJECT_LIBS)
 
 examples_murrayc_dp_top_down_tsp_SOURCES = \
