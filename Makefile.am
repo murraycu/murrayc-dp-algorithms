@@ -118,8 +118,7 @@ examples_murrayc_dp_top_down_parse_context_free_grammar_LDADD = \
 	$(PROJECT_LIBS)
 
 examples_murrayc_dp_top_down_tsp_SOURCES = \
-	examples/dp_top_down_tsp/murrayc_dp_top_down_tsp.cc \
-	examples/dp_top_down_tsp/subset_iterator.h
+	examples/dp_top_down_tsp/murrayc_dp_top_down_tsp.cc
 examples_murrayc_dp_top_down_tsp_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 examples_murrayc_dp_top_down_tsp_LDADD = \
