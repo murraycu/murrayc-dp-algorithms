@@ -20,6 +20,7 @@
 #include <vector>
 #include <algorithm>
 #include <tuple>
+#include <experimental/tuple> //For apply().
 
 namespace murraycdp {
 namespace utils{
@@ -186,22 +187,13 @@ const T_element& get_at_vector_of_vectors(const std::vector<std::vector<T>>& vec
 
 namespace {
 
-/// Call f(a, b, c, d) with std::tuple<a, b, c, d>
-template<class T_function, class T_tuple, std::size_t... Is>
-void call_with_tuple(T_function f,
-  const T_tuple& tuple, std::index_sequence<Is...>) {
-  f(std::get<Is>(tuple)...);
-}
-
 template<class T, class T_function, class T_tuple_indices, class T_first_size_start, class T_first_size_end>
 void for_vector_of_vectors_with_indices(std::vector<T>& /* vector */, T_function f, const T_tuple_indices& indices, T_first_size_start start, T_first_size_end end) {
   for (T_first_size_start i = start; i < end; ++i) {
     const std::tuple<T_first_size_start> index_i(i);
     const auto indices_with_i = std::tuple_cat(indices, index_i);
 
-    constexpr std::size_t tuple_size = std::tuple_size<T_tuple_indices>::value + 1;
-    call_with_tuple(f, indices_with_i,
-      std::make_index_sequence<tuple_size>());
+    std::experimental::apply(f, indices_with_i);
   }
 }
 
