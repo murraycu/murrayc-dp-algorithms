@@ -17,7 +17,7 @@ void test_tuple_type_cdr() {
 void test_tuple_cdr() {
   auto t_larger = std::make_tuple(nullptr, std::string("hello"),
     std::string("world"));
-  auto t_suffix = murraycdp::utils::tuple_cdr<decltype(t_larger)>(t_larger);
+  auto t_suffix = murraycdp::utils::tuple_cdr(t_larger);
   assert(std::get<0>(t_suffix) == "hello");
   assert(std::get<1>(t_suffix) == "world");
 
