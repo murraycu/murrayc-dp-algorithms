@@ -2,7 +2,6 @@
 #include <cassert>
 #include <utility>
 #include <iostream>
-#include <typeinfo>
 #include <murraycdp/utils/tuple_interlace.h>
 
 void test_tuple_type_interlace_empty() {
