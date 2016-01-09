@@ -32,7 +32,7 @@ MM_ARG_ENABLE_DOCUMENTATION
 #For instance: MM_ARG_WITH_TAGFILE_DOC([libstdc++.tag], [mm-common-libstdc++])
 
 # http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
-AC_SUBST([LIBMURRAYDP_SO_VERSION], [0:0:0])
+AC_SUBST([LIBMURRAYCDP_SO_VERSION], [0:0:0])
 
 #PKG_CHECK_MODULES([PROJECT], [])
 

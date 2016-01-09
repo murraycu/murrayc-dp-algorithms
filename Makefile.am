@@ -26,7 +26,7 @@ include $(top_srcdir)/murraycdp/filelist.am
 
 lib_LTLIBRARIES = libmurraycdp-@LIBMURRAYCDP_API_VERSION@.la
 libmurraycdp_@LIBMURRAYCDP_API_VERSION@_la_SOURCES = $(cc_sources) $(h_sources_public)
-libmurraycdp_@LIBMURRAYCDP_API_VERSION@_la_LDFLAGS = -no-undefined -version-info $(LIBMURRAYDP_SO_VERSION)
+libmurraycdp_@LIBMURRAYCDP_API_VERSION@_la_LDFLAGS = -no-undefined -version-info $(LIBMURRAYCDP_SO_VERSION)
 #libmurraycdp-_@LIBMURRAYCDP_API_VERSION@_la_LIBADD = $(LIBXMLXX_LIBS)
 
 library_includedir = $(includedir)/$(LIBMURRAYCDP_MODULE_NAME)
