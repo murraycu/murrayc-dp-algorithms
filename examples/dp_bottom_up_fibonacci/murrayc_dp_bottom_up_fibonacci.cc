@@ -56,7 +56,7 @@ class DpFibonacci
       unsigned int // i
       > {
 public:
-  DpFibonacci(unsigned int n)
+  explicit DpFibonacci(unsigned int n)
   : DpBottomUpBase(n + 1), //DpBottomUpBase without the specialization is apparently allowed.
     n_(n)
   {}

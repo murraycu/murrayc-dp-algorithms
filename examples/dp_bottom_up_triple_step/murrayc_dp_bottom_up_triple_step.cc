@@ -32,7 +32,7 @@ class DpTripleStep
       std::size_t // i
       > {
 public:
-  DpTripleStep(const std::size_t steps_count)
+  explicit DpTripleStep(const std::size_t steps_count)
   : DpBottomUpBase(steps_count), //DpBottomUpBase without the specialization is apparently allowed.
     steps_count_(steps_count)
   {}

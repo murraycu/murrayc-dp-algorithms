@@ -127,7 +127,7 @@ class DpTsp
       std::size_t // j: each node id in the subset.
       > {
 public:
-  DpTsp(const type_vec_nodes& vertices)
+  explicit DpTsp(const type_vec_nodes& vertices)
   : vertices_(vertices),
     start_node_id_(NODE_FIRST),
     start_node_(vertices_[start_node_id_])

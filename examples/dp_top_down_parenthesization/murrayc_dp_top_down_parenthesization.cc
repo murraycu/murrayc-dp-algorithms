@@ -64,7 +64,7 @@ public:
 class DpParenthesization
   : public murraycdp::DpTopDownBase<SubProblem, uint, uint> {
 public:
-  DpParenthesization(const VecMatrixDimensions& items)
+  explicit DpParenthesization(const VecMatrixDimensions& items)
   : items_(items)
   {}
 
