@@ -17,13 +17,13 @@
 #ifndef __MURRAYCDP_VECTOR_OF_VECTORS_H
 #define __MURRAYCDP_VECTOR_OF_VECTORS_H
 
-#include <vector>
 #include <algorithm>
-#include <tuple>
 #include <experimental/tuple> //For apply().
+#include <tuple>
+#include <vector>
 
 namespace murraycdp {
-namespace utils{
+namespace utils {
 
 /**
  * A type trait for nested std::vectors.
@@ -50,26 +50,25 @@ namespace utils{
  * @tparam T The type of the vector's elements.
  * @tparam N The number of levels of nested vectors in the type.
  */
-template<class T, std::size_t N>
+template <class T, std::size_t N>
 class vector_of_vectors {
 public:
-  using type = std::vector<typename vector_of_vectors<T, N-1>::type>;
+  using type = std::vector<typename vector_of_vectors<T, N - 1>::type>;
 };
 
 /// @cond DOXYGEN_HIDDEN_SYMBOLS
-template<class T>
+template <class T>
 class vector_of_vectors<T, 0> {
 public:
   using type = T;
 };
 
-template<class T>
+template <class T>
 class vector_of_vectors<T, 1> {
 public:
   using type = std::vector<T>;
 };
 /// @endcond DOXYGEN_HIDDEN_SYMBOLS
-
 
 /**
  * Resize a vector.
@@ -78,19 +77,21 @@ public:
  * @tparam T_first_size The type of the size, for @a first_size.
  * @param first_size The size with which to call resize() on the vector itself.
  */
-template<class T, class T_first_size, class... T_other_sizes>
-void resize_vector_of_vectors(std::vector<T>& vector, T_first_size first_size) {
+template <class T, class T_first_size, class... T_other_sizes>
+void
+resize_vector_of_vectors(std::vector<T>& vector, T_first_size first_size) {
   vector.resize(first_size);
 }
 
-template<class T>
+template <class T>
 void resize_vector_of_vectors(T /* base_type */) {
-  //Do nothing.
+  // Do nothing.
 }
 
 /**
  * Resize a vector of vectors.
- * For instance, when calling this on a std::vector<std::vector<std::vector<int>>>,
+ * For instance, when calling this on a
+ * std::vector<std::vector<std::vector<int>>>,
  * this is equivalent to:
  * @code
  *   vector.resize(a);
@@ -106,17 +107,18 @@ void resize_vector_of_vectors(T /* base_type */) {
  * @tparam T The type of the vector.
  * @tparam T_first_size The type of the size, for @a first_size.
  * @param first_size The size with which to call resize() on the vector itself.
- * @param other_sizes The sizes with which to call resize() on the vector's nested items.
+ * @param other_sizes The sizes with which to call resize() on the vector's
+ * nested items.
  */
-template<class T, class T_first_size, class... T_other_sizes>
-void resize_vector_of_vectors(std::vector<std::vector<T>>& vector, T_first_size first_size, T_other_sizes... other_sizes) {
+template <class T, class T_first_size, class... T_other_sizes>
+void
+resize_vector_of_vectors(std::vector<std::vector<T>>& vector,
+  T_first_size first_size, T_other_sizes... other_sizes) {
   vector.resize(first_size);
 
-  std::for_each(vector.begin(), vector.end(),
-    [other_sizes...](auto& item) {
-      resize_vector_of_vectors(item, other_sizes...);
-    }
-  );
+  std::for_each(vector.begin(), vector.end(), [other_sizes...](auto& item) {
+    resize_vector_of_vectors(item, other_sizes...);
+  });
 }
 
 /**
@@ -124,13 +126,15 @@ void resize_vector_of_vectors(std::vector<std::vector<T>>& vector, T_first_size 
  * instance of vector_of_vectors<Something, 0>::type,
  * so we can write generic code.
  */
-template<class T_element>
-T_element& get_at_vector_of_vectors(T_element& element) {
+template <class T_element>
+T_element&
+get_at_vector_of_vectors(T_element& element) {
   return element;
 }
 
-template<class T_element>
-const T_element& get_at_vector_of_vectors(const T_element& element) {
+template <class T_element>
+const T_element&
+get_at_vector_of_vectors(const T_element& element) {
   return element;
 }
 
@@ -143,8 +147,9 @@ const T_element& get_at_vector_of_vectors(const T_element& element) {
  * @tparam T_other_indices The types of the @a other_indices parameters.
  * @param first_index The top-level index.
  */
-template<class T_element, class T, class T_first_index, class... T_other_sizes>
-T_element& get_at_vector_of_vectors(std::vector<T>& vector, T_first_index first_index) {
+template <class T_element, class T, class T_first_index, class... T_other_sizes>
+T_element&
+get_at_vector_of_vectors(std::vector<T>& vector, T_first_index first_index) {
   return vector[first_index];
 }
 
@@ -167,28 +172,39 @@ T_element& get_at_vector_of_vectors(std::vector<T>& vector, T_first_index first_
  * @param first_index The top-level index.
  * @param other_indices The other indices.
  */
-template<class T_element, class T, class T_first_index, class... T_other_indices>
-T_element& get_at_vector_of_vectors(std::vector<std::vector<T>>& vector, T_first_index first_index, T_other_indices... other_indices) {
+template <class T_element, class T, class T_first_index,
+  class... T_other_indices>
+T_element&
+get_at_vector_of_vectors(std::vector<std::vector<T>>& vector,
+  T_first_index first_index, T_other_indices... other_indices) {
   auto& sub = vector[first_index];
   return get_at_vector_of_vectors<T_element>(sub, other_indices...);
 }
 
-template<class T_element, class T, class T_first_index, class... T_other_sizes>
-const T_element& get_at_vector_of_vectors(const std::vector<T>& vector, T_first_index first_index) {
+template <class T_element, class T, class T_first_index, class... T_other_sizes>
+const T_element&
+get_at_vector_of_vectors(
+  const std::vector<T>& vector, T_first_index first_index) {
   return vector[first_index];
 }
 
-template<class T_element, class T, class T_first_index, class... T_other_indices>
-const T_element& get_at_vector_of_vectors(const std::vector<std::vector<T>>& vector, T_first_index first_index, T_other_indices... other_indices) {
+template <class T_element, class T, class T_first_index,
+  class... T_other_indices>
+const T_element&
+get_at_vector_of_vectors(const std::vector<std::vector<T>>& vector,
+  T_first_index first_index, T_other_indices... other_indices) {
   auto& sub = vector[first_index];
   return get_at_vector_of_vectors<T_element>(sub, other_indices...);
 }
 
-
 namespace {
 
-template<class T, class T_function, class T_tuple_indices, class T_first_size_start, class T_first_size_end>
-void for_vector_of_vectors_with_indices(std::vector<T>& /* vector */, T_function f, const T_tuple_indices& indices, T_first_size_start start, T_first_size_end end) {
+template <class T, class T_function, class T_tuple_indices,
+  class T_first_size_start, class T_first_size_end>
+void
+for_vector_of_vectors_with_indices(std::vector<T>& /* vector */, T_function f,
+  const T_tuple_indices& indices, T_first_size_start start,
+  T_first_size_end end) {
   for (T_first_size_start i = start; i < end; ++i) {
     const std::tuple<T_first_size_start> index_i(i);
     const auto indices_with_i = std::tuple_cat(indices, index_i);
@@ -197,18 +213,23 @@ void for_vector_of_vectors_with_indices(std::vector<T>& /* vector */, T_function
   }
 }
 
-template<class T, class T_function, class T_tuple_indices, class T_first_size_start, class T_first_size_end, class... T_other_sizes>
-void for_vector_of_vectors_with_indices(std::vector<std::vector<T>>& vector, T_function f, const T_tuple_indices& indices, T_first_size_start start, T_first_size_end end, T_other_sizes... other_sizes) {
+template <class T, class T_function, class T_tuple_indices,
+  class T_first_size_start, class T_first_size_end, class... T_other_sizes>
+void
+for_vector_of_vectors_with_indices(std::vector<std::vector<T>>& vector,
+  T_function f, const T_tuple_indices& indices, T_first_size_start start,
+  T_first_size_end end, T_other_sizes... other_sizes) {
   for (T_first_size_start i = start; i < end; ++i) {
     const std::tuple<T_first_size_start> index_i(i);
     const auto indices_with_i = std::tuple_cat(indices, index_i);
-    for_vector_of_vectors_with_indices(vector[i], f, indices_with_i, other_sizes...);
+    for_vector_of_vectors_with_indices(
+      vector[i], f, indices_with_i, other_sizes...);
   }
 }
 
-} //anonymous namespace
+} // anonymous namespace
 
-template<class T, class T_function>
+template <class T, class T_function>
 void for_vector_of_vectors(T /* vector */, T_function /* f */) {
   // do nothing.
 }
@@ -226,8 +247,11 @@ void for_vector_of_vectors(T /* vector */, T_function /* f */) {
  * @param start The start of the range.
  * @param end One past the end of the range.
  */
-template<class T, class T_function, class T_first_size_start, class T_first_size_end>
-void for_vector_of_vectors(std::vector<T>& /* vector */, T_function f, T_first_size_start start, T_first_size_end end) {
+template <class T, class T_function, class T_first_size_start,
+  class T_first_size_end>
+void
+for_vector_of_vectors(std::vector<T>& /* vector */, T_function f,
+  T_first_size_start start, T_first_size_end end) {
   for (T_first_size_start i = start; i < end; ++i) {
     f(i);
   }
@@ -236,7 +260,8 @@ void for_vector_of_vectors(std::vector<T>& /* vector */, T_function f, T_first_s
 /**
  * Call @a f on a range of items in the vector of vectors.
  *
- * For instance, when calling this on a std::vector<std::vector<std::vector<int>>>,
+ * For instance, when calling this on a
+ * std::vector<std::vector<std::vector<int>>>,
  * this is equivalent to:
  * @code
  *   for (std::size_t i = i_start; i < i_end; ++i) {
@@ -251,15 +276,19 @@ void for_vector_of_vectors(std::vector<T>& /* vector */, T_function f, T_first_s
  * @param start The start of the range.
  * @param end One past the end of the range.
  */
-template<class T, class T_function, class T_first_size_start, class T_first_size_end, class... T_other_sizes>
-void for_vector_of_vectors(std::vector<std::vector<T>>& vector, T_function f, T_first_size_start start, T_first_size_end end, T_other_sizes... other_sizes) {
+template <class T, class T_function, class T_first_size_start,
+  class T_first_size_end, class... T_other_sizes>
+void
+for_vector_of_vectors(std::vector<std::vector<T>>& vector, T_function f,
+  T_first_size_start start, T_first_size_end end,
+  T_other_sizes... other_sizes) {
   for (T_first_size_start i = start; i < end; ++i) {
     const std::tuple<T_first_size_start> index_i(i);
     for_vector_of_vectors_with_indices(vector[i], f, index_i, other_sizes...);
   }
 }
 
-} //namespace utils
-} //namespace murraycdp
+} // namespace utils
+} // namespace murraycdp
 
 #endif //__MURRAYCDP_VECTOR_OF_VECTORS_H

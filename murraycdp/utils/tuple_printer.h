@@ -23,27 +23,28 @@ namespace utils {
 // Based on example code from here:
 // http://en.cppreference.com/w/cpp/utility/tuple/tuple_cat
 
-template<class Tuple, std::size_t N>
+template <class Tuple, std::size_t N>
 class TuplePrinter {
 public:
-  static void print(const Tuple& t) 
-  {
-    TuplePrinter<Tuple, N-1>::print(t);
-    std::cout << ", " << std::get<N-1>(t);
+  static void
+  print(const Tuple& t) {
+    TuplePrinter<Tuple, N - 1>::print(t);
+    std::cout << ", " << std::get<N - 1>(t);
   }
 };
 
 /// @cond DOXYGEN_HIDDEN_SYMBOLS
-template<class Tuple>
+template <class Tuple>
 class TuplePrinter<Tuple, 1> {
 public:
-  static void print(const Tuple& t)  {
+  static void
+  print(const Tuple& t) {
     std::cout << std::get<0>(t);
   }
 };
 /// @endcond DOXYGEN_HIDDEN_SYMBOLS
 
-} //namespace utils
-} //namespace murraycdp
+} // namespace utils
+} // namespace murraycdp
 
 #endif //_MURRAYCDP_TUPLE_PRINTER_H

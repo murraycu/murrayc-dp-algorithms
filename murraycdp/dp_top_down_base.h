@@ -18,16 +18,16 @@
 #define _MURRAYCDP_DP_TOP_DOWN_BASE_H
 
 #include <cstdlib>
-#include <string>
-#include <iostream>
-#include <vector>
-#include <iomanip>
-#include <limits>
-#include <unordered_map>
-#include <tuple>
 #include <experimental/tuple> //For apply().
+#include <iomanip>
+#include <iostream>
+#include <limits>
 #include <murraycdp/dp_base.h>
 #include <murraycdp/utils/tuple_hash.h>
+#include <string>
+#include <tuple>
+#include <unordered_map>
+#include <vector>
 
 namespace murraycdp {
 
@@ -35,11 +35,14 @@ namespace murraycdp {
 
 /** A base class for a 2D top-down (memoization) dynamic programming algorithm.
  *
- * Override this, implementing calc_subproblem(), and then call calc() to get the
+ * Override this, implementing calc_subproblem(), and then call calc() to get
+ * the
  * overall solution.
- * @tparam T_subproblem The type of the subproblem solution, such as unsigned int,
+ * @tparam T_subproblem The type of the subproblem solution, such as unsigned
+ * int,
  * or a custom class containing a value and a partial path.
- * @tparam T_value_types The types of the parameters for the calc_subproblem() method.
+ * @tparam T_value_types The types of the parameters for the calc_subproblem()
+ * method.
  */
 template <typename T_subproblem, typename... T_value_types>
 class DpTopDownBase : public DpBase<T_subproblem, T_value_types...> {
@@ -53,51 +56,54 @@ public:
    * @param The number of i values to calculate the subproblem for.
    * @pram The number of j values to calculate the subproblem for.
    */
-  DpTopDownBase()
-  : DpBase<T_subproblem, T_value_types...>()
-  {}
+  DpTopDownBase() : DpBase<T_subproblem, T_value_types...>() {}
 
   DpTopDownBase(const DpTopDownBase& src) = delete;
-  DpTopDownBase& operator=(const DpTopDownBase& src) = delete;
+  DpTopDownBase&
+  operator=(const DpTopDownBase& src) = delete;
 
   DpTopDownBase(DpTopDownBase&& src) = delete;
-  DpTopDownBase& operator=(DpTopDownBase&& src) = delete;
+  DpTopDownBase&
+  operator=(DpTopDownBase&& src) = delete;
 
-  type_subproblem calc() override {
+  type_subproblem
+  calc() override {
     clear();
 
-    //We cannot do this to pass the output parameters to get_goal_cell():
+    // We cannot do this to pass the output parameters to get_goal_cell():
     //  T_type_values... goal
-    //but we can pass a std::tuple<> based on T_type_values...
-    //and that will then be passed as individual parameters when we unpack it
-    //via std::index_sequence.
+    // but we can pass a std::tuple<> based on T_type_values...
+    // and that will then be passed as individual parameters when we unpack it
+    // via std::index_sequence.
     type_values goals;
-    this->get_goal_cell_call_with_tuple(goals,
-      std::index_sequence_for<T_value_types...>());
-    //std::cout << "calc: " << std::get<0>(goals) << std::endl;
+    this->get_goal_cell_call_with_tuple(
+      goals, std::index_sequence_for<T_value_types...>());
+    // std::cout << "calc: " << std::get<0>(goals) << std::endl;
 
     type_level level = 0;
     return std::experimental::apply(
-      [this, level] (T_value_types... the_values) {
+      [this, level](T_value_types... the_values) {
         return this->get_subproblem(level, the_values...);
       },
       goals);
   }
 
-  unsigned int count_cached_sub_problems() const {
+  unsigned int
+  count_cached_sub_problems() const {
     return subproblems_.size();
   }
- 
+
 protected:
-  void clear() override {
+  void
+  clear() override {
     type_base::clear();
     subproblems_.clear();
   }
 
-  static void indent(type_level level)
-  {
+  static void
+  indent(type_level level) {
     std::cout << "level: " << level;
-    for(type_level l = 0; l < level; ++l) {
+    for (type_level l = 0; l < level; ++l) {
       std::cout << "  ";
     }
   }
@@ -106,8 +112,11 @@ private:
   /** Gets the already-calculated subproblem solution, if any.
    * @result true if the subproblem solution was in the cache.
    */
-  bool get_cached_subproblem(type_subproblem& subproblem, T_value_types... values) const override {
-    //std::cout << "get_cached_subproblem(): i=" << i << ", j=" << j << std::endl;
+  bool
+  get_cached_subproblem(
+    type_subproblem& subproblem, T_value_types... values) const override {
+    // std::cout << "get_cached_subproblem(): i=" << i << ", j=" << j <<
+    // std::endl;
     const type_values key(values...);
     const auto iter = subproblems_.find(key);
     if (iter == subproblems_.end()) {
@@ -115,22 +124,26 @@ private:
       return false;
     }
 
-    //std::cout << "get_cached_subproblem(): returning cache for i=" << i << ", j=" << j << std::endl;
+    // std::cout << "get_cached_subproblem(): returning cache for i=" << i << ",
+    // j=" << j << std::endl;
     subproblem = iter->second;
     return true;
   }
 
-  void set_subproblem(const type_subproblem& subproblem, T_value_types... values) const override {
+  void
+  set_subproblem(
+    const type_subproblem& subproblem, T_value_types... values) const override {
     const type_values key(values...);
     subproblems_[key] = subproblem;
   }
 
 private:
-  //Map of values to subproblems:
-  using type_map_subproblems = std::unordered_map<type_values, type_subproblem, utils::hash_tuple::hash<type_values>>;
+  // Map of values to subproblems:
+  using type_map_subproblems = std::unordered_map<type_values, type_subproblem,
+    utils::hash_tuple::hash<type_values>>;
   mutable type_map_subproblems subproblems_;
 };
 
-} //namespace murraycdp
+} // namespace murraycdp
 
-#endif //MURRAYCDP_DP_BOTTOM_UP_BASE_H
+#endif // MURRAYCDP_DP_BOTTOM_UP_BASE_H

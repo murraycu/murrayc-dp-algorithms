@@ -14,17 +14,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/
  */
 
-#include <cstdlib>
-#include <cassert>
-#include <string>
-#include <iostream>
-#include <vector>
-#include <iomanip>
-#include <limits>
 #include <boost/timer/timer.hpp>
+#include <cassert>
+#include <cstdlib>
+#include <iomanip>
+#include <iostream>
+#include <limits>
+#include <string>
+#include <vector>
 
 #include <murraycdp/dp_bottom_up_base.h>
-
 
 /** This is the simplest example of dynamic programming,
  * just to see how much boilerplate is added by the use of DpBottomUpBase.
@@ -53,37 +52,40 @@ class DpFibonacci
   : public murraycdp::DpBottomUpBase<
       2 /* count of subproblems to keep, used in calc_subproblem() */,
       unsigned long, // sub problem type
-      unsigned int // i
+      unsigned int   // i
       > {
 public:
   explicit DpFibonacci(unsigned int n)
-  : DpBottomUpBase(n + 1), //DpBottomUpBase without the specialization is apparently allowed.
-    n_(n)
-  {}
+  : DpBottomUpBase(n + 1), // DpBottomUpBase without the specialization is
+    // apparently allowed.
+    n_(n) {}
 
 private:
-  type_subproblem calc_subproblem(type_base::type_level level, unsigned int i) const override {
-    //Base cases:
+  type_subproblem
+  calc_subproblem(type_base::type_level level, unsigned int i) const override {
+    // Base cases:
     if (i == 0) {
       return 0;
     } else if (i == 1) {
       return 1;
     }
 
-    return get_subproblem(level, i - 1) + get_subproblem(level, i -2);
+    return get_subproblem(level, i - 1) + get_subproblem(level, i - 2);
   }
 
-  void get_goal_cell(unsigned int& i) const override {
-     //The answer is in the last-calculated cell:
-     i = n_;
+  void
+  get_goal_cell(unsigned int& i) const override {
+    // The answer is in the last-calculated cell:
+    i = n_;
   }
-  
+
   const unsigned int n_;
 };
 
-int main() {
+int
+main() {
   const auto n = 90;
-  
+
   DpFibonacci dp(n);
 
   unsigned long result = 0;
@@ -93,9 +95,9 @@ int main() {
   }
 
   std::cout << "fibonacci number: " << n << std::endl
-    << "result: " << result << std::endl;
+            << "result: " << result << std::endl;
 
   assert(result == 2880067194370816120ul);
-  
+
   return EXIT_SUCCESS;
 }
