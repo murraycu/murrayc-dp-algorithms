@@ -127,13 +127,13 @@ resize_vector_of_vectors(std::vector<std::vector<T>>& vector,
  * so we can write generic code.
  */
 template <class T_element>
-T_element&
+decltype(auto)
 get_at_vector_of_vectors(T_element& element) {
   return element;
 }
 
 template <class T_element>
-const T_element&
+decltype(auto)
 get_at_vector_of_vectors(const T_element& element) {
   return element;
 }
@@ -148,7 +148,7 @@ get_at_vector_of_vectors(const T_element& element) {
  * @param first_index The top-level index.
  */
 template <class T_element, class T, class T_first_index, class... T_other_sizes>
-T_element&
+decltype(auto)
 get_at_vector_of_vectors(std::vector<T>& vector, T_first_index first_index) {
   return vector[first_index];
 }
@@ -174,7 +174,7 @@ get_at_vector_of_vectors(std::vector<T>& vector, T_first_index first_index) {
  */
 template <class T_element, class T, class T_first_index,
   class... T_other_indices>
-T_element&
+decltype(auto)
 get_at_vector_of_vectors(std::vector<std::vector<T>>& vector,
   T_first_index first_index, T_other_indices... other_indices) {
   auto& sub = vector[first_index];
@@ -182,7 +182,7 @@ get_at_vector_of_vectors(std::vector<std::vector<T>>& vector,
 }
 
 template <class T_element, class T, class T_first_index, class... T_other_sizes>
-const T_element&
+decltype(auto)
 get_at_vector_of_vectors(
   const std::vector<T>& vector, T_first_index first_index) {
   return vector[first_index];
@@ -190,7 +190,7 @@ get_at_vector_of_vectors(
 
 template <class T_element, class T, class T_first_index,
   class... T_other_indices>
-const T_element&
+decltype(auto)
 get_at_vector_of_vectors(const std::vector<std::vector<T>>& vector,
   T_first_index first_index, T_other_indices... other_indices) {
   auto& sub = vector[first_index];
