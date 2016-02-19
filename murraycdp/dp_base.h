@@ -19,7 +19,7 @@
 
 #include <iostream>
 #include <list>
-#include <murraycdp/utils/tuple_print.h>
+#include <tuple-utils/tuple_print.h>
 #include <tuple>
 #include <utility>
 
@@ -69,7 +69,7 @@ public:
                 << get_string_for_subproblem_access(subproblem_access.second)
                 << ", ";
 
-      utils::tuple_print(subproblem_access.first);
+      tupleutils::tuple_print(subproblem_access.first);
 
       std::cout << std::endl;
       ++i;

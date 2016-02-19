@@ -44,9 +44,7 @@ check_PROGRAMS = \
   examples/murrayc_dp_top_down_parenthesization \
   examples/murrayc_dp_top_down_parse_context_free_grammar \
   examples/murrayc_dp_top_down_tsp \
-  tests/test_vector_of_vectors \
-  tests/test_tuple_cdr \
-  tests/test_tuple_interlace
+  tests/test_vector_of_vectors
 
 TESTS = $(check_PROGRAMS)
 
@@ -129,20 +127,6 @@ tests_test_vector_of_vectors_SOURCES = \
 tests_test_vector_of_vectors_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 tests_test_vector_of_vectors_LDADD = \
-	$(PROJECT_LIBS)
-
-tests_test_tuple_cdr_SOURCES = \
-	tests/test_tuple_cdr.cc
-tests_test_tuple_cdr_CXXFLAGS = \
-	$(COMMON_CXXFLAGS)
-tests_test_tuple_cdr_LDADD = \
-	$(PROJECT_LIBS)
-
-tests_test_tuple_interlace_SOURCES = \
-	tests/test_tuple_interlace.cc
-tests_test_tuple_interlace_CXXFLAGS = \
-	$(COMMON_CXXFLAGS)
-tests_test_tuple_interlace_LDADD = \
 	$(PROJECT_LIBS)
 
 

@@ -28,9 +28,9 @@
 
 #include <murraycdp/dp_base.h>
 #include <murraycdp/utils/circular_vector.h>
-#include <murraycdp/utils/tuple_cdr.h>
-#include <murraycdp/utils/tuple_interlace.h>
 #include <murraycdp/utils/vector_of_vectors.h>
+#include <tuple-utils/tuple_cdr.h>
+#include <tuple-utils/tuple_interlace.h>
 
 namespace murraycdp {
 
@@ -67,7 +67,7 @@ public:
    */
   DpBottomUpBase(typename std::decay<T_value_types>::type... value_counts)
   : subproblems_(T_COUNT_SUBPROBLEMS_TO_KEEP), value_counts_(value_counts...) {
-    const auto value_counts_without_i = utils::tuple_cdr(value_counts_);
+    const auto value_counts_without_i = tupleutils::tuple_cdr(value_counts_);
     constexpr auto tuple_size =
       std::tuple_size<decltype(value_counts_without_i)>::value;
     if (tuple_size > 0) {
@@ -124,14 +124,14 @@ public:
           subproblems_.get_at_offset_from_start(i);
 
         using type_values_counts_without_i =
-          typename utils::tuple_type_cdr<type_values>::type;
+          typename tupleutils::tuple_type_cdr<type_values>::type;
         // TODO: Why can't this be const when it is tuple<> (with no element
         // types):
         type_values_counts_without_i
           values_starts_without_i; // TODO: explicitly initialize to 0.
-        const auto value_counts_without_i = utils::tuple_cdr(value_counts_);
+        const auto value_counts_without_i = tupleutils::tuple_cdr(value_counts_);
 
-        const auto values_start_end = utils::tuple_interlace(
+        const auto values_start_end = tupleutils::tuple_interlace(
           values_starts_without_i, value_counts_without_i);
 
         constexpr std::size_t values_start_end_size =
@@ -202,7 +202,7 @@ private:
     const type_subproblems& subproblems_i =
       subproblems_.get_at_offset_from_start(i);
 
-    const auto values_without_i = utils::tuple_cdr(values_tuple);
+    const auto values_without_i = tupleutils::tuple_cdr(values_tuple);
     constexpr auto tuple_size =
       std::tuple_size<decltype(values_without_i)>::value;
     subproblem = call_get_at_sub_vectors_with_tuple(
@@ -224,7 +224,7 @@ private:
     const auto i = std::get<0>(values_tuple);
     type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
 
-    const auto values_without_i = utils::tuple_cdr(values_tuple);
+    const auto values_without_i = tupleutils::tuple_cdr(values_tuple);
     constexpr auto tuple_size =
       std::tuple_size<decltype(values_without_i)>::value;
     call_get_at_sub_vectors_with_tuple(subproblems_i, values_without_i,

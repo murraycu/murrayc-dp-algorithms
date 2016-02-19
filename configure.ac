@@ -34,7 +34,7 @@ MM_ARG_ENABLE_DOCUMENTATION
 # http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
 AC_SUBST([LIBMURRAYCDP_SO_VERSION], [0:0:0])
 
-#PKG_CHECK_MODULES([PROJECT], [])
+PKG_CHECK_MODULES([PROJECT], [murrayc-tuple-utils-1.0 >= 0.0.1])
 
 # See http://www.gnu.org/software/autoconf-archive/ax_boost_base.html
 # Boost System is needed by Boost Timer
