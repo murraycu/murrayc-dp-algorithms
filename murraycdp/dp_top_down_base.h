@@ -62,9 +62,9 @@ public:
   DpTopDownBase&
   operator=(const DpTopDownBase& src) = delete;
 
-  DpTopDownBase(DpTopDownBase&& src) = delete;
+  DpTopDownBase(DpTopDownBase&& src) noexcept = delete;
   DpTopDownBase&
-  operator=(DpTopDownBase&& src) = delete;
+  operator=(DpTopDownBase&& src) noexcept = delete;
 
   type_subproblem
   calc() override {

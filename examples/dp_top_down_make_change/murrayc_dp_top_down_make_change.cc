@@ -43,9 +43,9 @@ public:
   SubSolution&
   operator=(const SubSolution& src) = default;
 
-  SubSolution(SubSolution&& src) = default;
+  SubSolution(SubSolution&& src) noexcept = default;
   SubSolution&
-  operator=(SubSolution&& src) = default;
+  operator=(SubSolution&& src) noexcept = default;
 
   type_size coin_count_used;
   type_vec_coins solution;

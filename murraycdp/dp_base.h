@@ -54,9 +54,9 @@ public:
   DpBase&
   operator=(const DpBase& src) = delete;
 
-  DpBase(DpBase&& src) = delete;
+  DpBase(DpBase&& src) noexcept = delete;
   DpBase&
-  operator=(DpBase&& src) = delete;
+  operator=(DpBase&& src) noexcept = delete;
 
   virtual type_subproblem
   calc() = 0;

@@ -43,9 +43,9 @@ public:
   Cost&
   operator=(const Cost& src) = default;
 
-  Cost(Cost&& src) = default;
+  Cost(Cost&& src) noexcept = default;
   Cost&
-  operator=(Cost&& src) = default;
+  operator=(Cost&& src) noexcept = default;
 
   static std::string
   get_operation_as_string(Operation op) {

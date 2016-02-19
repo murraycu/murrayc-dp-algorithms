@@ -38,9 +38,9 @@ public:
   Item&
   operator=(const Item& src) = default;
 
-  Item(Item&& src) = default;
+  Item(Item&& src) noexcept = default;
   Item&
-  operator=(Item&& src) = default;
+  operator=(Item&& src) noexcept = default;
 
   type_value value;
   type_weight weight;
@@ -62,9 +62,9 @@ public:
   SubSolution&
   operator=(const SubSolution& src) = default;
 
-  SubSolution(SubSolution&& src) = default;
+  SubSolution(SubSolution&& src) noexcept = default;
   SubSolution&
-  operator=(SubSolution&& src) = default;
+  operator=(SubSolution&& src) noexcept = default;
 
   type_value value;
   type_vec_items solution;

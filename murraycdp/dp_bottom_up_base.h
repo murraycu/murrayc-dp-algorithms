@@ -80,9 +80,9 @@ public:
   DpBottomUpBase&
   operator=(const DpBottomUpBase& src) = delete;
 
-  DpBottomUpBase(DpBottomUpBase&& src) = delete;
+  DpBottomUpBase(DpBottomUpBase&& src) noexcept = delete;
   DpBottomUpBase&
-  operator=(DpBottomUpBase&& src) = delete;
+  operator=(DpBottomUpBase&& src) noexcept = delete;
 
   type_subproblem
   calc() override {

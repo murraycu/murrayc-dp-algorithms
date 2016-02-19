@@ -39,9 +39,9 @@ public:
   Vertex&
   operator=(const Vertex& src) = default;
 
-  Vertex(Vertex&& src) = default;
+  Vertex(Vertex&& src) noexcept = default;
   Vertex&
-  operator=(Vertex&& src) = default;
+  operator=(Vertex&& src) noexcept = default;
 
   type_length x, y;
 };
