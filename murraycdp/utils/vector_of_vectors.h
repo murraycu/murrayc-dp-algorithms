@@ -138,6 +138,13 @@ get_at_vector_of_vectors(const T_element& element) {
   return element;
 }
 
+// TODO: Remove the const& and non-const& overloads in favour of this && overload?
+template <class T_element>
+decltype(auto)
+get_at_vector_of_vectors(T_element&& element) {
+  return std::forward<T_element>(element);
+}
+
 /**
  * Get an element from a vector.
  *
