@@ -1,4 +1,4 @@
-AC_INIT([murrayc-dp-algorithms],[0.0.2])
+AC_INIT([murrayc-dp-algorithms],[0.0.3])
 AC_PREREQ(2.63)
 
 AC_CONFIG_SRCDIR([examples/dp_top_down_make_change/murrayc_dp_top_down_make_change.cc])
