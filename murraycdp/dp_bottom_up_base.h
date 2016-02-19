@@ -246,27 +246,19 @@ private:
   }
 
   template <typename T_vector, typename T_tuple, std::size_t... Is>
-  type_subproblem&
+  decltype(auto)
   call_get_at_sub_vectors_with_tuple(
-    T_vector& vector, const T_tuple& tuple, std::index_sequence<Is...>) const {
+    T_vector&& vector, T_tuple&& tuple, std::index_sequence<Is...>) const {
     return murraycdp::utils::get_at_vector_of_vectors<type_subproblem>(
-      vector, std::get<Is>(tuple)...);
-  }
-
-  template <typename T_vector, typename T_tuple, std::size_t... Is>
-  const type_subproblem&
-  call_get_at_sub_vectors_with_tuple(const T_vector& vector,
-    const T_tuple& tuple, std::index_sequence<Is...>) const {
-    return murraycdp::utils::get_at_vector_of_vectors<type_subproblem>(
-      vector, std::get<Is>(tuple)...);
+      std::forward<T_vector>(vector), std::get<Is>(std::forward<T_tuple>(tuple))...);
   }
 
   template <typename T_vector, typename T_function, typename T_tuple,
     std::size_t... Is>
   void
-  call_for_sub_vectors_with_tuple(T_vector& vector, T_function f,
-    const T_tuple& tuple, std::index_sequence<Is...>) const {
-    murraycdp::utils::for_vector_of_vectors(vector, f, std::get<Is>(tuple)...);
+  call_for_sub_vectors_with_tuple(T_vector&& vector, T_function f,
+    T_tuple&& tuple, std::index_sequence<Is...>) const {
+    murraycdp::utils::for_vector_of_vectors(std::forward<T_vector>(vector), f, std::get<Is>(std::forward<T_tuple>(tuple))...);
   }
 
 protected:
