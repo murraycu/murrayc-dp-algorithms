@@ -14,8 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef _MURRAYCDP_DP_TOP_DOWN_BASE_H
-#define _MURRAYCDP_DP_TOP_DOWN_BASE_H
+#ifndef MURRAYCDP_DP_TOP_DOWN_BASE_H
+#define MURRAYCDP_DP_TOP_DOWN_BASE_H
 
 #include <cstdlib>
 #include <experimental/tuple> //For apply().

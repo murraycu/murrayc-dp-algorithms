@@ -14,8 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef _MURRAYCDP_CIRCULAR_VECTOR_H
-#define _MURRAYCDP_CIRCULAR_VECTOR_H
+#ifndef MURRAYCDP_CIRCULAR_VECTOR_H
+#define MURRAYCDP_CIRCULAR_VECTOR_H
 
 #include <vector>
 

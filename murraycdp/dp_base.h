@@ -14,8 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef _MURRAYCDP_DP__BASE_H
-#define _MURRAYCDP_DP__BASE_H
+#ifndef MURRAYCDP_DP__BASE_H
+#define MURRAYCDP_DP__BASE_H
 
 #include <iostream>
 #include <list>

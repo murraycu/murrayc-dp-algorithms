@@ -14,8 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef _MURRAYCDP_TUPLE_HASH_H
-#define _MURRAYCDP_TUPLE_HASH_H
+#ifndef MURRAYCDP_TUPLE_HASH_H
+#define MURRAYCDP_TUPLE_HASH_H
 
 #include <tuple>
 
