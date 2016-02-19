@@ -204,7 +204,7 @@ get_at_vector_of_vectors(const std::vector<std::vector<T>>& vector,
   return get_at_vector_of_vectors<T_element>(sub, other_indices...);
 }
 
-namespace {
+namespace detail {
 
 template <class T, class T_function, class T_tuple_indices,
   class T_first_size_start, class T_first_size_end>
@@ -232,7 +232,7 @@ for_vector_of_vectors_with_indices(std::vector<std::vector<T>>& vector,
   }
 }
 
-} // anonymous namespace
+} // detail namespace
 
 template <class T, class T_function>
 void for_vector_of_vectors(T /* vector */, T_function /* f */) {
@@ -288,7 +288,7 @@ for_vector_of_vectors(std::vector<std::vector<T>>& vector, T_function f,
   T_first_size_start start, T_first_size_end end,
   T_other_sizes... other_sizes) {
   for (auto i = start; i < end; ++i) {
-    for_vector_of_vectors_with_indices(vector[i], f, std::make_tuple(i), other_sizes...);
+    detail::for_vector_of_vectors_with_indices(vector[i], f, std::make_tuple(i), other_sizes...);
   }
 }
 
