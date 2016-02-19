@@ -8,7 +8,7 @@ h_sources_public = \
   murraycdp/utils/tuple_cdr.h \
   murraycdp/utils/tuple_hash.h \
   murraycdp/utils/tuple_interlace.h \
-  murraycdp/utils/tuple_printer.h \
+  murraycdp/utils/tuple_print.h \
   murraycdp/utils/vector_of_vectors.h
 
 cc_sources =

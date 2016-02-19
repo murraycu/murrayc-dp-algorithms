@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Murray Cumming
+/* Copyright (C) 2016 Murray Cumming
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,8 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef __MURRAYCDP_TUPLE_CDR_H
-#define __MURRAYCDP_TUPLE_CDR_H
+#ifndef MURRAYC_DP_TUPLE_CDR_H
+#define MURRAYC_DP_TUPLE_CDR_H
 
 #include <tuple>
 #include <type_traits>
@@ -24,38 +24,30 @@
 namespace murraycdp {
 namespace utils {
 
-// Based on this:
-// http://stackoverflow.com/a/14854294/1123654
-
-namespace {
-
-template <typename T, typename Seq>
-struct tuple_type_cdr_impl;
-
-template <typename T, std::size_t I0, std::size_t... I>
-struct tuple_type_cdr_impl<T, std::index_sequence<I0, I...>> {
-  using type = std::tuple<typename std::tuple_element<I, T>::type...>;
-};
-
-} // anonymous namespace
-
 /**
  * Get the type of a tuple without the first item.
  */
 template <typename T>
-struct tuple_type_cdr : tuple_type_cdr_impl<T,
-                          std::make_index_sequence<std::tuple_size<T>::value>> {
+struct tuple_type_cdr; // primary template is not defined
+
+// Partial specialization for tuples of at least one element:
+template <typename H, typename... T>
+struct tuple_type_cdr<std::tuple<H, T...>>
+{
+  using type = std::tuple<T...>;
 };
 
-namespace {
+namespace detail {
 
-template <typename T, std::size_t I0, std::size_t... I>
+template <typename T, std::size_t... I>
 decltype(auto)
-tuple_cdr_impl(const T& t, std::index_sequence<I0, I...>) {
-  return std::make_tuple(std::get<I>(t)...);
+tuple_cdr_impl(T&& t, std::index_sequence<0, I...>)
+{
+  using cdr = typename tuple_type_cdr<std::decay_t<T>>::type;
+  return cdr(std::get<I>(std::forward<T>(t))...);
 }
 
-} // anonymous namespace
+} // detail namespace
 
 /**
  * Get the a tuple without the first item.
@@ -63,13 +55,16 @@ tuple_cdr_impl(const T& t, std::index_sequence<I0, I...>) {
  */
 template <typename T>
 decltype(auto)
-tuple_cdr(const T& t) {
-  constexpr auto size = std::tuple_size<T>::value;
-  const auto seq = std::make_index_sequence<size>{};
-  return tuple_cdr_impl(t, seq);
+tuple_cdr(T&& t) {
+  //We use std::decay_t<> because tuple_size is not defined for references.
+  constexpr auto size = std::tuple_size<std::decay_t<T>>::value;
+
+  static_assert(size != 0, "tuple size must be non-zero");
+  using seq = std::make_index_sequence<size>;
+  return detail::tuple_cdr_impl(std::forward<T>(t), seq{});
 }
 
 } // namespace utils
 } // namespace murraycdp
 
-#endif //__MURRAYCDP_TUPLE_CDR_H
+#endif //MURRAYC_DP_TUPLE_CDR_H
