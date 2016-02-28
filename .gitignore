@@ -69,15 +69,19 @@ Makefile.in
 /docs/reference/*.devhelp2
 /docs/reference/html/
 
-/examples/murrayc_dp_make_change
+/examples/murrayc_dp_bottom_up_fibonacci
+/examples/murrayc_dp_bottom_up_knapsack
 /examples/murrayc_dp_bottom_up_string_edit_distance
 /examples/murrayc_dp_bottom_up_string_substring_matching
 /examples/murrayc_dp_bottom_up_triple_step
 /examples/murrayc_dp_string_edit_distance
 /examples/murrayc_dp_string_substring_matching
+
+/examples/murrayc_dp_top_down_fibonacci
 /examples/murrayc_dp_top_down_knapsack
 /examples/murrayc_dp_top_down_make_change
 /examples/murrayc_dp_top_down_parenthesization
+/examples/murrayc_dp_top_down_parse_context_free_grammar
 /examples/murrayc_dp_top_down_string_edit_distance
 /examples/murrayc_dp_top_down_tsp
 tests/test_vector_of_vectors
