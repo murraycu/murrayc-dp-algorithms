@@ -23,11 +23,12 @@
 #include <string>
 #include <vector>
 
-#include <murraycdp/dp_bottom_up_base.h>
+#include <murraycdp/dp_top_down_base.h>
 
-/** This is the simplest example of bottom-up dynamic programming,
- * just to see how much boilerplate is added by the use of DpBottomUpBase.
- * You'd be far better off just doing this:
+/** This is the simplest example of top-down dynamic programming,
+ * just to see how much boilerplate is added by the use of DpTopDownBase.
+ *
+ * You'd be far better off just doing this (bottom-up):
  * @code
  * unsigned long calc_fibonacci(unsigned int n) {
  *   if (n == 0)
@@ -49,16 +50,13 @@
  * @endcode
  */
 class DpFibonacci
-  : public murraycdp::DpBottomUpBase<
-      2 /* count of subproblems to keep, used in calc_subproblem() */,
-      unsigned long, // sub problem type
-      unsigned int   // i
-      > {
+  : public murraycdp::DpTopDownBase<
+      unsigned long, // subproblem type
+      unsigned int // i
+    > {
 public:
   explicit DpFibonacci(unsigned int n)
-  : DpBottomUpBase(n + 1), // DpBottomUpBase without the specialization is
-    // apparently allowed.
-    n_(n) {}
+  : n_(n) {}
 
 private:
   type_subproblem
