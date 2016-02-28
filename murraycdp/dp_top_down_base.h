@@ -33,11 +33,11 @@ namespace murraycdp {
 
 //#define MURRAYC_DP_DEBUG_OUTPUT = 1;
 
-/** A base class for a 2D top-down (memoization) dynamic programming algorithm.
+/** A base class for a top-down (memoization) dynamic programming algorithm.
  *
- * Override this, implementing calc_subproblem(), and then call calc() to get
- * the
- * overall solution.
+ * Derive from this class, implementing calc_subproblem(), and get_goal_cell().
+ * Then call calc() to get the overall solution.
+ *
  * @tparam T_subproblem The type of the subproblem solution, such as unsigned
  * int,
  * or a custom class containing a value and a partial path.
