@@ -50,9 +50,9 @@
  */
 class DpFibonacci
   : public murraycdp::DpBottomUpBase<
-      2 /* count of subproblems to keep, used in calc_subproblem() */,
+      2, // count of subproblems to keep.
       unsigned long, // sub problem type
-      unsigned int   // i
+      unsigned int // i
       > {
 public:
   explicit DpFibonacci(unsigned int n)
