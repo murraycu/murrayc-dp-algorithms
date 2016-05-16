@@ -75,7 +75,7 @@ class DpKnapsack
       2, // count of subproblems to keep.
       SubSolution,
       SubSolution::type_vec_items::size_type,
-      Item::type_weight> {      
+      Item::type_weight> {
 public:
   using type_value = Item::type_value;
   using type_weight = Item::type_weight;
