@@ -102,23 +102,9 @@ public:
 #if defined(MURRAYC_DP_DEBUG_OUTPUT)
       std::cout << "i=" << std::setw(2) << i << ": ";
 #endif
-      if (depth == 1) {
-        // Call it via a tuple,
-        // to avoid a compilation error when depth is not 1:
-        type_values values;
-        std::get<0>(values) = i;
-
-        const auto subproblem = std::experimental::apply(
-          [this, level](T_value_types... the_values) {
-            return this->calc_subproblem(level, the_values...);
-          },
-          values);
-
-        std::experimental::apply(
-          [this, subproblem](T_value_types... the_values) {
-            return this->set_subproblem(subproblem, the_values...);
-          },
-          values);
+      if constexpr(depth == 1) {
+        const auto subproblem = this->calc_subproblem(level, i);
+        set_subproblem(subproblem, i);
       } else {
         type_subproblems& subproblems_i =
           subproblems_.get_at_offset_from_start(i);
@@ -202,11 +188,17 @@ private:
     const type_subproblems& subproblems_i =
       subproblems_.get_at_offset_from_start(i);
 
-    const auto values_without_i = tupleutils::tuple_cdr(values_tuple);
-    constexpr auto tuple_size =
-      std::tuple_size<decltype(values_without_i)>::value;
-    subproblem = call_get_at_sub_vectors_with_tuple(
-      subproblems_i, values_without_i, std::make_index_sequence<tuple_size>());
+    constexpr auto depth =
+      std::tuple_size<type_values>::value; // sizeof...(T_value_types);
+    if constexpr(depth == 1) {
+      subproblem = subproblems_i;
+    } else {
+      const auto values_without_i = tupleutils::tuple_cdr(values_tuple);
+      constexpr auto tuple_size =
+        std::tuple_size<decltype(values_without_i)>::value;
+      subproblem = call_get_at_sub_vectors_with_tuple(
+          subproblems_i, values_without_i, std::make_index_sequence<tuple_size>());
+    }
 
     // std::cout << "get_cached_subproblem(): returning cache for i=" << i << ",
     // j=" << j << std::endl;
@@ -224,11 +216,17 @@ private:
     const auto i = std::get<0>(values_tuple);
     type_subproblems& subproblems_i = subproblems_.get_at_offset_from_start(i);
 
-    const auto values_without_i = tupleutils::tuple_cdr(values_tuple);
-    constexpr auto tuple_size =
-      std::tuple_size<decltype(values_without_i)>::value;
-    call_get_at_sub_vectors_with_tuple(subproblems_i, values_without_i,
-      std::make_index_sequence<tuple_size>()) = subproblem;
+    constexpr auto depth =
+      std::tuple_size<type_values>::value; // sizeof...(T_value_types);
+    if constexpr(depth == 1) {
+      subproblems_i = subproblem;
+    } else {
+      const auto values_without_i = tupleutils::tuple_cdr(values_tuple);
+      constexpr auto tuple_size =
+        std::tuple_size<decltype(values_without_i)>::value;
+      call_get_at_sub_vectors_with_tuple(subproblems_i, values_without_i,
+          std::make_index_sequence<tuple_size>()) = subproblem;
+    }
   }
 
   template <typename... T_sizes>

@@ -122,30 +122,6 @@ resize_vector_of_vectors(std::vector<std::vector<T>>& vector,
 }
 
 /**
- * This is useless, but it lets us call get_at_vector_of_vectors() on an
- * instance of vector_of_vectors<Something, 0>::type,
- * so we can write generic code.
- */
-template <class T_element>
-decltype(auto)
-get_at_vector_of_vectors(T_element& element) {
-  return element;
-}
-
-template <class T_element>
-decltype(auto)
-get_at_vector_of_vectors(const T_element& element) {
-  return element;
-}
-
-// TODO: Remove the const& and non-const& overloads in favour of this && overload?
-template <class T_element>
-decltype(auto)
-get_at_vector_of_vectors(T_element&& element) {
-  return std::forward<T_element>(element);
-}
-
-/**
  * Get an element from a vector.
  *
  * @tparam T_element the value_type of the innermost vector.
