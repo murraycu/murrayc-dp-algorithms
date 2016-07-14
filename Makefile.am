@@ -35,6 +35,7 @@ nobase_library_include_HEADERS = $(h_sources_public)
 
 check_PROGRAMS = \
   examples/murrayc_dp_bottom_up_fibonacci \
+  examples/murrayc_dp_bottom_up_sequence_alignment \
   examples/murrayc_dp_bottom_up_knapsack \
   examples/murrayc_dp_bottom_up_string_edit_distance \
   examples/murrayc_dp_bottom_up_string_substring_matching \
@@ -60,14 +61,21 @@ examples_murrayc_dp_bottom_up_fibonacci_LDADD = \
 	$(PROJECT_LIBS) \
 	$(BOOST_SYSTEM_LIB) \
 	$(BOOST_TIMER_LIB)
-	
+
 examples_murrayc_dp_bottom_up_knapsack_SOURCES = \
 	examples/dp_bottom_up_knapsack/murrayc_dp_bottom_up_knapsack.cc
 examples_murrayc_dp_bottom_up_knapsack_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 examples_murrayc_dp_bottom_up_knapsack_LDADD = \
 	$(PROJECT_LIBS)
-	
+
+examples_murrayc_dp_bottom_up_sequence_alignment_SOURCES = \
+	examples/dp_bottom_up_sequence_alignment/murrayc_dp_bottom_up_sequence_alignment.cc
+examples_murrayc_dp_bottom_up_sequence_alignment_CXXFLAGS = \
+	$(COMMON_CXXFLAGS)
+examples_murrayc_dp_bottom_up_sequence_alignment_LDADD = \
+	$(PROJECT_LIBS)
+
 examples_murrayc_dp_bottom_up_string_edit_distance_SOURCES = \
 	examples/dp_bottom_up_string_edit_distance/murrayc_dp_bottom_up_string_edit_distance.cc
 examples_murrayc_dp_bottom_up_string_edit_distance_CXXFLAGS = \
