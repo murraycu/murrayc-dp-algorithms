@@ -34,10 +34,9 @@ public:
 
   SubSolution() : value(0) {}
 
-  explicit SubSolution(type_value value_in, const type_items& solution_a_in, const type_items& solution_b_in)
-  : value(value_in),
-    solution_a(solution_a_in),
-    solution_b(solution_b_in) {}
+  explicit SubSolution(type_value value_in)
+  : value(value_in) {
+  }
 
   SubSolution(const SubSolution& src) = default;
   SubSolution&
@@ -47,13 +46,17 @@ public:
   SubSolution&
   operator=(SubSolution&& src) noexcept = default;
 
+  enum class cases {
+    CASE1, CASE2, CASE3
+  };
+
   type_value value;
-  type_items solution_a, solution_b;
+  cases case_used;
 };
 
 class DpSequenceAlignment
   : public murraycdp::DpBottomUpBase<
-      2, // count of subproblems to keep.
+      100, // count of subproblems to keep. TODO: Don't hard-code this just to keep all subproblems so we can use them to reconstruct the solution later.
       SubSolution,
       SubSolution::type_items::size_type,
       SubSolution::type_items::size_type> {
@@ -65,6 +68,39 @@ public:
   DpSequenceAlignment(const type_items& a, const type_items& b)
   : DpBottomUpBase(a.size() + 1, b.size() + 1),
     a_(a), b_(b) {}
+
+  std::pair<type_items, type_items>
+  get_solution() const {
+    type_size a_count = 0;
+    type_size b_count = 0;
+    get_goal_cell(a_count, b_count);
+
+    type_items a, b;
+    type_level level = 0;
+    while(a_count > 0 && b_count > 0) {
+      const auto& subproblem = get_subproblem(level, a_count, b_count);
+      switch (subproblem.case_used) {
+        case SubSolution::cases::CASE1:
+          a = get_char_a(a_count - 1) + a;
+          b = get_char_b(b_count - 1) + b;
+          a_count--;
+          b_count--;
+          break;
+        case SubSolution::cases::CASE2:
+          a = GAP_CHAR + a;
+          b = get_char_b(b_count - 1) + b;
+          a_count--;
+          break;
+        case SubSolution::cases::CASE3:
+          a = get_char_a(a_count - 1) + a;
+          b = GAP_CHAR;
+          b_count--;
+          break;
+      }
+    }
+
+    return std::make_pair(a, b);
+  }
 
 private:
   //Prefer mismatches to gaps, but prefer matches to either.
@@ -111,42 +147,35 @@ private:
   }
 
 
+  // Reconstruct the solution.
+  // TODO: This avoids the waste of constructing i*j sub-solutions along the way,
+  // but we instead need to store each subsolution just so we can examine the cases chosen in each subsolution.
+  // Calculating i*j full solutions (but only storing i*2 at any time) is maybe preferrable to storing i*j case-only solutions.
   type_subproblem
   calc_subproblem(type_level level, type_size a_count, type_size b_count) const override {
     //std::cout << "calc_subproblem: a_count=" << a_count << ", b_count=" << b_count << std::endl;
 
     if (a_count == 0) {
-      const auto result = type_subproblem(b_count  * GAP_COST, get_gap(b_count), b_.substr(0, b_count));
+      const auto result = type_subproblem(b_count  * GAP_COST);
       //std::cout << "  base a=0: result: a:" << result.solution_a << ", b:" << result.solution_b << "]" << std::endl;
       return result;
     }
 
     if (b_count == 0) {
-      const auto result = type_subproblem(a_count * GAP_COST, a_.substr(0, a_count),  get_gap(a_count));
+      const auto result = type_subproblem(a_count * GAP_COST);
       //std::cout << "  base b=0: result: a:" << result.solution_a << ", b:" << result.solution_b << "]" << std::endl;
       return result;
     }
 
-    //TODO: Storing the a and b solutions for each sub-solutin is a huge waste.
-    //TODO: These should instead be reconstructed.
     auto case1 = get_subproblem(level, a_count - 1, b_count - 1);
     case1.value += match_cost(a_count, b_count);
-    case1.solution_a += get_char_a(a_count - 1); //Could be a mismatch or gap at end.
-    case1.solution_b += get_char_b(b_count - 1); //Could be a mismatch or gap at end.
-    //std::cout << "  case 1: a:" << case1.solution_a << ", b:" << case1.solution_b << "]" << std::endl;
-    //assert(case1.solution_a.size() == case1.solution_b.size());
+    case1.case_used = SubSolution::cases::CASE1;
     auto case2 = get_subproblem(level, a_count - 1, b_count);
     case2.value += GAP_COST;
-    case2.solution_a += GAP_CHAR;
-    case2.solution_b += get_char_b(b_count - 1);
-    //std::cout << "  case 2: a:" << case2.solution_a << ", b:" << case2.solution_b << "]" << std::endl;
-    //assert(case2.solution_a.size() == case2.solution_b.size());
+    case2.case_used = SubSolution::cases::CASE2;
     auto case3 = get_subproblem(level, a_count, b_count - 1);
     case3.value += GAP_COST;
-    case3.solution_a += get_char_a(a_count - 1); //Could be a mismatch.
-    case3.solution_b += GAP_CHAR;
-    //std::cout << "  case 3 a:" << case3.solution_a << ", b:" << case3.solution_b << "]" << std::endl;
-    //assert(case3.solution_a.size() == case3.solution_b.size());
+    case3.case_used = SubSolution::cases::CASE3;
 
     const auto cases = {case1, case2, case3};
     const auto min_case_iter = std::min_element(std::begin(cases), std::end(cases),
@@ -154,8 +183,6 @@ private:
         return x.value < y.value;
       });
     const auto& min_case = *min_case_iter;
-    //std::cout << "  min: a:" << min_case.solution_a << ", b:" << min_case.solution_b << "]" << std::endl;
-    //assert(min_case.solution_a.size() == min_case.solution_b.size());
     return min_case;
   }
 
@@ -180,17 +207,18 @@ main() {
 
   DpSequenceAlignment dp(a, b);
   const auto result = dp.calc();
+  const auto solution = dp.get_solution();
 
   std::cout << "solution: value: " << result.value << std::endl
     << "with solution: " << std::endl
-    << "  a: [" << result.solution_a << "]" << std::endl
-    << "  b: [" << result.solution_b << "]" << std::endl;
+    << "  a: [" << solution.first << "]" << std::endl
+    << "  b: [" << solution.second << "]" << std::endl;
 
   // Uncomment to show the sequence: dp.print_subproblem_sequence();
 
   assert(result.value == 16);
-  assert(result.solution_a == "GCC-TAGCG");
-  assert(result.solution_b == "GCGGCAATG"); //TODO: This doesn't seem to be correct. The GG isn't in the original string.
+  assert(solution.first == "GCC-TAGCG");
+  assert(solution.second == "GCGGCAATG"); //TODO: This doesn't seem to be correct. The GG isn't in the original string.
 
   return EXIT_SUCCESS;
 }
