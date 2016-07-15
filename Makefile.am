@@ -37,6 +37,7 @@ check_PROGRAMS = \
   examples/murrayc_dp_bottom_up_fibonacci \
   examples/murrayc_dp_bottom_up_sequence_alignment \
   examples/murrayc_dp_bottom_up_knapsack \
+  examples/murrayc_dp_bottom_up_optimal_binary_search_tree \
   examples/murrayc_dp_bottom_up_string_edit_distance \
   examples/murrayc_dp_bottom_up_string_substring_matching \
   examples/murrayc_dp_bottom_up_triple_step \
@@ -67,6 +68,13 @@ examples_murrayc_dp_bottom_up_knapsack_SOURCES = \
 examples_murrayc_dp_bottom_up_knapsack_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 examples_murrayc_dp_bottom_up_knapsack_LDADD = \
+	$(PROJECT_LIBS)
+
+examples_murrayc_dp_bottom_up_optimal_binary_search_tree_SOURCES = \
+	examples/dp_bottom_up_optimal_binary_search_tree/murrayc_dp_bottom_up_optimal_binary_search_tree.cc
+examples_murrayc_dp_bottom_up_optimal_binary_search_tree_CXXFLAGS = \
+	$(COMMON_CXXFLAGS)
+examples_murrayc_dp_bottom_up_optimal_binary_search_tree_LDADD = \
 	$(PROJECT_LIBS)
 
 examples_murrayc_dp_bottom_up_sequence_alignment_SOURCES = \
