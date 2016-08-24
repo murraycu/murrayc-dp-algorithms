@@ -101,8 +101,9 @@ private:
 
     // std::cout << "  calc: i=" << items_count << ", w=" << weight_capacity <<
     // std::endl;
-
-    const auto& item = items_[items_count];
+    // When items_count is 1, we want to look at the first item (index 0):
+    assert((items_count - 1) < items_.size());
+    const auto& item = items_[items_count - 1];
 
     // If this item's weight alone is too much,
     // try the previously-calculated lesser number of items,
@@ -183,7 +184,7 @@ main() {
 
   // Uncomment to show the sequence: dp.print_subproblem_sequence();
 
-  assert(result.value == 83);
+  assert(result.value == 84);
 
   return EXIT_SUCCESS;
 }
