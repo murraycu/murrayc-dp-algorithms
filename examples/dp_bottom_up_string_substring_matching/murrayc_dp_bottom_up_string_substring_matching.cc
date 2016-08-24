@@ -65,6 +65,13 @@ public:
   type_path path;
 };
 
+/**
+ * This is like DpEditDistance, but it doesn't care where
+ * we start the match. So the base case is 0 regardless of j,
+ * and it examines all j in the last iteration (in get_goal_cell())
+ * to find the final answer.
+ * See page 289 of The Algorithm Design Manual.
+ */
 class DpSubstringMatching
   : public murraycdp::DpBottomUpBase<
       2 /* cost to keep, used in calc_subproblem() */, Cost, uint, uint> {
