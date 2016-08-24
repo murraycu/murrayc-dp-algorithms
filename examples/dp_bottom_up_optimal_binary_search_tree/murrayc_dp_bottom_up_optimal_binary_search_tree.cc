@@ -140,6 +140,10 @@ private:
 
 int
 main() {
+  // Note that these must be sorted,
+  // so we can choose a root r and know that the items
+  // before it will be in its left sub-tree, and the items
+  // after it will be in the right sub-tree.
   const DpOptimalBinarySearchTree::type_items items = {
     {'a', 11},
     {'b', 10},
