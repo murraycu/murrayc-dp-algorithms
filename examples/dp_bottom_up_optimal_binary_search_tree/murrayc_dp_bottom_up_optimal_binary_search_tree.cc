@@ -97,6 +97,13 @@ private:
     auto min = INFINITE_COST;
     type_size r_for_min = 0;
     const auto end = std::min(i + s, size);
+
+    // TODO: This should reduce the overall time to O(n^2):
+    // https://stackoverflow.com/questions/16987670/dynamic-programming-why-knuths-improvement-to-optimal-binary-search-tree-on2
+    // but that needs us to index by the start and end, not by the start and length.
+    //const auto r_left = get_subproblem(level, i, end - 1).root;
+    //const auto r_right = get_subproblem(level, i + 1, end).root;
+    //for (type_size r = r_left; r < r_right; ++r) {
     for (type_size r = i; r < end; ++r) {
       const auto left_size = r - i;
       const auto left = get_subproblem(level, left_size, i);
