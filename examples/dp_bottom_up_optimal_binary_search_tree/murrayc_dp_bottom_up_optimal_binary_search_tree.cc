@@ -52,6 +52,12 @@ public:
   unsigned int root;
 };
 
+/**
+ * Find the optimal binary search tree, by
+ * choosing the best roots for the tree and its sub-trees.
+ *
+ * This uses O(n^3) time, because it nests loops over s, i, and r.
+ */
 class DpOptimalBinarySearchTree
   : public murraycdp::DpBottomUpBase<0, /* keep all subproblems */
       SubSolution, SubSolution::type_items::size_type,
