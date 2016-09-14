@@ -56,7 +56,7 @@ public:
 
 class DpSequenceAlignment
   : public murraycdp::DpBottomUpBase<
-      100, // count of subproblems to keep. TODO: Don't hard-code this just to keep all subproblems so we can use them to reconstruct the solution later.
+      0 /* (all) count of subproblems to keep, used in calc_subproblem() */,
       SubSolution,
       SubSolution::type_items::size_type,
       SubSolution::type_items::size_type> {

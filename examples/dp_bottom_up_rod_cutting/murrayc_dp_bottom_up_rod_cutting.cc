@@ -29,7 +29,7 @@
  */
 class DpRodCutting
   : public murraycdp::DpBottomUpBase<
-      100 /* TODO */ /* count of subproblems to keep, used in calc_subproblem() */,
+      0 /* (all) count of subproblems to keep, used in calc_subproblem() */,
       std::size_t, // sub problem type
       std::size_t  // i
       > {

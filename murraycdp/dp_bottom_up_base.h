@@ -42,7 +42,8 @@ namespace murraycdp {
  * the
  * overall solution.
  * @tparam T_COUNT_SUBPROBLEMS_TO_KEEP The number of previous i values that
- * calc_subproblem() needs to use.
+ * calc_subproblem() needs to use, or 0 to keep subproblems for all previous i
+ * values.
  * @tparam T_subproblem The type of the subproblem solution, such as unsigned
  * int,
  * or a custom class containing a value and a partial path.
@@ -66,7 +67,8 @@ public:
    * @pram The number of j values to calculate the subproblem for.
    */
   DpBottomUpBase(typename std::decay<T_value_types>::type... value_counts)
-  : subproblems_(T_COUNT_SUBPROBLEMS_TO_KEEP), value_counts_(value_counts...) {
+  : subproblems_(T_COUNT_SUBPROBLEMS_TO_KEEP == 0 ? std::get<0>(std::make_tuple(value_counts...)) : T_COUNT_SUBPROBLEMS_TO_KEEP),
+    value_counts_(value_counts...) {
     const auto value_counts_without_i = tupleutils::tuple_cdr(value_counts_);
     constexpr auto tuple_size =
       std::tuple_size<decltype(value_counts_without_i)>::value;

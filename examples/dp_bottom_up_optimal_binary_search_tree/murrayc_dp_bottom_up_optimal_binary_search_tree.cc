@@ -59,7 +59,7 @@ public:
 
 class DpOptimalBinarySearchTree
   : public murraycdp::DpBottomUpBase<
-      100, // count of subproblems to keep. TODO: Don't hard-code this just to keep all subproblems.
+      0, /* keep all subproblems */
       SubSolution,
       SubSolution::type_items::size_type,
       SubSolution::type_items::size_type> {
