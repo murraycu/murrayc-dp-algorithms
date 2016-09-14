@@ -48,15 +48,13 @@ public:
  * Longest Common Subsequence.
  * Based on the example in section 15.4 of CLRS.
  */
-class DpLCS
-  : public murraycdp::DpTopDownBase<SubSolution,
-      std::string::size_type, std::string::size_type> {
+class DpLCS : public murraycdp::DpTopDownBase<SubSolution,
+                std::string::size_type, std::string::size_type> {
 public:
   using type_value = SubSolution::type_value;
   using type_size = std::string::size_type;
 
-  DpLCS(const std::string& x, const std::string& y)
-  : x_(x), y_(y) {}
+  DpLCS(const std::string& x, const std::string& y) : x_(x), y_(y) {}
 
 private:
   type_subproblem
@@ -74,14 +72,15 @@ private:
       result.value++;
 
       // TODO: It would use less space to just store the case that was chosen,
-      // and would still take only linear time to reconstruct the solution from that.
+      // and would still take only linear time to reconstruct the solution from
+      // that.
       result.solution += x_[i - 1];
       return result;
     }
 
     auto sub_i_less = get_subproblem(level, i - 1, j);
     auto sub_j_less = get_subproblem(level, i, j - 1);
-    if (sub_i_less.value >= sub_j_less.value ) {
+    if (sub_i_less.value >= sub_j_less.value) {
       return sub_i_less;
     } else {
       return sub_j_less;

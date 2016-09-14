@@ -40,9 +40,7 @@ public:
   : DpBottomUpBase(length + 1), // DpBottomUpBase without the
     // specialization is apparently allowed.
     length_prices_(length_prices),
-    length_(length) {
-    }
-
+    length_(length) {}
 
 private:
   type_subproblem
@@ -56,14 +54,16 @@ private:
     // Get the max of the prices resulting from various initial cuts:
     type_subproblem result = 0;
     for (std::size_t j = 1; j <= i; ++j) {
-      // The price when cutting one i-j piece and whatever is optimal for the rest:
-      const auto subproblem = length_prices_[j - 1].second + get_subproblem(level, i - j);
+      // The price when cutting one i-j piece and whatever is optimal for the
+      // rest:
+      const auto subproblem =
+        length_prices_[j - 1].second + get_subproblem(level, i - j);
       if (subproblem > result) {
         result = subproblem;
       }
     }
 
-    //std::cout << "i=" << i << ", result=" << result << std::endl;
+    // std::cout << "i=" << i << ", result=" << result << std::endl;
     return result;
   }
 
@@ -76,25 +76,17 @@ private:
   const std::size_t length_;
 };
 
-static
-void test(const DpRodCutting::LengthPrices& length_prices, std::size_t length, std::size_t expected_price) {
+static void
+test(const DpRodCutting::LengthPrices& length_prices, std::size_t length,
+  std::size_t expected_price) {
   DpRodCutting dp(length_prices, length);
   assert(dp.calc() == expected_price);
 }
 
 int
 main() {
-  const DpRodCutting::LengthPrices length_prices = {
-    {1, 1},
-    {2, 5},
-    {3, 8},
-    {4, 9},
-    {5, 10},
-    {6, 17},
-    {7, 17},
-    {8, 20},
-    {9, 24},
-    {10, 30}};
+  const DpRodCutting::LengthPrices length_prices = {{1, 1}, {2, 5}, {3, 8},
+    {4, 9}, {5, 10}, {6, 17}, {7, 17}, {8, 20}, {9, 24}, {10, 30}};
   test(length_prices, 4, 10);
   test(length_prices, 5, 13);
   test(length_prices, 9, 25);

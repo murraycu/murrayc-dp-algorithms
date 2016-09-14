@@ -27,7 +27,7 @@
 class ItemAndFrequency {
 public:
   char item;
-  unsigned int percentage; //0 to 100.
+  unsigned int percentage; // 0 to 100.
 };
 
 class SubSolution {
@@ -35,15 +35,10 @@ public:
   using type_items = std::vector<ItemAndFrequency>;
   using type_value = unsigned int;
 
-  SubSolution()
-  : value(0),
-    root(0)
-  {}
+  SubSolution() : value(0), root(0) {}
 
   explicit SubSolution(type_value value_in, unsigned int root_in)
-  : value(value_in),
-    root(root_in) {
-  }
+  : value(value_in), root(root_in) {}
 
   SubSolution(const SubSolution& src) = default;
   SubSolution&
@@ -58,10 +53,8 @@ public:
 };
 
 class DpOptimalBinarySearchTree
-  : public murraycdp::DpBottomUpBase<
-      0, /* keep all subproblems */
-      SubSolution,
-      SubSolution::type_items::size_type,
+  : public murraycdp::DpBottomUpBase<0, /* keep all subproblems */
+      SubSolution, SubSolution::type_items::size_type,
       SubSolution::type_items::size_type> {
 public:
   using type_value = unsigned int;
@@ -69,14 +62,12 @@ public:
   using type_size = type_items::size_type;
 
   DpOptimalBinarySearchTree(const type_items& items)
-  : DpBottomUpBase(items.size() + 1, items.size()),
-    items_(items) {}
+  : DpBottomUpBase(items.size() + 1, items.size()), items_(items) {}
 
 private:
-
   type_subproblem
   calc_subproblem(type_level level, type_size s, type_size i) const override {
-    //std::cout << "calc_subproblem: s=" << s << ", i=" << i << std::endl;
+    // std::cout << "calc_subproblem: s=" << s << ", i=" << i << std::endl;
 
     constexpr auto INFINITE_COST = std::numeric_limits<type_value>::max();
 
@@ -92,33 +83,33 @@ private:
 
     // Sum of all costs in this range:
     const auto b = std::begin(items_) + i;
-    const auto freq_sum = std::accumulate(b, b + s,
-      0,
-      [] (auto sum, const auto& item) {
-        return sum + item.percentage;
-      });
+    const auto freq_sum = std::accumulate(b, b + s, 0,
+      [](auto sum, const auto& item) { return sum + item.percentage; });
 
-    // Get the min of possible subproblems: For every possible root (try i to r-1 and r+1 to i+s)).
+    // Get the min of possible subproblems: For every possible root (try i to
+    // r-1 and r+1 to i+s)).
     auto min = INFINITE_COST;
     type_size r_for_min = 0;
     const auto end = std::min(i + s, size);
     for (type_size r = i; r < end; ++r) {
       const auto left_size = r - i;
       const auto left = get_subproblem(level, left_size, i);
-      //std::cout << "  r=" << r << ", (" << left_size << ", " << i << ") left=" << left.value << std::endl;
+      // std::cout << "  r=" << r << ", (" << left_size << ", " << i << ")
+      // left=" << left.value << std::endl;
 
-      //TODO: Simplify this?
+      // TODO: Simplify this?
       type_value right_value = 0;
       const auto right_size = s - left_size - 1;
       const auto right_start = r + 1;
       if (right_start < end && (right_start + right_size) <= end) {
         const auto right = get_subproblem(level, right_size, right_start);
-        //std::cout << "  r=" << r << ", (" << right_size << ", " << right_start << ") right=" << right.value << std::endl;
+        // std::cout << "  r=" << r << ", (" << right_size << ", " <<
+        // right_start << ") right=" << right.value << std::endl;
         right_value = right.value;
       }
 
       const auto cost = left.value + right_value;
-      //std::cout << "  r=" << r << ", cost=" << cost << std::endl;
+      // std::cout << "  r=" << r << ", cost=" << cost << std::endl;
       if (cost < min) {
         min = cost;
         r_for_min = r;
@@ -145,15 +136,9 @@ main() {
   // before it will be in its left sub-tree, and the items
   // after it will be in the right sub-tree.
   const DpOptimalBinarySearchTree::type_items items = {
-    {'a', 11},
-    {'b', 10},
-    {'c', 12},
-    {'d', 22},
-    {'e', 18}
-  };
+    {'a', 11}, {'b', 10}, {'c', 12}, {'d', 22}, {'e', 18}};
 
-  std::cout << "Problem:" << std::endl
-    << "  items: ";
+  std::cout << "Problem:" << std::endl << "  items: ";
   for (const auto& item : items) {
     std::cout << item.item << ": " << item.percentage << ", ";
   }

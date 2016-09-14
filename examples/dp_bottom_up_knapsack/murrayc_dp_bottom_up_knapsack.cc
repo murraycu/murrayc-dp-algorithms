@@ -71,11 +71,8 @@ public:
 };
 
 class DpKnapsack
-  : public murraycdp::DpBottomUpBase<
-      2, // count of subproblems to keep.
-      SubSolution,
-      SubSolution::type_vec_items::size_type,
-      Item::type_weight> {
+  : public murraycdp::DpBottomUpBase<2, // count of subproblems to keep.
+      SubSolution, SubSolution::type_vec_items::size_type, Item::type_weight> {
 public:
   using type_value = Item::type_value;
   using type_weight = Item::type_weight;
@@ -84,7 +81,8 @@ public:
 
   DpKnapsack(const type_vec_items& items, type_weight weight_capacity)
   : DpBottomUpBase(items.size() + 1, weight_capacity + 1),
-    items_(items), weight_capacity_(weight_capacity) {}
+    items_(items),
+    weight_capacity_(weight_capacity) {}
 
 private:
   type_subproblem

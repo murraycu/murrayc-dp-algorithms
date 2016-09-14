@@ -50,13 +50,11 @@
  * @endcode
  */
 class DpFibonacci
-  : public murraycdp::DpTopDownBase<
-      unsigned long, // subproblem type
-      unsigned int // i
-    > {
+  : public murraycdp::DpTopDownBase<unsigned long, // subproblem type
+      unsigned int                                 // i
+      > {
 public:
-  explicit DpFibonacci(unsigned int n)
-  : n_(n) {}
+  explicit DpFibonacci(unsigned int n) : n_(n) {}
 
 private:
   type_subproblem
