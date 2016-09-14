@@ -54,7 +54,7 @@ public:
 
   /**
    * @param The number of i values to calculate the subproblem for.
-   * @pram The number of j values to calculate the subproblem for.
+   * @param The number of j values to calculate the subproblem for.
    */
   DpTopDownBase() : DpBase<T_subproblem, T_value_types...>() {}
 
