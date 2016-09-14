@@ -7,6 +7,7 @@
 *.gcda
 *.gcov
 /gcov-report.txt
+*.swp
 
 .deps
 .dirstamp
