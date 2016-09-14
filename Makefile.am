@@ -48,6 +48,7 @@ check_PROGRAMS = \
   examples/murrayc_dp_top_down_make_change \
   examples/murrayc_dp_top_down_parenthesization \
   examples/murrayc_dp_top_down_parse_context_free_grammar \
+  examples/murrayc_dp_top_down_rod_cutting \
   examples/murrayc_dp_top_down_tsp \
   tests/test_vector_of_vectors
 
@@ -121,7 +122,7 @@ examples_murrayc_dp_top_down_fibonacci_LDADD = \
 	$(PROJECT_LIBS) \
 	$(BOOST_SYSTEM_LIB) \
 	$(BOOST_TIMER_LIB)
-	
+
 examples_murrayc_dp_top_down_knapsack_SOURCES = \
 	examples/dp_top_down_knapsack/murrayc_dp_top_down_knapsack.cc
 examples_murrayc_dp_top_down_knapsack_CXXFLAGS = \
@@ -155,6 +156,13 @@ examples_murrayc_dp_top_down_parse_context_free_grammar_SOURCES = \
 examples_murrayc_dp_top_down_parse_context_free_grammar_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 examples_murrayc_dp_top_down_parse_context_free_grammar_LDADD = \
+	$(PROJECT_LIBS)
+
+examples_murrayc_dp_top_down_rod_cutting_SOURCES = \
+	examples/dp_top_down_rod_cutting/murrayc_dp_top_down_rod_cutting.cc
+examples_murrayc_dp_top_down_rod_cutting_CXXFLAGS = \
+	$(COMMON_CXXFLAGS)
+examples_murrayc_dp_top_down_rod_cutting_LDADD = \
 	$(PROJECT_LIBS)
 
 examples_murrayc_dp_top_down_tsp_SOURCES = \
