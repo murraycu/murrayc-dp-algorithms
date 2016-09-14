@@ -83,6 +83,7 @@ Makefile.in
 
 /examples/murrayc_dp_top_down_fibonacci
 /examples/murrayc_dp_top_down_knapsack
+/examples/murrayc_dp_top_down_lcs
 /examples/murrayc_dp_top_down_make_change
 /examples/murrayc_dp_top_down_parenthesization
 /examples/murrayc_dp_top_down_parse_context_free_grammar

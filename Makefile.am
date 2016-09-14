@@ -44,6 +44,7 @@ check_PROGRAMS = \
   examples/murrayc_dp_bottom_up_triple_step \
   examples/murrayc_dp_top_down_fibonacci \
   examples/murrayc_dp_top_down_knapsack \
+  examples/murrayc_dp_top_down_lcs \
   examples/murrayc_dp_top_down_string_edit_distance \
   examples/murrayc_dp_top_down_make_change \
   examples/murrayc_dp_top_down_parenthesization \
@@ -128,6 +129,13 @@ examples_murrayc_dp_top_down_knapsack_SOURCES = \
 examples_murrayc_dp_top_down_knapsack_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 examples_murrayc_dp_top_down_knapsack_LDADD = \
+	$(PROJECT_LIBS)
+
+examples_murrayc_dp_top_down_lcs_SOURCES = \
+	examples/dp_top_down_lcs/murrayc_dp_top_down_lcs.cc
+examples_murrayc_dp_top_down_lcs_CXXFLAGS = \
+	$(COMMON_CXXFLAGS)
+examples_murrayc_dp_top_down_lcs_LDADD = \
 	$(PROJECT_LIBS)
 
 examples_murrayc_dp_top_down_string_edit_distance_SOURCES = \
