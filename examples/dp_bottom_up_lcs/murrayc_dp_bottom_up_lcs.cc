@@ -47,6 +47,9 @@ public:
 /**
  * Longest Common Subsequence.
  * Based on the example in section 15.4 of CLRS.
+ *
+ * This DP solution for LCS uses O(nm) time,
+ * but uses a suffix tree instead uses O(n + m) time.
  */
 class DpLCS
   : public murraycdp::DpBottomUpBase<2, // count of subproblems to keep.
