@@ -43,6 +43,7 @@ check_PROGRAMS = \
   examples/murrayc_dp_bottom_up_string_edit_distance \
   examples/murrayc_dp_bottom_up_string_substring_matching \
   examples/murrayc_dp_bottom_up_triple_step \
+  examples/murrayc_dp_top_down_clrs_problem_15_9_breaking_a_string \
   examples/murrayc_dp_top_down_fibonacci \
   examples/murrayc_dp_top_down_knapsack \
   examples/murrayc_dp_top_down_lcs \
@@ -121,6 +122,13 @@ examples_murrayc_dp_bottom_up_triple_step_SOURCES = \
 examples_murrayc_dp_bottom_up_triple_step_CXXFLAGS = \
 	$(COMMON_CXXFLAGS)
 examples_murrayc_dp_bottom_up_triple_step_LDADD = \
+	$(PROJECT_LIBS)
+
+examples_murrayc_dp_top_down_clrs_problem_15_9_breaking_a_string_SOURCES = \
+	examples/dp_top_down_clrs_problem_15_9_breaking_a_string/murrayc_dp_top_down_clrs_problem_15_9_breaking_a_string.cc
+examples_murrayc_dp_top_down_clrs_problem_15_9_breaking_a_string_CXXFLAGS = \
+	$(COMMON_CXXFLAGS)
+examples_murrayc_dp_top_down_clrs_problem_15_9_breaking_a_string_LDADD = \
 	$(PROJECT_LIBS)
 
 examples_murrayc_dp_top_down_fibonacci_SOURCES = \

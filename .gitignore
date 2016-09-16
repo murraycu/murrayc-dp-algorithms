@@ -83,6 +83,7 @@ Makefile.in
 /examples/murrayc_dp_string_edit_distance
 /examples/murrayc_dp_string_substring_matching
 
+/examples/murrayc_dp_top_down_clrs_problem_15_9_breaking_a_string
 /examples/murrayc_dp_top_down_fibonacci
 /examples/murrayc_dp_top_down_knapsack
 /examples/murrayc_dp_top_down_lcs
