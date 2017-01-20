@@ -57,7 +57,8 @@ public:
  * Find the optimal binary search tree, by
  * choosing the best roots for the tree and its sub-trees.
  *
- * This uses O(n^3) time, because it nests loops over s, i, and r.
+ * This uses O(n^3) time, because it nests loops over s (size of range),
+ * i (start of range), and r (root inside range).
  */
 class DpOptimalBinarySearchTree
   : public murraycdp::DpBottomUpBase<0, /* keep all subproblems */
@@ -72,6 +73,10 @@ public:
   : DpBottomUpBase(items.size() + 1, items.size()), items_(items) {}
 
 private:
+  /**
+   * Calculate the optimal root for the @a s items starting with item @a i.
+   * by calculating the optimal roots for every possible pair of subtrees.
+   */
   type_subproblem
   calc_subproblem(type_level level, type_size s, type_size i) const override {
     // std::cout << "calc_subproblem: s=" << s << ", i=" << i << std::endl;
@@ -89,6 +94,13 @@ private:
     }
 
     // Sum of all costs in this range:
+    //
+    // Note: If the item ends up being x levels deep in a sub-tree,
+    // its cost will have been added together x times. And that's what
+    // we want because the cost of each item in the optimal solution is
+    // its frequency * its depth.
+    // See https://youtu.be/u5eSBQQ4qVc?t=4m22s for Tim Roughgarden's more detailed explanation,
+    // though it seems to hand-wave past this part.
     const auto b = std::begin(items_) + i;
     const auto freq_sum = std::accumulate(b, b + s, 0,
       [](auto sum, const auto& item) { return sum + item.percentage; });
