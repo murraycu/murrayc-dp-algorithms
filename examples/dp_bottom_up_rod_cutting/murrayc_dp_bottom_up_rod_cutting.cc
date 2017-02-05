@@ -51,8 +51,17 @@ private:
       return 0;
     }
 
-    // Get the max of the prices resulting from various initial cuts:
+    // Get the max of the prices resulting from various initial cuts,
+    // or no cut:
+
+    // The price for the rod as it is (no cut):
     type_subproblem result = 0;
+    if (i < length_prices_.size()) {
+      // TODO: The -1 is awkward. And this code assumes that there is
+      // a price for every length starting at 1:
+      result = length_prices_[i - 1].second;
+    }
+
     for (std::size_t j = 1; j <= i; ++j) {
       // The price when cutting one i-j piece and whatever is optimal for the
       // rest:
